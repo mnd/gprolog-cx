@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Finite domain solver and built-in predicates</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog024.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="index.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog066.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H2 CLASS="section"><A NAME="htoc315">9</A>&#XA0;&#XA0;Finite domain solver and built-in predicates</H2><UL>
+<LI><A HREF="gprolog056.html">Introduction</A>
+<UL>
+<LI><A HREF="gprolog056.html#toc262">Finite Domain variables</A>
+</LI></UL>
+</LI><LI><A HREF="gprolog057.html">FD variable parameters</A>
+<UL>
+<LI><A HREF="gprolog057.html#toc263"><TT>fd_max_integer/1</TT></A>
+</LI><LI><A HREF="gprolog057.html#toc264"><TT>fd_vector_max/1</TT></A>
+</LI><LI><A HREF="gprolog057.html#toc265"><TT>fd_set_vector_max/1</TT></A>
+</LI></UL>
+</LI><LI><A HREF="gprolog058.html">Initial value constraints</A>
+<UL>
+<LI><A HREF="gprolog058.html#toc266"><TT>fd_domain/3</TT>,
+<TT>fd_domain_bool/1</TT></A>
+</LI><LI><A HREF="gprolog058.html#toc267"><TT>fd_domain/2</TT></A>
+</LI></UL>
+</LI><LI><A HREF="gprolog059.html">Type testing</A>
+<UL>
+<LI><A HREF="gprolog059.html#toc268"><TT>fd_var/1</TT>, <TT>non_fd_var/1</TT>,
+<TT>generic_var/1</TT>,
+<TT>non_generic_var/1</TT></A>
+</LI></UL>
+</LI><LI><A HREF="gprolog060.html">FD variable information</A>
+<UL>
+<LI><A HREF="gprolog060.html#toc269"><TT>fd_min/2</TT>,
+<TT>fd_max/2</TT>,
+<TT>fd_size/2</TT>,
+<TT>fd_dom/2</TT></A>
+</LI><LI><A HREF="gprolog060.html#toc270"><TT>fd_has_extra_cstr/1</TT>,
+<TT>fd_has_vector/1</TT>,
+<TT>fd_use_vector/1</TT></A>
+</LI></UL>
+</LI><LI><A HREF="gprolog061.html">Arithmetic constraints</A>
+<UL>
+<LI><A HREF="gprolog061.html#toc271">FD arithmetic expressions</A>
+</LI><LI><A HREF="gprolog061.html#toc272">Partial AC: <TT>(#=)/2</TT> - constraint equal,
+<TT>(#</TT><TT>\</TT><TT>=)/2</TT> - constraint not equal,<BR>
+ <TT>(#</TT><TT>&lt;</TT><TT>)/2</TT> - constraint less than,
+<TT>(#=</TT><TT>&lt;</TT><TT>)/2</TT> - constraint less than or equal,<BR>
+ <TT>(#</TT><TT>&gt;</TT><TT>)/2</TT> - constraint greater than,
+<TT>(#</TT><TT>&gt;</TT><TT>=)/2</TT> - constraint greater than or equal</A>
+</LI><LI><A HREF="gprolog061.html#toc273">Full AC: <TT>(#=#)/2</TT> - constraint equal,
+<TT>(#</TT><TT>\</TT><TT>=#)/2</TT> - constraint not equal,<BR>
+ <TT>(#</TT><TT>&lt;</TT><TT>#)/2</TT> - constraint less than,
+<TT>(#=</TT><TT>&lt;</TT><TT>#)/2</TT> - constraint less than or equal,<BR>
+ <TT>(#</TT><TT>&gt;</TT><TT>#)/2</TT> - constraint greater than,
+<TT>(#</TT><TT>&gt;</TT><TT>=#)/2</TT> - constraint greater than or equal</A>
+</LI><LI><A HREF="gprolog061.html#toc274"><TT>fd_prime/1</TT>,
+<TT>fd_not_prime/1</TT></A>
+</LI></UL>
+</LI><LI><A HREF="gprolog062.html">Boolean and reified constraints</A>
+<UL>
+<LI><A HREF="gprolog062.html#toc275">Boolean FD expressions</A>
+</LI><LI><A HREF="gprolog062.html#toc276"><TT>fd_reified_in/4</TT></A>
+</LI><LI><A HREF="gprolog062.html#toc277"><TT>(#</TT><TT>\</TT><TT>)/1</TT> - constraint NOT,
+<TT>(#</TT><TT>&lt;</TT><TT>=</TT><TT>&gt;</TT><TT>)/2</TT> - constraint equivalent,<BR>
+ <TT>(#</TT><TT>\</TT><TT>&lt;</TT><TT>=</TT><TT>&gt;</TT><TT>)/2</TT> - constraint different,
+<TT>(##)/2</TT> - constraint XOR,<BR>
+ <TT>(#==</TT><TT>&gt;</TT><TT>)/2</TT> - constraint imply,
+<TT>(#</TT><TT>\</TT><TT>==</TT><TT>&gt;</TT><TT>)/2</TT> - constraint not imply,<BR>
+ <TT>(#/</TT><TT>\</TT><TT>)/2</TT> - constraint AND,
+<TT>(#</TT><TT>\</TT><TT>/</TT><TT>\</TT><TT>)/2</TT> - constraint NAND,<BR>
+ <TT>(#</TT><TT>\</TT><TT>/)/2</TT> - constraint OR,
+<TT>(#</TT><TT>\</TT><TT>\</TT><TT>/)/2</TT> - constraint NOR</A>
+</LI><LI><A HREF="gprolog062.html#toc278"><TT>fd_cardinality/2</TT>,
+<TT>fd_cardinality/3</TT>,
+<TT>fd_at_least_one/1</TT>,
+<TT>fd_at_most_one/1</TT>,<BR>
+ <TT>fd_only_one/1</TT></A>
+</LI></UL>
+</LI><LI><A HREF="gprolog063.html">Symbolic constraints</A>
+<UL>
+<LI><A HREF="gprolog063.html#toc279"><TT>fd_all_different/1</TT></A>
+</LI><LI><A HREF="gprolog063.html#toc280"><TT>fd_element/3</TT></A>
+</LI><LI><A HREF="gprolog063.html#toc281"><TT>fd_element_var/3</TT></A>
+</LI><LI><A HREF="gprolog063.html#toc282"><TT>fd_atmost/3</TT>,
+<TT>fd_atleast/3</TT>,
+<TT>fd_exactly/3</TT></A>
+</LI><LI><A HREF="gprolog063.html#toc283"><TT>fd_relation/2</TT>,
+<TT>fd_relationc/2</TT></A>
+</LI></UL>
+</LI><LI><A HREF="gprolog064.html">Labeling constraints</A>
+<UL>
+<LI><A HREF="gprolog064.html#toc284"><TT>fd_labeling/2</TT>,
+<TT>fd_labeling/1</TT>,
+<TT>fd_labelingff/1</TT></A>
+</LI></UL>
+</LI><LI><A HREF="gprolog065.html">Optimization constraints</A>
+<UL>
+<LI><A HREF="gprolog065.html#toc285"><TT>fd_minimize/2</TT>,
+<TT>fd_maximize/2</TT></A>
+</LI></UL>
+</LI></UL>
+
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog024.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="index.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog066.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

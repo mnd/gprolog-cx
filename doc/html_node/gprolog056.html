@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Introduction</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog055.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog057.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc316">9.1</A>&#XA0;&#XA0;Introduction</H3><UL>
+<LI><A HREF="gprolog056.html#toc262">Finite Domain variables</A>
+</LI></UL>
+<P>
+<A NAME="Intro-FD"></A>
+The finite domain (FD) constraint solver extends Prolog with constraints over
+FD. This facility is available if the FD part of GNU Prolog has been
+installed. The solver is an instance of the Constraint Logic Programming
+scheme introduced by Jaffar and Lassez in 1987
+[<A HREF="gprolog074.html#Jaffar-Lassez87">7</A>]. Constraints on FD are solved using propagation
+techniques, in particular arc-consistency (AC). The interested reader can
+refer to &#X201C;Constraint Satisfaction in Logic Programming&#X201D; of P. Van
+Hentenryck (1989) [<A HREF="gprolog074.html#pvh89">8</A>]. The solver is based on the <TT>clp(FD)</TT>
+solver [<A HREF="gprolog074.html#long-clp-fd">4</A>]. The GNU Prolog FD solver offers arithmetic
+constraints, boolean constraints, reified constraints and symbolic
+constraints on an new kind of variables: Finite Domain variables.</P><H4 CLASS="subsubsection"><A NAME="toc262"></A><A NAME="htoc317">9.1.1</A>&#XA0;&#XA0;Finite Domain variables</H4><P>
+<A NAME="Finite-Domain-variables"></A>
+A new type of data is introduced: FD variables which can only take values in
+their domains. The initial domain of an FD variable is
+<TT>0..fd_max_integer</TT> where <TT>fd_max_integer</TT> represents the
+greatest value that any FD variable can take. The predicate
+<TT>fd_max_integer/1</TT> returns this value which may be different from
+the <TT>max_integer</TT> Prolog flag
+(section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>). The domain of an FD variable <TT>X</TT> is
+reduced step by step by constraints in a monotonic way: when a value
+has been removed from the domain of <TT>X</TT> it will never reappear
+in the domain of <TT>X</TT>. An FD variable is fully compatible with
+both Prolog integers and Prolog variables. Namely, when an FD
+variable is expected by an FD constraint it is possible to pass a
+Prolog integer (considered as an FD variable whose domain is a
+singleton) or a Prolog variable (immediately bound to an initial range
+<TT>0..fd_max_integer</TT>). This avoids the need for specific type
+declaration. Although it is not necessary to declare the initial domain of an
+FD variable (since it will be bound <TT>0..fd_max_integer</TT> when
+appearing for the fist time in a constraint) it is advantageous to do so and
+thus reduce as soon as possible the size of its domain: particularly because
+GNU Prolog, for efficiency reasons, does not check for overflows. For instance,
+without any preliminary domain definitions for <TT>X</TT>, <TT>Y</TT> and
+<TT>Z</TT>, the non-linear constraint <TT>X*Y#=Z</TT> will fail due to an
+overflow when computing the upper bound of the domain of <TT>Z</TT>:
+<TT>fd_max_integer &#XD7; fd_max_integer</TT>. This overflow causes a
+negative result for the upper bound and the constraint then fails.</P><P>There are two internal representations for an FD variable:</P><UL CLASS="itemize"><LI CLASS="li-itemize"><B>interval representation</B>: only the <EM>min</EM> and the
+<EM>max</EM> of the variable are maintained. In this representation it is
+possible to store values included in <TT>0..fd_max_integer</TT>.</LI><LI CLASS="li-itemize"><B>sparse representation</B>: an additional bit-vector is used to
+store the set of possible values for the variable (i.e. the domain). In
+this representation it is possible to store values included in
+<TT>0..vector_max</TT>. By default <TT>vector_max</TT> is set to 127.
+This value can be redefined via an environment variable <TT>VECTORMAX</TT>
+or via the built-in predicate <TT>fd_set_vector_max/1</TT>
+(section&#XA0;<A HREF="gprolog057.html#fd-set-vector-max/1">9.2.3</A>). The predicate <TT>fd_vector_max/1</TT>
+returns the current value of <TT>vector_max</TT>
+(section&#XA0;<A HREF="gprolog057.html#fd-max-integer/1">9.2.1</A>).</LI></UL><P>
+The initial representation for an FD variable <TT>X</TT> is always an
+interval representation and is switched to a sparse representation when a
+&#X201C;hole&#X201D; appears in the domain (e.g. due to an inequality constraint). Once a
+variable uses a sparse representation it will not switch back to an interval
+representation even if there are no longer holes in its domain. When this
+switching occurs some values in the domain of <TT>X</TT> can be lost since
+<TT>vector_max</TT> is less than <TT>fd_max_integer</TT>. We say that
+&#X201C;<TT>X</TT> is extra-constrained&#X201D; since
+<TT>X</TT> is constrained by the solver to the domain
+<TT>0..vector_max</TT> (via an imaginary constraint
+<TT>X #=&lt; <I>vector_max</I></TT>). An <TT>extra_cstr</TT> is
+associated with each FD variable to indicate that values have been lost due to
+the switch to a sparse representation. This flag is updated on every
+operations. The domain of an extra-constrained FD variable is output followed
+by the <TT>@</TT> symbol. When a constraint fails on a extra-constrained
+variable a message <TT>Warning: Vector too small - maybe lost solutions
+(FD Var:<I>N</I>)</TT> is displayed (<I><TT>N</TT></I> is the address of the involved
+variable).</P><P>Example 1 (<TT>vector_max</TT> = <TT>127</TT>):</P><TABLE BORDER=1 CELLSPACING=0 CELLPADDING=1><TR><TD ALIGN=left NOWRAP>
+Constraint on <TT>X</TT></TD><TD ALIGN=left NOWRAP>Domain of <TT>X</TT></TD><TD ALIGN=center NOWRAP><TT>extra_cstr</TT></TD><TD ALIGN=left NOWRAP>Lost values</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>X #=&lt; 512</TT></TD><TD ALIGN=left NOWRAP><TT>0..512</TT></TD><TD ALIGN=center NOWRAP><TT>off</TT></TD><TD ALIGN=left NOWRAP>none</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>X #\= 10</TT></TD><TD ALIGN=left NOWRAP><TT>0..9:11..127</TT></TD><TD ALIGN=center NOWRAP><TT>on</TT></TD><TD ALIGN=left NOWRAP><TT>128..512</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>X #=&lt; 100</TT></TD><TD ALIGN=left NOWRAP><TT>0..9:11..100</TT></TD><TD ALIGN=center NOWRAP><TT>off</TT></TD><TD ALIGN=left NOWRAP>none</TD></TR>
+</TABLE><P>In this example, when the constraint <TT>X #\= 10</TT> is posted some
+values are lost, the <TT>extra_cstr</TT> is then switched on. However,
+posting the constraint <TT>X #=&lt; 100</TT> will turn off the flag (no
+values are lost).</P><P>Example 2:</P><TABLE BORDER=1 CELLSPACING=0 CELLPADDING=1><TR><TD ALIGN=left NOWRAP>
+Constraint on <TT>X</TT></TD><TD ALIGN=left NOWRAP>Domain of <TT>X</TT></TD><TD ALIGN=center NOWRAP><TT>extra_cstr</TT></TD><TD ALIGN=left NOWRAP>Lost values</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>X #=&lt; 512</TT></TD><TD ALIGN=left NOWRAP><TT>0..512</TT></TD><TD ALIGN=center NOWRAP><TT>off</TT></TD><TD ALIGN=left NOWRAP>none</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>X #\= 10</TT></TD><TD ALIGN=left NOWRAP><TT>0..9:11..127</TT></TD><TD ALIGN=center NOWRAP><TT>on</TT></TD><TD ALIGN=left NOWRAP><TT>128..512</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>X #&gt;= 256</TT></TD><TD ALIGN=left NOWRAP><TT>Warning: Vector too small&#X2026;</TT></TD><TD ALIGN=center NOWRAP><TT>on</TT></TD><TD ALIGN=left NOWRAP><TT>128..512</TT></TD></TR>
+</TABLE><P>In this example, the constraint <TT>X #&gt;= 256</TT> fails due to the lost
+of <TT>128..512</TT> so a message is displayed onto the terminal. The
+solution would consist in increasing the size of the vector either by setting
+the environment variable <TT>VECTORMAX</TT> (e.g. to <TT>512</TT>) or using
+<TT>fd_set_vector_max(512)</TT>.</P><P>Finally, bit-vectors are not dynamic, i.e. all vectors have the same size
+(<TT>0..vector_max</TT>). So the use of <TT>fd_set_vector_max/1</TT> is
+limited to the initial definition of vector sizes and must occur before any
+constraint. As seen before, the solver tries to display a message when a
+failure occurs due to a too short <TT>vector_max</TT>. Unfortunately, in
+some cases it cannot detect the lost of values and no message is emitted. So
+the user should always take care to this parameter to be sure that it is
+large to encode any vector.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog055.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog057.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Predicate information</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog031.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog033.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc106">8.8</A>&#XA0;&#XA0;Predicate information</H3><UL>
+<LI><A HREF="gprolog032.html#toc76"><TT>current_predicate/1</TT></A>
+</LI><LI><A HREF="gprolog032.html#toc77"><TT>predicate_property/2</TT></A>
+</LI></UL>
+<H4 CLASS="subsubsection"><A NAME="toc76"></A><A NAME="htoc107">8.8.1</A>&#XA0;&#XA0;<TT>current_predicate/1</TT></H4><P>
+<A NAME="current-predicate/1"></A>
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+current_predicate(?predicate_indicator)</TT></DD></DL><P><B>Description</B></P><P><TT>current_predicate(Pred)</TT> succeeds if there
+exists a predicate indicator of a defined procedure that unifies with
+<TT>Pred</TT>. All user defined procedures are found, whether static or
+dynamic. Internal system procedures whose name begins
+with <TT>&#X2019;$&#X2019;</TT> are not found. A user-defined procedure is found
+even when it has no clauses. A user-defined procedure is not found if
+it has been abolished. To conform to the ISO reference, built-in predicates
+are not found except if the <TT>strict_iso</TT> Prolog flag is switched off (section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>). This predicate is re-executable on
+backtracking.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Pred</TT> is neither a variable nor a predicate indicator</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(predicate_indicator, Pred)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Pred</TT> is a term <TT>Name/Arity</TT> and <TT>Arity</TT> is
+neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Arity)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Pred</TT> is a term <TT>Name/Arity</TT> and <TT>Name</TT> is
+neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Name)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Pred</TT> is a term <TT>Name/Arity</TT> and <TT>Arity</TT> is
+an integer &lt; 0</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(not_less_than_zero, Arity)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Pred</TT> is a term <TT>Name/Arity</TT> and <TT>Arity</TT> is
+an integer &gt; <TT>max_arity</TT> flag (section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>representation_error(max_arity)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>ISO predicate.</P><H4 CLASS="subsubsection"><A NAME="toc77"></A><A NAME="htoc108">8.8.2</A>&#XA0;&#XA0;<TT>predicate_property/2</TT></H4><P>
+<A NAME="predicate-property/2"></A>
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+predicate_property(?callable, ?predicate_property)</TT></DD></DL><P><B>Description</B></P><P><TT>predicate_property(Head, Property)</TT> succeeds if <TT>Head</TT> refers
+to a predicate that has a property <TT>Property</TT>. All user defined
+procedures and built-in predicates are found. Internal system procedures
+whose name begins with <TT>&#X2019;$&#X2019;</TT> are not found. This predicate is
+re-executable on backtracking.</P><P>Since version 1.4.0, <TT>predicate_property/2</TT> no longer accepts a
+predicate indicator. Control constructs are now returned. Properties
+<TT>built_in_fd</TT> and <TT>control_construct</TT> now imply the property
+<TT>built_in</TT>.</P><P><B>Predicate properties</B>:</P><UL CLASS="itemize"><LI CLASS="li-itemize"><TT>static</TT>: if the procedure is static.</LI><LI CLASS="li-itemize"><TT>dynamic</TT>: if the procedure is dynamic.</LI><LI CLASS="li-itemize"><TT>private</TT>: if the procedure is private.</LI><LI CLASS="li-itemize"><TT>public</TT>: if the procedure is public.</LI><LI CLASS="li-itemize"><TT>monofile</TT>: if the procedure is monofile.</LI><LI CLASS="li-itemize"><TT>multifile</TT>: if the procedure is multifile.</LI><LI CLASS="li-itemize"><TT>user</TT>: if the procedure is a user-defined procedure.</LI><LI CLASS="li-itemize"><TT>built_in</TT>: if the procedure is a built-in predicate or a control construct.</LI><LI CLASS="li-itemize"><TT>built_in_fd</TT>: if the procedure is an FD built-in predicate.</LI><LI CLASS="li-itemize"><TT>control_construct</TT>: if the procedure is a control construct (section&#XA0;<A HREF="gprolog023.html#control-construct">7.2</A>).</LI><LI CLASS="li-itemize"><TT>native_code</TT>: if the procedure is compiled in native code.</LI><LI CLASS="li-itemize"><TT>prolog_file(File)</TT>: source file from which the
+procedure has been read.</LI><LI CLASS="li-itemize"><TT>prolog_line(Line)</TT>: line number of the source
+file.</LI><LI CLASS="li-itemize"><TT>meta_predicate(Head)</TT>: if the procedure is a
+meta-predicate unify <TT>Head</TT> with the head-pattern. The head-pattern
+is a compound term with the same name and arity as the predicate where each
+argument of the term is a meta argument specifier as follows:<DL CLASS="description"><DT CLASS="dt-description"><B>integer <TT>N</TT></B></DT><DD CLASS="dd-description"> the argument is a term that is used to reference a
+predicate with <TT>N</TT> more arguments than the given argument term (e.g. <TT>call(0)</TT>).</DD><DT CLASS="dt-description"><TT><B>:</B></TT></DT><DD CLASS="dd-description"> the argument is module sensitive, but does not directly
+refer to a predicate (e.g. <TT>consult(:)</TT>).</DD><DT CLASS="dt-description"><TT><B>-</B></TT></DT><DD CLASS="dd-description"> the argument is not module sensitive and unbound on entry.</DD><DT CLASS="dt-description"><TT><B>?</B></TT></DT><DD CLASS="dd-description"> the argument is not module sensitive and the mode is unspecified.</DD><DT CLASS="dt-description"><TT><B>+</B></TT></DT><DD CLASS="dd-description"> the argument is not module sensitive and bound (i.e., nonvar) on entry.</DD></DL></LI></UL><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Head</TT> is neither a variable nor a callable term</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(callable, Head)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Property</TT> is neither a variable nor a predicate property
+term</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(predicate_property, Property)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Property</TT> = <TT>prolog_file(File)</TT> and <TT>File</TT>
+is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, File)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Property</TT> = <TT>prolog_line(Line)</TT> and <TT>Line</TT>
+is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Line)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog031.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog033.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

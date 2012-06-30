@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Including and using gprolog.h</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog067.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog066.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog069.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc352">10.2</A>&#XA0;&#XA0;Including and using <TT>gprolog.h</TT></H3><P>The C code should include <TT>gprolog.h</TT> which provides a set of C
+definitions (types, macros, prototypes) associated to the API. Include this
+files as follows:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">#include &lt;gprolog.h&gt;
+</PRE></DD></DL><P>If the installation has been correctly done nothing else is needed. If the C
+compiler/preprocessor cannot locate <TT>gprolog.h</TT> pass the C compiler
+option required to specify an additional include directory
+(e.g.<TT>-Iinclude_dir</TT>) to <TT>gplc</TT> as follows
+(section&#XA0;<A HREF="gprolog009.html#Using-the-compiler">4.4.3</A>):</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>% gplc -C -I</TT>include_dir ...</DD></DL><P>The file <TT>gprolog.h</TT> declares the following C types:</P><UL CLASS="itemize"><LI CLASS="li-itemize"><TT>PlBool</TT> as an integer and the constants <TT>PL_FALSE</TT> (i.e. 0) and <TT>PL_TRUE</TT>
+(i.e. 1).</LI><LI CLASS="li-itemize"><TT>PlLong</TT> as an integer able to store a pointer (equivalent to
+<TT>intptr_t</TT>). This type appeared in GNU Prolog 1.4.0 in replacement
+of <TT>long</TT> to support Windows 64 bits (where the <TT>long</TT> type is only
+32 bits). This type is used to handle integer types.</LI><LI CLASS="li-itemize"><TT>PlULong</TT> same as <TT>PlLong</TT> but unsigned (same as <TT>uintptr_t</TT>).</LI><LI CLASS="li-itemize"><TT>PlTerm</TT> same as <TT>intptr_t</TT>. This type is used to store general Prolog terms.</LI></UL><P><B>New in GNU Prolog 1.3.1 and backward compatibility issues</B>: in
+GNU Prolog 1.3.1 the API has been modified to protect namespace. The name of
+public functions, macros, variables and types are now prefixed
+with <TT>Pl_</TT>, <TT>PL_</TT> or <TT>pl_</TT>. All these prefixes should
+be avoided by the foreign C-code to prevent name clashes. To ensure a
+backward compatibility, the names used by the old API are available thanks to
+a set of <TT>#define</TT>. However, this deprecated API should not be used
+by recent code. It is also possible to prevent the definition of the
+compatibility macros using:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">#define __GPROLOG_FOREIGN_STRICT__
+#include &lt;gprolog.h&gt;
+</PRE></DD></DL><P>In addition, <TT>gprolog.h</TT> defines a set of macros:</P><UL CLASS="itemize"><LI CLASS="li-itemize"><TT> __GNU_PROLOG__</TT> (as the major version).</LI><LI CLASS="li-itemize"><TT> __GPROLOG__</TT>, <TT>__GPROLOG_MINOR__</TT> and
+<TT>__GPROLOG_PATCHLEVEL__</TT>. Their values are the major version,
+minor version, and patch level of GNU Prolog, as integer constants. For
+example, GNU Prolog 1.3.2 will define <TT>____GPROLOG__</TT> to 1,
+<TT>____GPROLOG_MINOR__</TT> to 3, and
+<TT>____GPROLOG_PATCHLEVEL__</TT> to 2.<P>If you need to write code which depends on a specific version, you must be
+more careful. Recall these macros appeared in GNU Prolog 1.3.1 (undefined
+before), each time the minor version is increased, the patch level is reset
+to zero; each time the major version is increased (which happens rarely),
+the minor version and patch level are reset.</P></LI><LI CLASS="li-itemize"><TT>__GPROLOG_VERSION__</TT>: the version as an integer defined as
+follows: <I>major</I> * 10000 + <I>minor</I> * 100 + <I>patch level</I>. For example: version
+1.3.2 will result in the value 10302.</LI><LI CLASS="li-itemize"><TT>PL_PROLOG_DIALECT</TT>: a C constant string (generally
+<TT>"gprolog"</TT>). Appeared in 1.3.2.</LI><LI CLASS="li-itemize"><TT>PL_PROLOG_NAME</TT>: a C constant string (generally
+<TT>"GNU Prolog"</TT>).</LI><LI CLASS="li-itemize"><TT>PL_PROLOG_VERSION</TT>: a C constant string associated to the
+version (e.g. <TT>"1.4.0"</TT>).</LI><LI CLASS="li-itemize"><TT>PL_PROLOG_DATE</TT>: a C constant string associated with the date
+of this version (e.g. <TT>"Mar 29 2011"</TT>.</LI><LI CLASS="li-itemize"><TT>PL_PROLOG_COPYRIGHT</TT>: a C constant string associated with the
+copyright of this version (e.g. <TT>"Copyright (C) 1999-2012 Daniel Diaz"</TT>.</LI></UL><P>Note the above <TT>PL_PROLOG_</TT>... macros are also accessible via Prolog
+flags thanks to the built-in predicate <TT>current_prolog_flag/2</TT>
+(section&#XA0;<A HREF="gprolog046.html#current-prolog-flag/2">8.22.2</A>)</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog067.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog066.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog069.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

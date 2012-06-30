@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Initial value constraints</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog057.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog055.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog059.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc322">9.3</A>&#XA0;&#XA0;Initial value constraints</H3><UL>
+<LI><A HREF="gprolog058.html#toc266"><TT>fd_domain/3</TT>,
+<TT>fd_domain_bool/1</TT></A>
+</LI><LI><A HREF="gprolog058.html#toc267"><TT>fd_domain/2</TT></A>
+</LI></UL>
+<H4 CLASS="subsubsection"><A NAME="toc266"></A><A NAME="htoc323">9.3.1</A>&#XA0;&#XA0;<TT>fd_domain/3</TT>,
+<TT>fd_domain_bool/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+fd_domain(+fd_variable_list_or_fd_variable, +integer,
++integer)<BR>
+fd_domain(?fd_variable, +integer, +integer)<BR>
+fd_domain_bool(+fd_variable_list)<BR>
+fd_domain_bool(?fd_variable)</TT></DD></DL><P><B>Description</B></P><P><TT>fd_domain(Vars, Lower, Upper)</TT> constraints each element <TT>X</TT>
+of <TT>Vars</TT> to take a value in <TT>Lower..Upper</TT>. This
+predicate is generally used to set the initial domain of variables to an
+interval. <TT>Vars</TT> can be also a single FD variable (or a single Prolog
+variable).</P><P><TT>fd_domain_bool(Vars)</TT> is equivalent to <TT>fd_domain(Vars, 0,
+1)</TT> and is used to declare boolean FD variables.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Vars</TT> is not a variable but is a partial list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Vars</TT> is neither a variable nor an FD variable nor an
+integer nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Vars)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Vars</TT> list is neither a
+variable nor an FD variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(fd_variable, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Lower</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Lower</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Lower)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Upper</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Upper</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Upper)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc267"></A><A NAME="htoc324">9.3.2</A>&#XA0;&#XA0;<TT>fd_domain/2</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+fd_domain(+fd_variable_list, +integer_list)<BR>
+fd_domain(?fd_variable, +integer_list)</TT></DD></DL><P><B>Description</B></P><P><TT>fd_domain(Vars, Values)</TT> constraints each element <TT>X</TT> of the
+list <TT>Vars</TT> to take a value in the list <TT>Values</TT>. This
+predicate is generally used to set the initial domain of variables to a set
+of values. The domain of each variable of <TT>Vars</TT> uses a sparse
+representation. <TT>Vars</TT> can be also a single FD variable (or a single
+Prolog variable).</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Vars</TT> is not a variable but is a partial list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Vars</TT> is neither a variable nor an FD variable nor an
+integer nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Vars)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Vars</TT> list is neither a
+variable nor an FD variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(fd_variable, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Values</TT> is a partial list or a list with an element
+<TT>E</TT> which is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Values</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Values)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Values</TT> list is neither a
+variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog057.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog055.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog059.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

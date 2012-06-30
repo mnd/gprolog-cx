@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Adjusting the size of Prolog stacks</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog007.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog005.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog009.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc13">4.3</A>&#XA0;&#XA0;Adjusting the size of Prolog stacks</H3><P>
+<A NAME="Adjusting-the-size-of-Prolog-stacks"></A>
+GNU Prolog uses several stacks to execute a Prolog program. Each stack has a
+static size and cannot be dynamically increased during the execution. For
+each stack there is a default size but the user can define a new size by
+setting an environment variable. When a GNU Prolog program is run it first
+consults these variables and if they are not defined uses the default sizes.
+The following table presents each stack of GNU Prolog with its default size
+and the name of its associated environment variable:</P><TABLE BORDER=1 CELLSPACING=0 CELLPADDING=1><TR><TD ALIGN=center NOWRAP>
+Stack</TD><TD ALIGN=center NOWRAP>Default</TD><TD ALIGN=center NOWRAP>Environment</TD><TD ALIGN=left NOWRAP>Description</TD></TR>
+<TR><TD ALIGN=center NOWRAP>name</TD><TD ALIGN=center NOWRAP>size (Kb)</TD><TD ALIGN=center NOWRAP>variable</TD><TD ALIGN=left NOWRAP>&nbsp;</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>local</TT></TD><TD ALIGN=center NOWRAP>16384</TD><TD ALIGN=center NOWRAP><TT>LOCALSZ</TT></TD><TD ALIGN=left NOWRAP>control stack (environments
+and choice-points)</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>global</TT></TD><TD ALIGN=center NOWRAP>32768</TD><TD ALIGN=center NOWRAP><TT>GLOBALSZ</TT></TD><TD ALIGN=left NOWRAP>heap (compound terms)</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>trail</TT></TD><TD ALIGN=center NOWRAP>16384</TD><TD ALIGN=center NOWRAP><TT>TRAILSZ</TT></TD><TD ALIGN=left NOWRAP>conditional bindings (bindings
+to undo at backtracking)</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>cstr</TT></TD><TD ALIGN=center NOWRAP>16384</TD><TD ALIGN=center NOWRAP><TT>CSTRSZ</TT></TD><TD ALIGN=left NOWRAP>finite domain constraint stack
+(FD variables and constraints)</TD></TR>
+</TABLE><P>In addition, under Windows (since version 1.4.0), registry keys are consulted
+(key names are the same as environment names). The keys are stored in
+<TT>HKEY_CURRENT_USER\Software\GnuProlog\</TT>.</P><P>If the size of a stack is too small an overflow will occur during the
+execution. In that case GNU Prolog emits the following error message before
+stopping:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT><I>S</I> stack overflow (size:&#XA0;<I>N</I> Kb, environment variable used:&#XA0;<I>E</I>)</TT></DD></DL><P>where <I><TT>S</TT></I> is the name of the stack, <I><TT>N</TT></I> is
+the current stack size in Kb and <I><TT>E</TT></I> the name of the
+associated environment variable. When such a message occurs it is possible
+to (re)define the variable <I><TT>E</TT></I> with the new size. For
+instance to allocate Kb to the local stack under a Unix shell use:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP><TT>LOCALSZ=32768; export LOCALSZ</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(under <TT>sh</TT> or <TT>bash</TT>)</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>setenv LOCALSZ 32768</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(under <TT>csh</TT> or <TT>tcsh</TT>)</TD></TR>
+</TABLE></DD></DL><P>This method allows the user to adjust the size of Prolog stacks. However, in
+some cases it is preferable not to allow the user to modify these sizes. For
+instance, when providing a stand alone executable whose behavior should be
+independent of the environment in which it is run. In that case the program
+should not consult environment variables and the programmer should be able
+to define new default stack sizes. The GNU Prolog compiler offers this
+facilities via several command-line options such as <TT>--local-size</TT> or
+<TT>--fixed-sizes</TT> (section&#XA0;<A HREF="gprolog009.html#Using-the-compiler">4.4.3</A>).</P><P>Finally note that GNU Prolog stacks are virtually allocated (i.e. use virtual
+memory). This means that a physical memory page is allocated only when needed
+(i.e. when an attempt to read/write it occurs). Thus it is possible to define
+very large stacks. At the execution, only the needed amount of space will be
+physically allocated.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog007.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog005.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog009.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

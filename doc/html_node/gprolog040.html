@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>DEC-10 compatibility input/output</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog039.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog041.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc179">8.16</A>&#XA0;&#XA0;DEC-10 compatibility input/output</H3><UL>
+<LI><A HREF="gprolog040.html#toc141">Introduction</A>
+</LI><LI><A HREF="gprolog040.html#toc142"><TT>see/1</TT>,
+<TT>tell/1</TT>,
+<TT>append/1</TT></A>
+</LI><LI><A HREF="gprolog040.html#toc143"><TT>seeing/1</TT>,
+<TT>telling/1</TT></A>
+</LI><LI><A HREF="gprolog040.html#toc144"><TT>seen/0</TT>,
+<TT>told/0</TT></A>
+</LI><LI><A HREF="gprolog040.html#toc145"><TT>get0/1</TT>,
+<TT>get/1</TT>,
+<TT>skip/1</TT></A>
+</LI><LI><A HREF="gprolog040.html#toc146"><TT>put/1</TT>,
+<TT>tab/1</TT></A>
+</LI></UL>
+<H4 CLASS="subsubsection"><A NAME="toc141"></A><A NAME="htoc180">8.16.1</A>&#XA0;&#XA0;Introduction</H4><P>
+The DEC-10 Prolog I/O predicates manipulate streams implicitly since they
+only refer to current input/output streams (section&#XA0;<A HREF="gprolog034.html#Introduction:(Streams)">8.10.1</A>).
+The current input and output streams are initially set to
+<TT>user_input</TT> and <TT>user_output</TT> respectively. The predicate
+<TT>see/1</TT>
+(resp. <TT>tell/1</TT>, <TT>append/1</TT>) can be used for setting the
+current input (resp. output) stream to newly opened streams for
+particular files. The predicate <TT>seen/0</TT>
+(resp. <TT>told/0</TT>) close the current input (resp. output) stream,
+and resets it to the standard input (resp. output). The predicate
+<TT>seeing/1</TT> (resp. <TT>telling/1</TT>) is used for retrieving
+the file name associated with the current input (resp. output)
+stream. The file name <TT>user</TT> stands for the standard input or
+output, depending on context (<TT>user_input</TT> and
+<TT>user_output</TT> can also be used). The DEC-10 Prolog I/O predicates
+are only provided for compatibility, they are now obsolete and
+their use is discouraged. The predicates for explicit stream manipulation
+should be used instead (section&#XA0;<A HREF="gprolog034.html#Streams">8.10</A>).</P><H4 CLASS="subsubsection"><A NAME="toc142"></A><A NAME="htoc181">8.16.2</A>&#XA0;&#XA0;<TT>see/1</TT>,
+<TT>tell/1</TT>,
+<TT>append/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+see(+source_sink)<BR>
+see(+stream)<BR>
+tell(+source_sink)<BR>
+tell(+stream)<BR>
+append(+source_sink)<BR>
+append(+stream)</TT></DD></DL><P><B>Description</B></P><P><TT>see(FileName)</TT> sets the current input stream to <TT>FileName</TT>.
+If there is a stream opened by <TT>see/1</TT> associated with the same
+<TT>FileName</TT> already, then it becomes the current input stream.
+Otherwise, <TT>FileName</TT> is opened for reading and becomes the current
+input stream.</P><P><TT>tell(FileName)</TT> sets the current output stream to <TT>FileName</TT>.
+If there is a stream opened by <TT>tell/1</TT> associated with the same
+<TT>FileName</TT> already, then it becomes the current output stream.
+Otherwise, <TT>FileName</TT> is opened for writing and becomes the current
+output stream.</P><P><TT>append(FileName)</TT> like <TT>tell/1</TT> but
+<TT>FileName</TT> is opened for writing + append.</P><P>A stream-term (obtained with any other built-in predicate) can also be
+provided as <TT>FileName</TT> to these predicates.</P><P><B>Errors</B></P><P>See errors associated with <TT>open/4</TT> (section&#XA0;<A HREF="gprolog034.html#open/4">8.10.6</A>).</P><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc143"></A><A NAME="htoc182">8.16.3</A>&#XA0;&#XA0;<TT>seeing/1</TT>,
+<TT>telling/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+seeing(?source_sink)<BR>
+telling(?source_sink)</TT></DD></DL><P><B>Description</B></P><P><TT>seeing(FileName)</TT> succeeds if <TT>FileName</TT> unifies
+with the name of the current input file, if it was opened by
+<TT>see/1</TT>; else with the current input stream-term, if this is not
+<TT>user_input</TT>, otherwise with
+<TT>user</TT>.</P><P><TT>telling(FileName)</TT> succeeds if <TT>FileName</TT> unifies with the
+name of the current output file, if it was opened by <TT>tell/1</TT> or
+<TT>append/1</TT>; else with the current output stream-term, if this is not
+<TT>user_output</TT>, otherwise with <TT>user</TT>.</P><P><B>Errors</B></P><P>None.</P><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc144"></A><A NAME="htoc183">8.16.4</A>&#XA0;&#XA0;<TT>seen/0</TT>,
+<TT>told/0</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+seen<BR>
+told</TT></DD></DL><P><B>Description</B></P><P><TT>seen</TT> closes the current input, and resets it to
+<TT>user_input</TT>.</P><P><TT>told</TT> closes the current output, and resets it to
+<TT>user_output</TT>.</P><P><B>Errors</B></P><P>None.</P><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc145"></A><A NAME="htoc184">8.16.5</A>&#XA0;&#XA0;<TT>get0/1</TT>,
+<TT>get/1</TT>,
+<TT>skip/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+get0(?in_character_code)<BR>
+get(?in_character_code)<BR>
+skip(+character_code)</TT></DD></DL><P><B>Description</B></P><P><TT>get0(Code)</TT> succeeds if <TT>Code</TT> unifies with the next
+character code read from the current input stream. Thus it is equivalent to
+<TT>get_code(Code)</TT> (section&#XA0;<A HREF="gprolog036.html#get-char/2">8.12.1</A>).</P><P><TT>get(Code)</TT> succeeds if <TT>Code</TT> unifies with the next character
+code read from the current input stream that is not a layout character.</P><P><TT>skip(Code)</TT> skips just past the next character code <TT>Code</TT>
+from the current input stream.</P><P><B>Errors</B></P><P>See errors for <TT>get_code/2</TT> (section&#XA0;<A HREF="gprolog036.html#get-char/2">8.12.1</A>).</P><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc146"></A><A NAME="htoc185">8.16.6</A>&#XA0;&#XA0;<TT>put/1</TT>,
+<TT>tab/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+put(+character_code)<BR>
+tab(+evaluable)</TT></DD></DL><P><B>Description</B></P><P><TT>put(Code)</TT> writes the character whose code is <TT>Code</TT> onto the
+current output stream. It is equivalent to <TT>put_code(Code)</TT>
+(section&#XA0;<A HREF="gprolog036.html#put-char/2">8.12.5</A>).</P><P><TT>tab(N)</TT> writes <TT>N</TT> spaces onto the current output
+stream. <TT>N</TT> may be an arithmetic expression.</P><P><B>Errors</B></P><P>See errors for <TT>put_code/2</TT> (section&#XA0;<A HREF="gprolog036.html#put-char/2">8.12.5</A>) and for arithmetic
+expressions (section&#XA0;<A HREF="gprolog030.html#Evaluation-of-an-arithmetic-expression">8.6.1</A>).</P><P><B>Portability</B></P><P>GNU Prolog predicates.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog039.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog041.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

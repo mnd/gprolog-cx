@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Type testing</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog058.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog055.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog060.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc325">9.4</A>&#XA0;&#XA0;Type testing</H3><UL>
+<LI><A HREF="gprolog059.html#toc268"><TT>fd_var/1</TT>, <TT>non_fd_var/1</TT>,
+<TT>generic_var/1</TT>,
+<TT>non_generic_var/1</TT></A>
+</LI></UL>
+<H4 CLASS="subsubsection"><A NAME="toc268"></A><A NAME="htoc326">9.4.1</A>&#XA0;&#XA0;<TT>fd_var/1</TT>, <TT>non_fd_var/1</TT>,
+<TT>generic_var/1</TT>,
+<TT>non_generic_var/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+fd_var(?term)<BR>
+non_fd_var(?term)<BR>
+generic_var(?term)<BR>
+non_generic_var(?term)</TT></DD></DL><P><B>Description</B></P><P><TT>fd_var(Term)</TT> succeeds if <TT>Term</TT> is currently an
+FD variable.</P><P><TT>non_fd_var(Term)</TT> succeeds if <TT>Term</TT> is
+currently not an FD variable (opposite of <TT>fd_var/1</TT>).</P><P><TT>generic_var(Term)</TT> succeeds if <TT>Term</TT> is
+either a Prolog variable or an FD variable.</P><P><TT>non_generic_var(Term)</TT> succeeds if
+<TT>Term</TT> is neither a Prolog variable nor an FD variable
+(opposite of <TT>generic_var/1</TT>).</P><P><B>Errors</B></P><P>None.</P><P><B>Portability</B></P><P>GNU Prolog predicate.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog058.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog055.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog060.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Debugger commands</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog014.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog010.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog016.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc29">5.5</A>&#XA0;&#XA0;Debugger commands</H3><P>
+<A NAME="Debugger-commands"></A>
+When the debugger reaches a leashed port it shows the current goal followed
+by the <TT>?</TT> symbol. At this point there are many commands available.
+Typing <TT>RETURN</TT> will creep into the program. Continuing to creep will
+show all the control flow. The debugger shows every port for every predicate
+encountered during the execution. It is possible to select the ports at
+which the debugger will prompt the user using the built-in predicate
+<TT>leash/1</TT> (section&#XA0;<A HREF="gprolog013.html#Leashing-ports">5.3.2</A>). Each command is only one
+character long:</P><TABLE BORDER=1 CELLSPACING=0 CELLPADDING=1><TR><TD VALIGN=top ALIGN=center NOWRAP>
+Command</TD><TD VALIGN=top ALIGN=center NOWRAP>Name</TD><TD VALIGN=top ALIGN=left>Description</TD></TR>
+<TR><TD VALIGN=top ALIGN=center NOWRAP>
+<TT>RET</TT> or <TT>c</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>creep</TD><TD VALIGN=top ALIGN=left>single-step to the next port</TD></TR>
+<TR><TD VALIGN=top ALIGN=center NOWRAP>
+<TT>l</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>leap</TD><TD VALIGN=top ALIGN=left>continue the execution only stopping when a goal with a
+spy-point is reached</TD></TR>
+<TR><TD VALIGN=top ALIGN=center NOWRAP>
+<TT>s</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>skip</TD><TD VALIGN=top ALIGN=left>skip over the entire execution of the current goal. No
+message will be shown until control returns</TD></TR>
+<TR><TD VALIGN=top ALIGN=center NOWRAP>
+<TT>G</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>go to</TD><TD VALIGN=top ALIGN=left>ask for an invocation number and continue the execution
+until a port is reached for that invocation number</TD></TR>
+<TR><TD VALIGN=top ALIGN=center NOWRAP>
+<TT>r</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>retry</TD><TD VALIGN=top ALIGN=left>try to restart the invocation of the current goal by
+failing until reaching the invocation of the goal. The state of
+execution is the same as when the goal was initially invoked (except when
+using side-effect predicates)</TD></TR>
+<TR><TD VALIGN=top ALIGN=center NOWRAP>
+<TT>f</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>fail</TD><TD VALIGN=top ALIGN=left>force the current goal to fail immediately</TD></TR>
+<TR><TD VALIGN=top ALIGN=center NOWRAP>
+<TT>w</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>write</TD><TD VALIGN=top ALIGN=left>show the current goal using <TT>write/2</TT>
+(section&#XA0;<A HREF="gprolog038.html#write-term/3">8.14.6</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=center NOWRAP>
+<TT>d</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>display</TD><TD VALIGN=top ALIGN=left>show the current goal using <TT>display/2</TT>
+(section&#XA0;<A HREF="gprolog038.html#write-term/3">8.14.6</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=center NOWRAP>
+<TT>p</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>print</TD><TD VALIGN=top ALIGN=left>show the current goal using <TT>print/2</TT>
+(section&#XA0;<A HREF="gprolog038.html#write-term/3">8.14.6</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=center NOWRAP>
+<TT>e</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>exception</TD><TD VALIGN=top ALIGN=left>show the pending exception. Only applicable to an
+<TT>exception</TT> port</TD></TR>
+<TR><TD VALIGN=top ALIGN=center NOWRAP>
+<TT>g</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>ancestors</TD><TD VALIGN=top ALIGN=left>show the list of ancestors of the current goal</TD></TR>
+<TR><TD VALIGN=top ALIGN=center NOWRAP>
+<TT>A</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>alternatives</TD><TD VALIGN=top ALIGN=left>show the list of ancestors of the current goal
+combined with choice-points</TD></TR>
+<TR><TD VALIGN=top ALIGN=center NOWRAP>
+<TT>u</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>unify</TD><TD VALIGN=top ALIGN=left>ask for a term and unify the current goal with this
+term. This is convenient for getting a specific solution. Only available at
+a <TT>call</TT> port</TD></TR>
+<TR><TD VALIGN=top ALIGN=center NOWRAP>
+<TT>.</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>father file</TD><TD VALIGN=top ALIGN=left>show the Prolog file name and the line number
+where the current predicate is defined</TD></TR>
+<TR><TD VALIGN=top ALIGN=center NOWRAP>
+<TT>n</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>no debug</TD><TD VALIGN=top ALIGN=left>switch the debugger off. Same as <TT>nodebug/0</TT>
+(section&#XA0;<A HREF="gprolog013.html#Running-and-stopping-the-debugger">5.3.1</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=center NOWRAP>
+<TT>=</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>debugging</TD><TD VALIGN=top ALIGN=left>show debugger information. Same as
+<TT>debugging/0</TT> (section&#XA0;<A HREF="gprolog013.html#Running-and-stopping-the-debugger">5.3.1</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=center NOWRAP>
+<TT>+</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>spy this</TD><TD VALIGN=top ALIGN=left>set a spy-point on the current goal. Uses
+<TT>spy/1</TT> (section&#XA0;<A HREF="gprolog013.html#Spy-points">5.3.3</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=center NOWRAP>
+<TT>-</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>nospy this</TD><TD VALIGN=top ALIGN=left>remove a spy-point on the current goal. Uses
+<TT>nospy/1</TT> (section&#XA0;<A HREF="gprolog013.html#Spy-points">5.3.3</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=center NOWRAP>
+<TT>*</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>spy conditionally</TD><TD VALIGN=top ALIGN=left>ask for a term <TT>Goal, Port, Test</TT>
+(terminated by a dot) and set a conditional spy-point on the current
+predicate. <TT>Goal</TT> and the current goal must have the same predicate
+indicator. Uses <TT>spypoint_condition/3</TT> (section&#XA0;<A HREF="gprolog013.html#Spy-points">5.3.3</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=center NOWRAP>
+<TT>L</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>listing</TD><TD VALIGN=top ALIGN=left>list all the clauses associated with the current
+predicate. Uses <TT>listing/1</TT> (section&#XA0;<A HREF="gprolog047.html#listing/1">8.23.3</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=center NOWRAP>
+<TT>a</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>abort</TD><TD VALIGN=top ALIGN=left>abort the current execution. Same as <TT>abort/0</TT>
+(section&#XA0;<A HREF="gprolog042.html#abort/0">8.18.1</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=center NOWRAP>
+<TT>b</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>break</TD><TD VALIGN=top ALIGN=left>invoke a recursive top-level. Same as <TT>break/0</TT>
+(section&#XA0;<A HREF="gprolog042.html#abort/0">8.18.1</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=center NOWRAP>
+<TT>@</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>execute goal</TD><TD VALIGN=top ALIGN=left>ask for a goal and execute it</TD></TR>
+<TR><TD VALIGN=top ALIGN=center NOWRAP>
+<TT>&lt;</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>set print depth</TD><TD VALIGN=top ALIGN=left>ask for an integer and set the print
+depth to this value (<TT>-1</TT> for no depth limit)</TD></TR>
+<TR><TD VALIGN=top ALIGN=center NOWRAP>
+<TT>h</TT> or <TT>?</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>help</TD><TD VALIGN=top ALIGN=left>display a summary of available commands</TD></TR>
+<TR><TD VALIGN=top ALIGN=center NOWRAP>
+<TT>W</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>WAM debugger</TD><TD VALIGN=top ALIGN=left>invoke the low-level WAM debugger
+(section&#XA0;<A HREF="gprolog016.html#The-WAM-debugger">5.6</A>)</TD></TR>
+</TABLE>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog014.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog010.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog016.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

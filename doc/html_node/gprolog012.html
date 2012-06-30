@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>The procedure box model</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog011.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog010.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog013.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc23">5.2</A>&#XA0;&#XA0;The procedure box model</H3><P>
+The procedure box model of Prolog execution provides a simple way to show
+the control flow. This model is very popular and has been adopted in many
+Prolog systems (e.g. SICStus Prolog, Quintus Prolog,&#X2026;). A good
+introduction is the chapter 8 of &#X201C;Programming in Prolog&#X201D; of Clocksin &amp;
+Mellish&#XA0;[<A HREF="gprolog074.html#Clock">2</A>]. The debugger executes a program step by step tracing an
+invocation to a predicate (<TT>call</TT>) and the return from this predicate
+due to either a success (<TT>exit</TT>) or a failure (<TT>fail</TT>). When a
+failure occurs the execution backtracks to the last predicate with an
+alternative clause. The predicate is then re-invoked (<TT>redo</TT>).
+Another source of change of the control flow is due to exceptions. When an
+exception is raised from a predicate (<TT>exception</TT>) by
+<TT>throw/1</TT> (section&#XA0;<A HREF="gprolog023.html#catch/3">7.2.4</A>) the control is given back to the most
+recent predicate that has defined a handler to recover this exception using
+<TT>catch/3</TT> (section&#XA0;<A HREF="gprolog023.html#catch/3">7.2.4</A>). The procedure box model shows these
+different changes in the control flow, as illustrated here:</P><DIV CLASS="center"><IMG SRC="debug-box.gif"></DIV><P>Each arrow corresponds to a <EM>port</EM>. An arrow to the box indicates
+that the control is given to this predicate while an arrow from the box
+indicates that the control is given back from the procedure. This model
+visualizes the control flow through these five ports and the connections
+between the boxes associated with subgoals. Finally, it should be clear that a
+box is associated with one invocation of a given predicate. In particular, a
+recursive predicate will give raise to a box for each invocation of the
+predicate with different entries/exits in the control flow. Since this might
+get confusing for the user, the debugger associates with each box a unique
+identifier (i.e. the invocation number).</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog011.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog010.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog013.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

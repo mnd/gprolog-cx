@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Interfacing Prolog and C</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog055.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="index.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog074.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H2 CLASS="section"><A NAME="htoc350">10</A>&#XA0;&#XA0;Interfacing Prolog and C</H2><P>
+<A NAME="Interfacing-Prolog-and-C"></A>
+</P><UL>
+<LI><A HREF="gprolog067.html">Introduction</A>
+</LI><LI><A HREF="gprolog068.html">Including and using <TT>gprolog.h</TT></A>
+</LI><LI><A HREF="gprolog069.html">Calling C from Prolog</A>
+<UL>
+<LI><A HREF="gprolog069.html#toc286">Introduction</A>
+</LI><LI><A HREF="gprolog069.html#toc287"><TT>foreign/2</TT> directive</A>
+</LI><LI><A HREF="gprolog069.html#toc288">The C function</A>
+</LI><LI><A HREF="gprolog069.html#toc289">Input arguments</A>
+</LI><LI><A HREF="gprolog069.html#toc290">Output arguments</A>
+</LI><LI><A HREF="gprolog069.html#toc291">Input/output arguments</A>
+</LI><LI><A HREF="gprolog069.html#toc292">Writing non-deterministic C code</A>
+</LI><LI><A HREF="gprolog069.html#toc293">Example: input and output arguments</A>
+</LI><LI><A HREF="gprolog069.html#toc294">Example: non-deterministic code</A>
+</LI><LI><A HREF="gprolog069.html#toc295">Example: input/output arguments</A>
+</LI></UL>
+</LI><LI><A HREF="gprolog070.html">Manipulating Prolog terms</A>
+<UL>
+<LI><A HREF="gprolog070.html#toc296">Introduction</A>
+</LI><LI><A HREF="gprolog070.html#toc297">Managing Prolog atoms</A>
+</LI><LI><A HREF="gprolog070.html#toc298">Reading Prolog terms</A>
+</LI><LI><A HREF="gprolog070.html#toc299">Unifying Prolog terms</A>
+</LI><LI><A HREF="gprolog070.html#toc300">Creating Prolog terms</A>
+</LI><LI><A HREF="gprolog070.html#toc301">Testing the type of Prolog terms</A>
+</LI><LI><A HREF="gprolog070.html#toc302">Comparing Prolog terms</A>
+</LI><LI><A HREF="gprolog070.html#toc303">Term processing</A>
+</LI><LI><A HREF="gprolog070.html#toc304">Comparing and evaluating arithmetic expressions</A>
+</LI></UL>
+</LI><LI><A HREF="gprolog071.html">Raising Prolog errors</A>
+<UL>
+<LI><A HREF="gprolog071.html#toc305">Managing the error context</A>
+</LI><LI><A HREF="gprolog071.html#toc306">Instantiation error</A>
+</LI><LI><A HREF="gprolog071.html#toc307">Uninstantiation error</A>
+</LI><LI><A HREF="gprolog071.html#toc308">Type error</A>
+</LI><LI><A HREF="gprolog071.html#toc309">Domain error</A>
+</LI><LI><A HREF="gprolog071.html#toc310">Existence error</A>
+</LI><LI><A HREF="gprolog071.html#toc311">Permission error</A>
+</LI><LI><A HREF="gprolog071.html#toc312">Representation error</A>
+</LI><LI><A HREF="gprolog071.html#toc313">Evaluation error</A>
+</LI><LI><A HREF="gprolog071.html#toc314">Resource error</A>
+</LI><LI><A HREF="gprolog071.html#toc315">Syntax error</A>
+</LI><LI><A HREF="gprolog071.html#toc316">System error</A>
+</LI></UL>
+</LI><LI><A HREF="gprolog072.html">Calling Prolog from C</A>
+<UL>
+<LI><A HREF="gprolog072.html#toc317">Introduction</A>
+</LI><LI><A HREF="gprolog072.html#toc318">Example: <TT>my_call/1</TT> - a <TT>call/1</TT> clone</A>
+</LI><LI><A HREF="gprolog072.html#toc319">Example: recovering the list of all operators</A>
+</LI></UL>
+</LI><LI><A HREF="gprolog073.html">Defining a new C <TT>main()</TT> function</A>
+<UL>
+<LI><A HREF="gprolog073.html#toc320">Example: asking for ancestors</A>
+</LI></UL>
+</LI></UL>
+
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog055.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="index.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog074.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

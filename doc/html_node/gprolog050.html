@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>File name processing</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog049.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog051.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc248">8.26</A>&#XA0;&#XA0;File name processing</H3><UL>
+<LI><A HREF="gprolog050.html#toc200"><TT>absolute_file_name/2</TT></A>
+</LI><LI><A HREF="gprolog050.html#toc201"><TT>decompose_file_name/4</TT></A>
+</LI><LI><A HREF="gprolog050.html#toc202"><TT>prolog_file_name/2</TT></A>
+</LI></UL>
+<H4 CLASS="subsubsection"><A NAME="toc200"></A><A NAME="htoc249">8.26.1</A>&#XA0;&#XA0;<TT>absolute_file_name/2</TT></H4><P>
+<A NAME="absolute-file-name/2"></A>
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+absolute_file_name(+atom, atom)</TT></DD></DL><P><B>Description</B></P><P><TT>absolute_file_name(File1, File2)</TT> succeeds if <TT>File2</TT> is
+the absolute pathname associated with the relative file name <TT>File1</TT>.
+<TT>File1</TT> can contain <TT>$<I>VAR_NAME</I></TT> sub-strings. When
+such a sub-string is encountered, it is expanded with the value of the
+environment variable whose name is <I><TT>VAR_NAME</TT></I> if exists
+(otherwise no expansion is done). <TT>File1</TT> can also begin with a
+sub-string <TT>~<I>USER_NAME</I>/</TT>, this is expanded as the home
+directory of the user <I><TT>USER_NAME</TT></I>. If
+<I><TT>USER_NAME</TT></I> does not exist <TT>File1</TT> is an invalid
+pathname. If no <I><TT>USER_NAME</TT></I> is given (i.e. <TT>File1</TT>
+begins with <TT>~/</TT>) the <TT>~</TT> character is expanded as the
+value of the environment variable <TT>HOME</TT>. If the <TT>HOME</TT>
+variable is not defined <TT>File1</TT> is an invalid pathname. Relative
+references to the current directory (<TT>/./</TT> sub-string) and to the
+parent directory (<TT>/../</TT> sub-strings) are removed and no longer
+appear in <TT>File2</TT>. <TT>File1</TT> is also invalid if it contains too
+many <TT>/../</TT> consecutive sub-strings (i.e. parent directory relative
+references). Finally if <TT>File1</TT> is <TT>user</TT> then <TT>File2</TT>
+is also unified with <TT>user</TT> to allow this predicate to be called on
+Prolog file names (since <TT>user</TT> in DEC-10 input/output predicates
+denotes the current input/output stream).</P><P>Under Windows the following applies: 
+</P><UL CLASS="itemize"><LI CLASS="li-itemize">
+an alternate recognized form for <TT>$<I>VAR_NAME</I></TT> is
+<TT>%<I>VAR_NAME</I>%</TT>. </LI><LI CLASS="li-itemize">when <TT>~</TT> is expanded, if the <TT>HOME</TT> variable is not defined, <TT>~</TT> is expanded using <TT>HOMEDIR</TT> and
+<TT>HOMEPATH</TT> (if <TT>HOMEPATH</TT> is not defined then <TT>File1</TT>
+is an invalid pathname).
+</LI></UL><P>Most predicates using a file name implicitly call this predicate to obtain
+the desired file, e.g. <TT>open/4</TT>.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>File1</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>File1</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, File1)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>File2</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, File2)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>File1</TT> is an atom but not a valid pathname</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(os_path, File1)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc201"></A><A NAME="htoc250">8.26.2</A>&#XA0;&#XA0;<TT>decompose_file_name/4</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+decompose_file_name(+atom, ?atom, ?atom, ?atom)</TT></DD></DL><P><B>Description</B></P><P><TT>decompose_file_name(File, Directory, Prefix, Suffix)</TT> decomposes
+the pathname <TT>File</TT> and extracts the <TT>Directory</TT> part
+(characters before the last <TT>/</TT>), the <TT>Prefix</TT> part
+(characters after the last <TT>/</TT> and before the last <TT>.</TT> or
+until the end if there is no suffix) and the <TT>Suffix</TT> part
+(characters from the last <TT>.</TT> to the end of the string).</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>File</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>File</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, File)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Directory</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Directory)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Prefix</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Prefix)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Suffix</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Suffix)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc202"></A><A NAME="htoc251">8.26.3</A>&#XA0;&#XA0;<TT>prolog_file_name/2</TT></H4><P>
+<A NAME="prolog-file-name/2"></A>
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+prolog_file_name(+atom, ?atom)</TT></DD></DL><P><B>Description</B></P><P><TT>prolog_file_name(File1, File2)</TT> unifies <TT>File2</TT> with the
+Prolog file name associated with <TT>File1</TT>. More precisely <TT>File2</TT>
+is computed as follows:</P><UL CLASS="itemize"><LI CLASS="li-itemize">if <TT>File1</TT> has a suffix or if it is <TT>user</TT> then
+<TT>File2</TT> is unified with <TT>File1</TT>.</LI><LI CLASS="li-itemize">else if the file whose name is <TT>File1</TT> + <TT>&#X2019;.pl&#X2019;</TT> exists
+then <TT>File2</TT> is unified with this name.</LI><LI CLASS="li-itemize">else if the file whose name is <TT>File1</TT> + <TT>&#X2019;.pro&#X2019;</TT> exists
+then <TT>File2</TT> is unified with this name.</LI><LI CLASS="li-itemize">else <TT>File2</TT> is unified with the name <TT>File1</TT> +
+<TT>&#X2019;.pl&#X2019;</TT>.</LI></UL><P>This predicate uses <TT>absolute_file_name/2</TT> to check the existence
+of a file (section&#XA0;<A HREF="#absolute-file-name/2">8.26.1</A>).</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>File1</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>File1</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, File1)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>File2</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, File2)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>File1</TT> is an atom but not a valid pathname</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(os_path, File1)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog049.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog051.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

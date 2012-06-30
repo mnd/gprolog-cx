@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Variable naming/numbering</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog028.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog030.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc89">8.5</A>&#XA0;&#XA0;Variable naming/numbering</H3><UL>
+<LI><A HREF="gprolog029.html#toc62"><TT>name_singleton_vars/1</TT></A>
+</LI><LI><A HREF="gprolog029.html#toc63"><TT>name_query_vars/2</TT></A>
+</LI><LI><A HREF="gprolog029.html#toc64"><TT>bind_variables/2</TT>,
+<TT>numbervars/3</TT>,
+<TT>numbervars/1</TT></A>
+</LI><LI><A HREF="gprolog029.html#toc65"><TT>term_ref/2</TT></A>
+</LI></UL>
+<P>
+<A NAME="Variable-naming/numbering"></A></P><H4 CLASS="subsubsection"><A NAME="toc62"></A><A NAME="htoc90">8.5.1</A>&#XA0;&#XA0;<TT>name_singleton_vars/1</TT></H4><P>
+<A NAME="name-singleton-vars/1"></A>
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+name_singleton_vars(?term)</TT></DD></DL><P><B>Description</B></P><P><TT>name_singleton_vars(Term)</TT> binds each singleton variable appearing
+in <TT>Term</TT> with a term of the form <TT>&#X2019;$VARNAME&#X2019;(&#X2019;_&#X2019;)</TT>. Such a
+term can be output by <TT>write_term/3</TT> as a variable name
+(section&#XA0;<A HREF="gprolog038.html#write-term/3">8.14.6</A>).</P><P><B>Errors</B></P><P>None.</P><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc63"></A><A NAME="htoc91">8.5.2</A>&#XA0;&#XA0;<TT>name_query_vars/2</TT></H4><P>
+<A NAME="name-query-vars/2"></A>
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+name_query_vars(+list, ?list)</TT></DD></DL><P><B>Description</B></P><P><TT>name_query_vars(List, Rest)</TT> for each element of <TT>List</TT> of
+the form <TT>Name = Var</TT> where <TT>Name</TT> is an atom and <TT>Var</TT>
+a variable, binds <TT>Var</TT> with the term <TT>&#X2019;$VARNAME&#X2019;(Name)</TT>.
+Such a term can be output by <TT>write_term/3</TT> as a variable name
+(section&#XA0;<A HREF="gprolog038.html#write-term/3">8.14.6</A>). <TT>Rest</TT> is unified with the list of elements of
+<TT>List</TT> that have not given rise to a binding. This predicate is
+provided as a way to name the variable lists obtained returned by
+<TT>read_term/3</TT> with <TT>variable_names(List)</TT> or
+<TT>singletons(List)</TT> options (section&#XA0;<A HREF="gprolog038.html#read-term/3">8.14.1</A>).</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>List</TT> is a partial list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>List</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, List)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Rest</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Rest)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc64"></A><A NAME="htoc92">8.5.3</A>&#XA0;&#XA0;<TT>bind_variables/2</TT>,
+<TT>numbervars/3</TT>,
+<TT>numbervars/1</TT></H4><P>
+<A NAME="bind-variables/2"></A>
+
+
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+bind_variables(?term, +var_binding_option_list)<BR>
+numbervars(?term, +integer, ?integer)<BR>
+numbervars(?term)</TT></DD></DL><P><B>Description</B></P><P><TT>bind_variables(Term, Options)</TT> binds each variable appearing in
+<TT>Term</TT> according to the options given by <TT>Options</TT>.</P><P><B>Variable binding options</B>: <TT>Options</TT> is a list of variable
+binding options. If this list contains contradictory options, the rightmost
+option is the one which applies. Possible options are:</P><UL CLASS="itemize"><LI CLASS="li-itemize"><TT>numbervars</TT>: specifies that each variable appearing in
+<TT>Term</TT> should be bound to a term of the form <TT>&#X2019;$VAR&#X2019;(N)</TT>
+where <TT>N</TT> is an integer. Such a term can be output by
+<TT>write_term/3</TT> as a variable name (section&#XA0;<A HREF="gprolog038.html#write-term/3">8.14.6</A>). This is
+the default.</LI><LI CLASS="li-itemize"><TT>namevars</TT>: specifies that each variables appearing in
+<TT>Term</TT> shall be bound to a term of the form
+<TT>&#X2019;$VARNAME&#X2019;(Name)</TT> where <TT>Name</TT> is the atom that would be
+output by <TT>write_term/3</TT> seeing a term of the <TT>&#X2019;$VAR&#X2019;(N)</TT>
+where <TT>N</TT> is an integer. Such a term can be output by
+<TT>write_term/3</TT> as a variable name (section&#XA0;<A HREF="gprolog038.html#write-term/3">8.14.6</A>). This is
+the alternative to <TT>numbervars</TT>.</LI><LI CLASS="li-itemize"><TT>from(From)</TT>: the first integer <TT>N</TT> to use for
+number/name variables of <TT>Term</TT> is <TT>From</TT>. The default value
+is <TT>0</TT>.</LI><LI CLASS="li-itemize"><TT>next(Next)</TT>: when <TT>bind_variables/2</TT> succeeds,
+<TT>Next</TT> is unified with the (last integer <TT>N</TT>)+1 used
+to bind the variables of <TT>Term</TT>.</LI><LI CLASS="li-itemize"><TT>exclude(List)</TT>: collects all variable names appearing
+in <TT>List</TT> to avoid a clash when binding a variable of <TT>Term</TT>.
+Precisely a number <TT>N</TT> &#X2265; <TT>From</TT> will not be used to bind a
+variable of <TT>Term</TT> if:<UL CLASS="itemize"><LI CLASS="li-itemize">there is a sub-term of <TT>List</TT> of the form <TT>&#X2019;$VAR&#X2019;(N)</TT>
+or <TT>&#X2019;$VARNAME&#X2019;(Name)</TT> where <TT>Name</TT> is the constant that would
+be output by <TT>write_term/3</TT> seeing a term of the
+<TT>&#X2019;$VAR&#X2019;(N)</TT>.</LI><LI CLASS="li-itemize">an element of <TT>List</TT> is of the form <TT>Name = Var</TT> where
+<TT>Name</TT> is an atom that would be output by <TT>write_term/3</TT> on
+seeing a term of the from <TT>&#X2019;$VAR&#X2019;(N)</TT>. This case allows for lists
+returned by <TT>read_term/3</TT>
+(with <TT>variable_names(List)</TT> or
+<TT>singletons(List)</TT> options) (section&#XA0;<A HREF="gprolog038.html#read-term/3">8.14.1</A>) and by
+<TT>name_query_vars/2</TT> (section&#XA0;<A HREF="#name-query-vars/2">8.5.2</A>).</LI></UL></LI></UL><P><TT>numbervars(Term, From, Next)</TT> is equivalent to
+<TT>bind_variables(Term, [from(From), next(Next)]</TT>, i.e. each variable
+of <TT>Term</TT> is bound to <TT>&#X2019;$VAR&#X2019;(N)</TT> where <TT>From &#X2264;</TT>
+<TT>N</TT> &lt; <TT>Next</TT>.</P><P><TT>numbervars(Term)</TT> is equivalent to <TT>numbervars(Term, 0, _)</TT>.</P><P>See also <TT>term_variables</TT> (section&#XA0;<A HREF="gprolog028.html#term_variables/2-3">8.4.5</A>) which returns the set of variables of a
+term.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Options</TT> is a partial list or a list with an element
+<TT>E</TT> which is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Options</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Options)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Options</TT> list is neither a
+variable nor a variable binding option</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(var_binding_option, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>From</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>From</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, From)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Next</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Next)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>List</TT> is a partial list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>List</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, List)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc65"></A><A NAME="htoc93">8.5.4</A>&#XA0;&#XA0;<TT>term_ref/2</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+term_ref(+term, ?integer)<BR>
+term_ref(?term, +integer)</TT></DD></DL><P><B>Description</B></P><P><TT>term_ref(Term, Ref)</TT> succeeds if the internal reference of
+<TT>Term</TT> is <TT>Ref</TT>. This predicate can be used either to obtain
+the internal reference of a term or to obtain the term associated with a given
+reference. Note that two identical terms can have different internal
+references. A good way to use this predicate is to first record the internal
+reference of a given term and to later re-obtain the term via this
+reference.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Term</TT> and <TT>Ref</TT> are both variables</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Ref</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Ref)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Ref</TT> is an integer &lt; 0</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(not_less_than_zero, Ref)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog028.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog030.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

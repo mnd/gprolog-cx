@@ -1,0 +1,23 @@
+#!/bin/sh
+
+if test $# != 1; then
+	echo usage $0 RPM_PREFIX_PATH
+	exit 1
+fi
+
+p=$1
+
+mkdir -p $p/RPM/SOURCES
+mkdir    $p/RPM/SPECS
+mkdir    $p/RPM/BUILD
+mkdir    $p/RPM/SRPMS
+mkdir -p $p/RPM/RPMS/i386
+mkdir    $p/RPM/RPMS/i486
+mkdir    $p/RPM/RPMS/i586
+mkdir    $p/RPM/RPMS/i686
+mkdir    $p/RPM/RPMS/i786
+mkdir    $p/RPM/RPMS/i886
+mkdir    $p/RPM/RPMS/i986
+
+echo Updating your $HOME/.rpmmacros
+echo "%_topdir $p/RPM" >>$HOME/.rpmmacros

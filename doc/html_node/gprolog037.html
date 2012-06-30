@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Byte input/output</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog036.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog038.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc153">8.13</A>&#XA0;&#XA0;Byte input/output</H3><UL>
+<LI><A HREF="gprolog037.html#toc118"><TT>get_byte/2</TT>,
+<TT>get_byte/1</TT></A>
+</LI><LI><A HREF="gprolog037.html#toc119"><TT>peek_byte/2</TT>,
+<TT>peek_byte/1</TT></A>
+</LI><LI><A HREF="gprolog037.html#toc120"><TT>unget_byte/2</TT>,
+<TT>unget_byte/1</TT></A>
+</LI><LI><A HREF="gprolog037.html#toc121"><TT>put_byte/2</TT>,
+<TT>put_byte/1</TT></A>
+</LI></UL>
+<P>
+<A NAME="Byte-input/output"></A></P><P>These built-in predicates enable a single byte to be input from and output
+to a binary stream. <TT>-1</TT> is returned to indicate the end-of-file.</P><H4 CLASS="subsubsection"><A NAME="toc118"></A><A NAME="htoc154">8.13.1</A>&#XA0;&#XA0;<TT>get_byte/2</TT>,
+<TT>get_byte/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+get_byte(+stream_or_alias, ?in_byte)<BR>
+get_byte(?in_byte)</TT></DD></DL><P><B>Description</B></P><P><TT>get_byte(SorA, Byte)</TT> succeeds if <TT>Byte</TT> unifies with the
+next byte read from the stream associated with the stream-term or alias
+<TT>SorA</TT>.</P><P><TT>get_byte/1</TT> applies to the current input stream.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Byte</TT> is neither a variable nor an in-byte</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(in_byte, Byte)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is neither a variable nor a stream-term or alias</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(stream_or_alias, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is not associated with an open stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>existence_error(stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is an output stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(input, stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is associated with a text stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(input, text_stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> has stream properties <TT>end_of_stream(past)</TT>
+and <TT>eof_action(error)</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(input, past_end_of_stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>ISO predicates.</P><H4 CLASS="subsubsection"><A NAME="toc119"></A><A NAME="htoc155">8.13.2</A>&#XA0;&#XA0;<TT>peek_byte/2</TT>,
+<TT>peek_byte/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+peek_byte(+stream_or_alias, ?in_byte)<BR>
+peek_byte(?in_byte)</TT></DD></DL><P><B>Description</B></P><P><TT>peek_byte(SorA, Byte)</TT> succeeds if <TT>Byte</TT> unifies with the
+next byte that will be read from the stream associated with the stream-term or
+alias <TT>SorA</TT>. The byte is not read.</P><P><TT>peek_byte/1</TT> applies to the current input stream.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Byte</TT> is neither a variable nor an in-byte</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(in_byte, Byte)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is neither a variable nor a stream-term or alias</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(stream_or_alias, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is not associated with an open stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>existence_error(stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is an output stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(input, stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is associated with a text stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(input, text_stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> has stream properties <TT>end_of_stream(past)</TT>
+and <TT>eof_action(error)</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(input, past_end_of_stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>ISO predicates.</P><H4 CLASS="subsubsection"><A NAME="toc120"></A><A NAME="htoc156">8.13.3</A>&#XA0;&#XA0;<TT>unget_byte/2</TT>,
+<TT>unget_byte/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+unget_byte(+stream_or_alias, +byte)<BR>
+unget_byte(+byte)</TT></DD></DL><P><B>Description</B></P><P><TT>unget_byte(SorA, Byte)</TT> pushes back <TT>Byte</TT> onto the stream
+associated with the stream-term or alias <TT>SorA</TT>. <TT>Byte</TT> will be
+the next byte read by <TT>get_byte/2</TT>. The maximum number of bytes that
+can be successively pushed back is given by the <TT>max_unget</TT>
+Prolog flag (section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>).</P><P><TT>unget_byte/1</TT> applies to the current input stream.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Byte</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Byte</TT> is neither a variable nor a byte</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(byte, Byte)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is neither a variable nor a stream-term or alias</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(stream_or_alias, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is not associated with an open stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>existence_error(stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is an output stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(input, stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is associated with a text stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(input, text_stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc121"></A><A NAME="htoc157">8.13.4</A>&#XA0;&#XA0;<TT>put_byte/2</TT>,
+<TT>put_byte/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+put_byte(+stream_or_alias, +byte)<BR>
+put_byte(+byte)</TT></DD></DL><P><B>Description</B></P><P><TT>put_byte(SorA, Byte)</TT> writes <TT>Byte</TT> onto the stream
+associated with the stream-term or alias <TT>SorA</TT>.</P><P><TT>put_byte/1</TT> applies to the current output stream.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Byte</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Byte</TT> is neither a variable nor a byte</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(byte, Byte)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is neither a variable nor a stream-term or alias</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(stream_or_alias, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is not associated with an open stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>existence_error(stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is an output stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(output, stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is associated with a text stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(output, text_stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog036.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog038.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

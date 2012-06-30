@@ -1,0 +1,1707 @@
+ <HTML>
+  <HEAD>
+  <!-- Sitemap 1.0 -->
+  </HEAD>
+  <BODY>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="The GNU Prolog Manual">
+      <param name="Local" value="index.html">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="1  Acknowledgements">
+      <param name="Local" value="gprolog002.html#htoc1">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="2  GNU Prolog License Conditions">
+      <param name="Local" value="gprolog003.html#htoc2">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="3  Introduction">
+      <param name="Local" value="gprolog004.html#htoc3">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="4  Using GNU Prolog">
+      <param name="Local" value="gprolog005.html#htoc4">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="4.1  Introduction">
+      <param name="Local" value="gprolog006.html#htoc5">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="4.2  The GNU Prolog interactive interpreter">
+      <param name="Local" value="gprolog007.html#htoc6">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="4.2.1  Starting/exiting the interactive interpreter">
+      <param name="Local" value="gprolog007.html#htoc7">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="4.2.2  The interactive interpreter read-execute-write loop">
+      <param name="Local" value="gprolog007.html#htoc8">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="4.2.3  Consulting a Prolog program">
+      <param name="Local" value="gprolog007.html#htoc9">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="4.2.4  Scripting Prolog">
+      <param name="Local" value="gprolog007.html#htoc10">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="4.2.5  Interrupting a query">
+      <param name="Local" value="gprolog007.html#htoc11">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="4.2.6  The line editor">
+      <param name="Local" value="gprolog007.html#htoc12">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="4.3  Adjusting the size of Prolog stacks">
+      <param name="Local" value="gprolog008.html#htoc13">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="4.4  The GNU Prolog compiler">
+      <param name="Local" value="gprolog009.html#htoc14">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="4.4.1  Different kinds of codes">
+      <param name="Local" value="gprolog009.html#htoc15">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="4.4.2  Compilation scheme">
+      <param name="Local" value="gprolog009.html#htoc16">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="4.4.3  Using the compiler">
+      <param name="Local" value="gprolog009.html#htoc17">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="4.4.4  Running an executable">
+      <param name="Local" value="gprolog009.html#htoc18">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="4.4.5  Generating a new interactive interpreter">
+      <param name="Local" value="gprolog009.html#htoc19">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="4.4.6  The name mangling scheme">
+      <param name="Local" value="gprolog009.html#htoc20">
+      </object>
+  </ul>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="5  Debugging">
+      <param name="Local" value="gprolog010.html#htoc21">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="5.1  Introduction">
+      <param name="Local" value="gprolog011.html#htoc22">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="5.2  The procedure box model">
+      <param name="Local" value="gprolog012.html#htoc23">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="5.3  Debugging predicates">
+      <param name="Local" value="gprolog013.html#htoc24">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="5.3.1  Running and stopping the debugger">
+      <param name="Local" value="gprolog013.html#htoc25">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="5.3.2  Leashing ports">
+      <param name="Local" value="gprolog013.html#htoc26">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="5.3.3  Spy-points">
+      <param name="Local" value="gprolog013.html#htoc27">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="5.4  Debugging messages">
+      <param name="Local" value="gprolog014.html#htoc28">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="5.5  Debugger commands">
+      <param name="Local" value="gprolog015.html#htoc29">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="5.6  The WAM debugger">
+      <param name="Local" value="gprolog016.html#htoc30">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="6  Format of definitions">
+      <param name="Local" value="gprolog017.html#htoc31">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="6.1  General format">
+      <param name="Local" value="gprolog018.html#htoc32">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="6.2  Types and modes">
+      <param name="Local" value="gprolog019.html#htoc33">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="6.3  Errors">
+      <param name="Local" value="gprolog020.html#htoc34">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="6.3.1  General format and error context">
+      <param name="Local" value="gprolog020.html#htoc35">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="6.3.2  Instantiation error">
+      <param name="Local" value="gprolog020.html#htoc36">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="6.3.3  Uninstantiation error">
+      <param name="Local" value="gprolog020.html#htoc37">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="6.3.4  Type error">
+      <param name="Local" value="gprolog020.html#htoc38">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="6.3.5  Domain error">
+      <param name="Local" value="gprolog020.html#htoc39">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="6.3.6  Existence error">
+      <param name="Local" value="gprolog020.html#htoc40">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="6.3.7  Permission error">
+      <param name="Local" value="gprolog020.html#htoc41">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="6.3.8  Representation error">
+      <param name="Local" value="gprolog020.html#htoc42">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="6.3.9  Evaluation error">
+      <param name="Local" value="gprolog020.html#htoc43">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="6.3.10  Resource error">
+      <param name="Local" value="gprolog020.html#htoc44">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="6.3.11  Syntax error">
+      <param name="Local" value="gprolog020.html#htoc45">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="6.3.12  System error">
+      <param name="Local" value="gprolog020.html#htoc46">
+      </object>
+  </ul>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="7  Prolog directives and control constructs">
+      <param name="Local" value="gprolog021.html#htoc47">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="7.1  Prolog directives">
+      <param name="Local" value="gprolog022.html#htoc48">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="7.1.1  Introduction">
+      <param name="Local" value="gprolog022.html#htoc49">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="7.1.2  dynamic/1">
+      <param name="Local" value="gprolog022.html#htoc50">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="7.1.3  public/1">
+      <param name="Local" value="gprolog022.html#htoc51">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="7.1.4  multifile/1">
+      <param name="Local" value="gprolog022.html#htoc52">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="7.1.5  discontiguous/1">
+      <param name="Local" value="gprolog022.html#htoc53">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="7.1.6  ensure_linked/1">
+      <param name="Local" value="gprolog022.html#htoc54">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="7.1.7  built_in/0, built_in/1, built_in_fd/0, built_in_fd/1">
+      <param name="Local" value="gprolog022.html#htoc55">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="7.1.8  include/1">
+      <param name="Local" value="gprolog022.html#htoc56">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="7.1.9  if/1, else/0, endif/0, elif/1 ">
+      <param name="Local" value="gprolog022.html#htoc57">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="7.1.10  ensure_loaded/1">
+      <param name="Local" value="gprolog022.html#htoc58">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="7.1.11  op/3">
+      <param name="Local" value="gprolog022.html#htoc59">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="7.1.12  char_conversion/2">
+      <param name="Local" value="gprolog022.html#htoc60">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="7.1.13  set_prolog_flag/2">
+      <param name="Local" value="gprolog022.html#htoc61">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="7.1.14  initialization/1">
+      <param name="Local" value="gprolog022.html#htoc62">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="7.1.15  foreign/2, foreign/1">
+      <param name="Local" value="gprolog022.html#htoc63">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="7.2  Prolog control constructs">
+      <param name="Local" value="gprolog023.html#htoc64">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="7.2.1  true/0, fail/0, !/0">
+      <param name="Local" value="gprolog023.html#htoc65">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="7.2.2  (',')/2 - conjunction, (;)/2 - disjunction, (->)/2 - if-then, (*->)/2 - soft-cut (soft if-then)">
+      <param name="Local" value="gprolog023.html#htoc66">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="7.2.3  call/1">
+      <param name="Local" value="gprolog023.html#htoc67">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="7.2.4  catch/3, throw/1">
+      <param name="Local" value="gprolog023.html#htoc68">
+      </object>
+  </ul>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8  Prolog built-in predicates">
+      <param name="Local" value="gprolog024.html#htoc69">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.1  Type testing">
+      <param name="Local" value="gprolog025.html#htoc70">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.1.1  var/1, nonvar/1, atom/1, integer/1, float/1, number/1, atomic/1,  compound/1, callable/1, ground/1, is_list/1, list/1, partial_list/1, list_or_partial_list/1">
+      <param name="Local" value="gprolog025.html#htoc71">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.2  Term unification">
+      <param name="Local" value="gprolog026.html#htoc72">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.2.1  (=)/2 - Prolog unification">
+      <param name="Local" value="gprolog026.html#htoc73">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.2.2  unify_with_occurs_check/2">
+      <param name="Local" value="gprolog026.html#htoc74">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.2.3  (\=)/2 - not Prolog unifiable">
+      <param name="Local" value="gprolog026.html#htoc75">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.3  Term comparison">
+      <param name="Local" value="gprolog027.html#htoc76">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.3.1  Standard total ordering of terms">
+      <param name="Local" value="gprolog027.html#htoc77">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.3.2  (==)/2 - term identical, (\==)/2 - term not identical,  (@<)/2 - term less than, (@=<)/2 - term less than or equal to,  (@>)/2 - term greater than, (@>=)/2 - term greater than or equal to">
+      <param name="Local" value="gprolog027.html#htoc78">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.3.3  compare/3">
+      <param name="Local" value="gprolog027.html#htoc79">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.4  Term processing">
+      <param name="Local" value="gprolog028.html#htoc80">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.4.1  functor/3">
+      <param name="Local" value="gprolog028.html#htoc81">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.4.2  arg/3">
+      <param name="Local" value="gprolog028.html#htoc82">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.4.3  (=..)/2 - univ">
+      <param name="Local" value="gprolog028.html#htoc83">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.4.4  copy_term/2">
+      <param name="Local" value="gprolog028.html#htoc84">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.4.5  term_variables/2, 		term_variables/3">
+      <param name="Local" value="gprolog028.html#htoc85">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.4.6  subsumes_term/2">
+      <param name="Local" value="gprolog028.html#htoc86">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.4.7  acyclic_term/1">
+      <param name="Local" value="gprolog028.html#htoc87">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.4.8  setarg/4, setarg/3">
+      <param name="Local" value="gprolog028.html#htoc88">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.5  Variable naming/numbering">
+      <param name="Local" value="gprolog029.html#htoc89">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.5.1  name_singleton_vars/1">
+      <param name="Local" value="gprolog029.html#htoc90">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.5.2  name_query_vars/2">
+      <param name="Local" value="gprolog029.html#htoc91">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.5.3  bind_variables/2, numbervars/3, numbervars/1">
+      <param name="Local" value="gprolog029.html#htoc92">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.5.4  term_ref/2">
+      <param name="Local" value="gprolog029.html#htoc93">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.6  Arithmetic">
+      <param name="Local" value="gprolog030.html#htoc94">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.6.1  Evaluation of an arithmetic expression">
+      <param name="Local" value="gprolog030.html#htoc95">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.6.2  (is)/2 - evaluate expression">
+      <param name="Local" value="gprolog030.html#htoc96">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.6.3  (=:=)/2 - arithmetic equal, (=\=)/2 - arithmetic not equal,  (<)/2 - arithmetic less than, (=<)/2 - arithmetic less than or equal to,  (>)/2 - arithmetic greater than, (>=)/2 - arithmetic greater than or equal to">
+      <param name="Local" value="gprolog030.html#htoc97">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.6.4  succ/2">
+      <param name="Local" value="gprolog030.html#htoc98">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.7  Dynamic clause management">
+      <param name="Local" value="gprolog031.html#htoc99">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.7.1  Introduction">
+      <param name="Local" value="gprolog031.html#htoc100">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.7.2  asserta/1, assertz/1">
+      <param name="Local" value="gprolog031.html#htoc101">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.7.3  retract/1">
+      <param name="Local" value="gprolog031.html#htoc102">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.7.4  retractall/1">
+      <param name="Local" value="gprolog031.html#htoc103">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.7.5  clause/2">
+      <param name="Local" value="gprolog031.html#htoc104">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.7.6  abolish/1">
+      <param name="Local" value="gprolog031.html#htoc105">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.8  Predicate information">
+      <param name="Local" value="gprolog032.html#htoc106">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.8.1  current_predicate/1">
+      <param name="Local" value="gprolog032.html#htoc107">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.8.2  predicate_property/2">
+      <param name="Local" value="gprolog032.html#htoc108">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.9  All solutions">
+      <param name="Local" value="gprolog033.html#htoc109">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.9.1  Introduction">
+      <param name="Local" value="gprolog033.html#htoc110">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.9.2  findall/3">
+      <param name="Local" value="gprolog033.html#htoc111">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.9.3  bagof/3, setof/3">
+      <param name="Local" value="gprolog033.html#htoc112">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.10  Streams">
+      <param name="Local" value="gprolog034.html#htoc113">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.10.1  Introduction">
+      <param name="Local" value="gprolog034.html#htoc114">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.10.2  current_input/1">
+      <param name="Local" value="gprolog034.html#htoc115">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.10.3  current_output/1">
+      <param name="Local" value="gprolog034.html#htoc116">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.10.4  set_input/1">
+      <param name="Local" value="gprolog034.html#htoc117">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.10.5  set_output/1">
+      <param name="Local" value="gprolog034.html#htoc118">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.10.6  open/4, open/3">
+      <param name="Local" value="gprolog034.html#htoc119">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.10.7  close/2, close/1">
+      <param name="Local" value="gprolog034.html#htoc120">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.10.8  flush_output/1, flush_output/0">
+      <param name="Local" value="gprolog034.html#htoc121">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.10.9  current_stream/1">
+      <param name="Local" value="gprolog034.html#htoc122">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.10.10  stream_property/2">
+      <param name="Local" value="gprolog034.html#htoc123">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.10.11  at_end_of_stream/1, at_end_of_stream/0">
+      <param name="Local" value="gprolog034.html#htoc124">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.10.12  stream_position/2">
+      <param name="Local" value="gprolog034.html#htoc125">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.10.13  set_stream_position/2">
+      <param name="Local" value="gprolog034.html#htoc126">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.10.14  seek/4">
+      <param name="Local" value="gprolog034.html#htoc127">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.10.15  character_count/2">
+      <param name="Local" value="gprolog034.html#htoc128">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.10.16  line_count/2">
+      <param name="Local" value="gprolog034.html#htoc129">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.10.17  line_position/2">
+      <param name="Local" value="gprolog034.html#htoc130">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.10.18  stream_line_column/3">
+      <param name="Local" value="gprolog034.html#htoc131">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.10.19  set_stream_line_column/3">
+      <param name="Local" value="gprolog034.html#htoc132">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.10.20  add_stream_alias/2">
+      <param name="Local" value="gprolog034.html#htoc133">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.10.21  current_alias/2">
+      <param name="Local" value="gprolog034.html#htoc134">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.10.22  add_stream_mirror/2">
+      <param name="Local" value="gprolog034.html#htoc135">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.10.23  remove_stream_mirror/2">
+      <param name="Local" value="gprolog034.html#htoc136">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.10.24  current_mirror/2">
+      <param name="Local" value="gprolog034.html#htoc137">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.10.25  set_stream_type/2">
+      <param name="Local" value="gprolog034.html#htoc138">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.10.26  set_stream_eof_action/2">
+      <param name="Local" value="gprolog034.html#htoc139">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.10.27  set_stream_buffering/2">
+      <param name="Local" value="gprolog034.html#htoc140">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.11  Constant term streams">
+      <param name="Local" value="gprolog035.html#htoc141">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.11.1  Introduction">
+      <param name="Local" value="gprolog035.html#htoc142">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.11.2  open_input_atom_stream/2, open_input_chars_stream/2,  open_input_codes_stream/2">
+      <param name="Local" value="gprolog035.html#htoc143">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.11.3  close_input_atom_stream/1, close_input_chars_stream/1,  close_input_codes_stream/1">
+      <param name="Local" value="gprolog035.html#htoc144">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.11.4  open_output_atom_stream/1, open_output_chars_stream/1,  open_output_codes_stream/1">
+      <param name="Local" value="gprolog035.html#htoc145">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.11.5  close_output_atom_stream/2, close_output_chars_stream/2,  close_output_codes_stream/2">
+      <param name="Local" value="gprolog035.html#htoc146">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.12  Character input/output">
+      <param name="Local" value="gprolog036.html#htoc147">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.12.1  get_char/2, get_char/1, get_code/1, get_code/2">
+      <param name="Local" value="gprolog036.html#htoc148">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.12.2  get_key/2, get_key/1 	 get_key_no_echo/2, get_key_no_echo/1">
+      <param name="Local" value="gprolog036.html#htoc149">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.12.3  peek_char/2, peek_char/1, peek_code/1, peek_code/2">
+      <param name="Local" value="gprolog036.html#htoc150">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.12.4  unget_char/2, unget_char/1, unget_code/2, unget_code/1">
+      <param name="Local" value="gprolog036.html#htoc151">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.12.5  put_char/2, put_char/1, put_code/1, put_code/2, nl/1, nl/0">
+      <param name="Local" value="gprolog036.html#htoc152">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.13  Byte input/output">
+      <param name="Local" value="gprolog037.html#htoc153">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.13.1  get_byte/2, get_byte/1">
+      <param name="Local" value="gprolog037.html#htoc154">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.13.2  peek_byte/2, peek_byte/1">
+      <param name="Local" value="gprolog037.html#htoc155">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.13.3  unget_byte/2, unget_byte/1">
+      <param name="Local" value="gprolog037.html#htoc156">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.13.4  put_byte/2, put_byte/1">
+      <param name="Local" value="gprolog037.html#htoc157">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.14  Term input/output">
+      <param name="Local" value="gprolog038.html#htoc158">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.14.1  read_term/3, read_term/2, read/2, read/1">
+      <param name="Local" value="gprolog038.html#htoc159">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.14.2  read_atom/2, read_atom/1, read_integer/2, read_integer/1,  read_number/2, read_number/1">
+      <param name="Local" value="gprolog038.html#htoc160">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.14.3  read_token/2, read_token/1">
+      <param name="Local" value="gprolog038.html#htoc161">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.14.4  syntax_error_info/4">
+      <param name="Local" value="gprolog038.html#htoc162">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.14.5  last_read_start_line_column/2">
+      <param name="Local" value="gprolog038.html#htoc163">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.14.6   write_term/3, write_term/2, write/2, write/1, writeq/2, writeq/1,  write_canonical/2, write_canonical/1, display/2, display/1, print/2,  print/1">
+      <param name="Local" value="gprolog038.html#htoc164">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.14.7  format/3, format/2">
+      <param name="Local" value="gprolog038.html#htoc165">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.14.8  portray_clause/2, portray_clause/1">
+      <param name="Local" value="gprolog038.html#htoc166">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.14.9  get_print_stream/1">
+      <param name="Local" value="gprolog038.html#htoc167">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.14.10  op/3">
+      <param name="Local" value="gprolog038.html#htoc168">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.14.11  current_op/3">
+      <param name="Local" value="gprolog038.html#htoc169">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.14.12  char_conversion/2">
+      <param name="Local" value="gprolog038.html#htoc170">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.14.13  current_char_conversion/2">
+      <param name="Local" value="gprolog038.html#htoc171">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.15  Input/output from/to constant terms">
+      <param name="Local" value="gprolog039.html#htoc172">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.15.1  read_term_from_atom/3, read_from_atom/2, read_token_from_atom/2">
+      <param name="Local" value="gprolog039.html#htoc173">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.15.2  read_term_from_chars/3, read_from_chars/2, read_token_from_chars/2">
+      <param name="Local" value="gprolog039.html#htoc174">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.15.3  read_term_from_codes/3, read_from_codes/2, read_token_from_codes/2">
+      <param name="Local" value="gprolog039.html#htoc175">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.15.4  write_term_to_atom/3, write_to_atom/2, writeq_to_atom/2,  write_canonical_to_atom/2, display_to_atom/2, print_to_atom/2,  format_to_atom/3">
+      <param name="Local" value="gprolog039.html#htoc176">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.15.5  write_term_to_chars/3, write_to_chars/2, writeq_to_chars/2,  write_canonical_to_chars/2, display_to_chars/2, print_to_chars/2,  format_to_chars/3">
+      <param name="Local" value="gprolog039.html#htoc177">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.15.6  write_term_to_codes/3, write_to_codes/2, writeq_to_codes/2,  write_canonical_to_codes/2, display_to_codes/2, print_to_codes/2,  format_to_codes/3">
+      <param name="Local" value="gprolog039.html#htoc178">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.16  DEC-10 compatibility input/output">
+      <param name="Local" value="gprolog040.html#htoc179">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.16.1  Introduction">
+      <param name="Local" value="gprolog040.html#htoc180">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.16.2  see/1, tell/1, append/1">
+      <param name="Local" value="gprolog040.html#htoc181">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.16.3  seeing/1, telling/1">
+      <param name="Local" value="gprolog040.html#htoc182">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.16.4  seen/0, told/0">
+      <param name="Local" value="gprolog040.html#htoc183">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.16.5  get0/1, get/1, skip/1">
+      <param name="Local" value="gprolog040.html#htoc184">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.16.6  put/1, tab/1">
+      <param name="Local" value="gprolog040.html#htoc185">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.17  Term expansion">
+      <param name="Local" value="gprolog041.html#htoc186">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.17.1  Definite clause grammars">
+      <param name="Local" value="gprolog041.html#htoc187">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.17.2  expand_term/2, term_expansion/2">
+      <param name="Local" value="gprolog041.html#htoc188">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.17.3  phrase/3, phrase/2">
+      <param name="Local" value="gprolog041.html#htoc189">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.18  Logic, control and exceptions">
+      <param name="Local" value="gprolog042.html#htoc190">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.18.1  abort/0, stop/0, top_level/0, break/0, halt/1, halt/0">
+      <param name="Local" value="gprolog042.html#htoc191">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.18.2  false/0, once/1, (\+)/1 - not provable, call/2-11, 	 call_with_args/1-11, call_det/2, forall/2">
+      <param name="Local" value="gprolog042.html#htoc192">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.18.3  repeat/0">
+      <param name="Local" value="gprolog042.html#htoc193">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.18.4  between/3, for/3">
+      <param name="Local" value="gprolog042.html#htoc194">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.19  Atomic term processing">
+      <param name="Local" value="gprolog043.html#htoc195">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.19.1  atom_length/2">
+      <param name="Local" value="gprolog043.html#htoc196">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.19.2  atom_concat/3">
+      <param name="Local" value="gprolog043.html#htoc197">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.19.3  sub_atom/5">
+      <param name="Local" value="gprolog043.html#htoc198">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.19.4  char_code/2">
+      <param name="Local" value="gprolog043.html#htoc199">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.19.5  lower_upper/2">
+      <param name="Local" value="gprolog043.html#htoc200">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.19.6  atom_chars/2, atom_codes/2">
+      <param name="Local" value="gprolog043.html#htoc201">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.19.7  number_atom/2, number_chars/2, number_codes/2">
+      <param name="Local" value="gprolog043.html#htoc202">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.19.8  name/2">
+      <param name="Local" value="gprolog043.html#htoc203">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.19.9  atom_hash/2">
+      <param name="Local" value="gprolog043.html#htoc204">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.19.10  new_atom/3, new_atom/2, new_atom/1">
+      <param name="Local" value="gprolog043.html#htoc205">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.19.11  current_atom/1">
+      <param name="Local" value="gprolog043.html#htoc206">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.19.12  atom_property/2">
+      <param name="Local" value="gprolog043.html#htoc207">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.20  List processing">
+      <param name="Local" value="gprolog044.html#htoc208">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.20.1  append/3">
+      <param name="Local" value="gprolog044.html#htoc209">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.20.2  member/2, memberchk/2">
+      <param name="Local" value="gprolog044.html#htoc210">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.20.3  reverse/2">
+      <param name="Local" value="gprolog044.html#htoc211">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.20.4  delete/3, select/3">
+      <param name="Local" value="gprolog044.html#htoc212">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.20.5  permutation/2">
+      <param name="Local" value="gprolog044.html#htoc213">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.20.6  prefix/2, suffix/2">
+      <param name="Local" value="gprolog044.html#htoc214">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.20.7  sublist/2">
+      <param name="Local" value="gprolog044.html#htoc215">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.20.8  last/2">
+      <param name="Local" value="gprolog044.html#htoc216">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.20.9  length/2">
+      <param name="Local" value="gprolog044.html#htoc217">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.20.10  nth/3">
+      <param name="Local" value="gprolog044.html#htoc218">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.20.11  max_list/2, min_list/2, sum_list/2">
+      <param name="Local" value="gprolog044.html#htoc219">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.20.12  maplist/2-8">
+      <param name="Local" value="gprolog044.html#htoc220">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.20.13  sort/2, msort/2, keysort/2 sort/1, msort/1, keysort/1">
+      <param name="Local" value="gprolog044.html#htoc221">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.21  Global variables">
+      <param name="Local" value="gprolog045.html#htoc222">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.21.1  Introduction">
+      <param name="Local" value="gprolog045.html#htoc223">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.21.2  g_assign/2, g_assignb/2, g_link/2">
+      <param name="Local" value="gprolog045.html#htoc224">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.21.3  g_read/2">
+      <param name="Local" value="gprolog045.html#htoc225">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.21.4  g_array_size/2">
+      <param name="Local" value="gprolog045.html#htoc226">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.21.5  g_inc/3, g_inc/2, g_inco/2, g_inc/1, g_dec/3, g_dec/2, g_deco/2, g_dec/1">
+      <param name="Local" value="gprolog045.html#htoc227">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.21.6  g_set_bit/2, g_reset_bit/2, g_test_set_bit/2, g_test_reset_bit/2">
+      <param name="Local" value="gprolog045.html#htoc228">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.21.7  Examples">
+      <param name="Local" value="gprolog045.html#htoc229">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.22  Prolog state">
+      <param name="Local" value="gprolog046.html#htoc230">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.22.1  set_prolog_flag/2">
+      <param name="Local" value="gprolog046.html#htoc231">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.22.2  current_prolog_flag/2">
+      <param name="Local" value="gprolog046.html#htoc232">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.22.3  set_bip_name/2">
+      <param name="Local" value="gprolog046.html#htoc233">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.22.4  current_bip_name/2">
+      <param name="Local" value="gprolog046.html#htoc234">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.22.5  write_pl_state_file/1, read_pl_state_file/1">
+      <param name="Local" value="gprolog046.html#htoc235">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.23  Program state">
+      <param name="Local" value="gprolog047.html#htoc236">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.23.1  consult/1, '.'/2 - program consult">
+      <param name="Local" value="gprolog047.html#htoc237">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.23.2  load/1">
+      <param name="Local" value="gprolog047.html#htoc238">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.23.3  listing/1, listing/0">
+      <param name="Local" value="gprolog047.html#htoc239">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.24  System statistics">
+      <param name="Local" value="gprolog048.html#htoc240">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.24.1  statistics/0, statistics/2">
+      <param name="Local" value="gprolog048.html#htoc241">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.24.2  user_time/1, system_time/1, cpu_time/1, real_time/1">
+      <param name="Local" value="gprolog048.html#htoc242">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.25  Random number generator">
+      <param name="Local" value="gprolog049.html#htoc243">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.25.1  set_seed/1, randomize/0">
+      <param name="Local" value="gprolog049.html#htoc244">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.25.2  get_seed/1">
+      <param name="Local" value="gprolog049.html#htoc245">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.25.3  random/1">
+      <param name="Local" value="gprolog049.html#htoc246">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.25.4  random/3">
+      <param name="Local" value="gprolog049.html#htoc247">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.26  File name processing">
+      <param name="Local" value="gprolog050.html#htoc248">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.26.1  absolute_file_name/2">
+      <param name="Local" value="gprolog050.html#htoc249">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.26.2  decompose_file_name/4">
+      <param name="Local" value="gprolog050.html#htoc250">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.26.3  prolog_file_name/2">
+      <param name="Local" value="gprolog050.html#htoc251">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27  Operating system interface">
+      <param name="Local" value="gprolog051.html#htoc252">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.1  argument_counter/1">
+      <param name="Local" value="gprolog051.html#htoc253">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.2  argument_value/2">
+      <param name="Local" value="gprolog051.html#htoc254">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.3  argument_list/1">
+      <param name="Local" value="gprolog051.html#htoc255">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.4  environ/2">
+      <param name="Local" value="gprolog051.html#htoc256">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.5  make_directory/1, delete_directory/1, change_directory/1">
+      <param name="Local" value="gprolog051.html#htoc257">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.6  working_directory/1">
+      <param name="Local" value="gprolog051.html#htoc258">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.7  directory_files/2">
+      <param name="Local" value="gprolog051.html#htoc259">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.8  rename_file/2">
+      <param name="Local" value="gprolog051.html#htoc260">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.9  delete_file/1, unlink/1">
+      <param name="Local" value="gprolog051.html#htoc261">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.10  file_permission/2, file_exists/1">
+      <param name="Local" value="gprolog051.html#htoc262">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.11  file_property/2">
+      <param name="Local" value="gprolog051.html#htoc263">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.12  temporary_name/2">
+      <param name="Local" value="gprolog051.html#htoc264">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.13  temporary_file/3">
+      <param name="Local" value="gprolog051.html#htoc265">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.14  date_time/1">
+      <param name="Local" value="gprolog051.html#htoc266">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.15  host_name/1">
+      <param name="Local" value="gprolog051.html#htoc267">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.16  os_version/1">
+      <param name="Local" value="gprolog051.html#htoc268">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.17  architecture/1">
+      <param name="Local" value="gprolog051.html#htoc269">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.18  shell/2, shell/1, shell/0">
+      <param name="Local" value="gprolog051.html#htoc270">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.19  system/2, system/1">
+      <param name="Local" value="gprolog051.html#htoc271">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.20  spawn/3, spawn/2">
+      <param name="Local" value="gprolog051.html#htoc272">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.21  popen/3">
+      <param name="Local" value="gprolog051.html#htoc273">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.22  exec/5, exec/4">
+      <param name="Local" value="gprolog051.html#htoc274">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.23  fork_prolog/1">
+      <param name="Local" value="gprolog051.html#htoc275">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.24  create_pipe/2">
+      <param name="Local" value="gprolog051.html#htoc276">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.25  wait/2">
+      <param name="Local" value="gprolog051.html#htoc277">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.26  prolog_pid/1">
+      <param name="Local" value="gprolog051.html#htoc278">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.27  send_signal/2">
+      <param name="Local" value="gprolog051.html#htoc279">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.28  sleep/1">
+      <param name="Local" value="gprolog051.html#htoc280">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.27.29  select/5">
+      <param name="Local" value="gprolog051.html#htoc281">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.28  Sockets input/output">
+      <param name="Local" value="gprolog052.html#htoc282">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.28.1  Introduction">
+      <param name="Local" value="gprolog052.html#htoc283">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.28.2  socket/2">
+      <param name="Local" value="gprolog052.html#htoc284">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.28.3  socket_close/1">
+      <param name="Local" value="gprolog052.html#htoc285">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.28.4  socket_bind/2">
+      <param name="Local" value="gprolog052.html#htoc286">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.28.5  socket_connect/4">
+      <param name="Local" value="gprolog052.html#htoc287">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.28.6  socket_listen/2">
+      <param name="Local" value="gprolog052.html#htoc288">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.28.7  socket_accept/4, socket_accept/3">
+      <param name="Local" value="gprolog052.html#htoc289">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.28.8  hostname_address/2">
+      <param name="Local" value="gprolog052.html#htoc290">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.29  Linedit management">
+      <param name="Local" value="gprolog053.html#htoc291">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.29.1  get_linedit_prompt/1">
+      <param name="Local" value="gprolog053.html#htoc292">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.29.2  set_linedit_prompt/1">
+      <param name="Local" value="gprolog053.html#htoc293">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.29.3  add_linedit_completion/1">
+      <param name="Local" value="gprolog053.html#htoc294">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.29.4  find_linedit_completion/2">
+      <param name="Local" value="gprolog053.html#htoc295">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.30  Source reader facility">
+      <param name="Local" value="gprolog054.html#htoc296">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.30.1  Introduction">
+      <param name="Local" value="gprolog054.html#htoc297">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.30.2  sr_open/3">
+      <param name="Local" value="gprolog054.html#htoc298">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.30.3  sr_change_options/2">
+      <param name="Local" value="gprolog054.html#htoc299">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.30.4  sr_close/1">
+      <param name="Local" value="gprolog054.html#htoc300">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.30.5  sr_read_term/4">
+      <param name="Local" value="gprolog054.html#htoc301">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.30.6  sr_current_descriptor/1">
+      <param name="Local" value="gprolog054.html#htoc302">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.30.7  sr_get_stream/2">
+      <param name="Local" value="gprolog054.html#htoc303">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.30.8  sr_get_module/3">
+      <param name="Local" value="gprolog054.html#htoc304">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.30.9  sr_get_file_name/2">
+      <param name="Local" value="gprolog054.html#htoc305">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.30.10  sr_get_position/3">
+      <param name="Local" value="gprolog054.html#htoc306">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.30.11  sr_get_include_list/2">
+      <param name="Local" value="gprolog054.html#htoc307">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.30.12  sr_get_include_stream_list/2">
+      <param name="Local" value="gprolog054.html#htoc308">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.30.13  sr_get_size_counters/3">
+      <param name="Local" value="gprolog054.html#htoc309">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.30.14  sr_get_error_counters/3">
+      <param name="Local" value="gprolog054.html#htoc310">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.30.15  sr_set_error_counters/3">
+      <param name="Local" value="gprolog054.html#htoc311">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.30.16  sr_error_from_exception/2">
+      <param name="Local" value="gprolog054.html#htoc312">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.30.17  sr_write_message/8, sr_write_message/6, sr_write_message/4">
+      <param name="Local" value="gprolog054.html#htoc313">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="8.30.18  sr_write_error/6, sr_write_error/4, sr_write_error/2">
+      <param name="Local" value="gprolog054.html#htoc314">
+      </object>
+  </ul>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9  Finite domain solver and built-in predicates">
+      <param name="Local" value="gprolog055.html#htoc315">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.1  Introduction">
+      <param name="Local" value="gprolog056.html#htoc316">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.1.1  Finite Domain variables">
+      <param name="Local" value="gprolog056.html#htoc317">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.2  FD variable parameters">
+      <param name="Local" value="gprolog057.html#htoc318">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.2.1  fd_max_integer/1">
+      <param name="Local" value="gprolog057.html#htoc319">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.2.2  fd_vector_max/1">
+      <param name="Local" value="gprolog057.html#htoc320">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.2.3  fd_set_vector_max/1">
+      <param name="Local" value="gprolog057.html#htoc321">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.3  Initial value constraints">
+      <param name="Local" value="gprolog058.html#htoc322">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.3.1  fd_domain/3, fd_domain_bool/1">
+      <param name="Local" value="gprolog058.html#htoc323">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.3.2  fd_domain/2">
+      <param name="Local" value="gprolog058.html#htoc324">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.4  Type testing">
+      <param name="Local" value="gprolog059.html#htoc325">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.4.1  fd_var/1, non_fd_var/1, generic_var/1, non_generic_var/1">
+      <param name="Local" value="gprolog059.html#htoc326">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.5  FD variable information">
+      <param name="Local" value="gprolog060.html#htoc327">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.5.1  fd_min/2, fd_max/2, fd_size/2, fd_dom/2">
+      <param name="Local" value="gprolog060.html#htoc328">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.5.2  fd_has_extra_cstr/1, fd_has_vector/1, fd_use_vector/1">
+      <param name="Local" value="gprolog060.html#htoc329">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.6  Arithmetic constraints">
+      <param name="Local" value="gprolog061.html#htoc330">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.6.1  FD arithmetic expressions">
+      <param name="Local" value="gprolog061.html#htoc331">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.6.2  Partial AC: (#=)/2 - constraint equal, (#\=)/2 - constraint not equal,  (#<)/2 - constraint less than, (#=<)/2 - constraint less than or equal,  (#>)/2 - constraint greater than, (#>=)/2 - constraint greater than or equal">
+      <param name="Local" value="gprolog061.html#htoc332">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.6.3  Full AC: (#=#)/2 - constraint equal, (#\=#)/2 - constraint not equal,  (#<#)/2 - constraint less than, (#=<#)/2 - constraint less than or equal,  (#>#)/2 - constraint greater than, (#>=#)/2 - constraint greater than or equal">
+      <param name="Local" value="gprolog061.html#htoc333">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.6.4  fd_prime/1, fd_not_prime/1">
+      <param name="Local" value="gprolog061.html#htoc334">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.7  Boolean and reified constraints">
+      <param name="Local" value="gprolog062.html#htoc335">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.7.1  Boolean FD expressions">
+      <param name="Local" value="gprolog062.html#htoc336">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.7.2  fd_reified_in/4">
+      <param name="Local" value="gprolog062.html#htoc337">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.7.3  (#\)/1 - constraint NOT, (#<=>)/2 - constraint equivalent,  (#\<=>)/2 - constraint different, (##)/2 - constraint XOR,  (#==>)/2 - constraint imply, (#\==>)/2 - constraint not imply,  (#/\)/2 - constraint AND, (#\/\)/2 - constraint NAND,  (#\/)/2 - constraint OR, (#\\/)/2 - constraint NOR">
+      <param name="Local" value="gprolog062.html#htoc338">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.7.4  fd_cardinality/2, fd_cardinality/3, fd_at_least_one/1, fd_at_most_one/1,  fd_only_one/1">
+      <param name="Local" value="gprolog062.html#htoc339">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.8  Symbolic constraints">
+      <param name="Local" value="gprolog063.html#htoc340">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.8.1  fd_all_different/1">
+      <param name="Local" value="gprolog063.html#htoc341">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.8.2  fd_element/3">
+      <param name="Local" value="gprolog063.html#htoc342">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.8.3  fd_element_var/3">
+      <param name="Local" value="gprolog063.html#htoc343">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.8.4  fd_atmost/3, fd_atleast/3, fd_exactly/3">
+      <param name="Local" value="gprolog063.html#htoc344">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.8.5  fd_relation/2, fd_relationc/2">
+      <param name="Local" value="gprolog063.html#htoc345">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.9  Labeling constraints">
+      <param name="Local" value="gprolog064.html#htoc346">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.9.1  fd_labeling/2, fd_labeling/1, fd_labelingff/1">
+      <param name="Local" value="gprolog064.html#htoc347">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.10  Optimization constraints">
+      <param name="Local" value="gprolog065.html#htoc348">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="9.10.1  fd_minimize/2, fd_maximize/2">
+      <param name="Local" value="gprolog065.html#htoc349">
+      </object>
+  </ul>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10  Interfacing Prolog and C">
+      <param name="Local" value="gprolog066.html#htoc350">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.1  Introduction">
+      <param name="Local" value="gprolog067.html#htoc351">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.2  Including and using gprolog.h">
+      <param name="Local" value="gprolog068.html#htoc352">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.3  Calling C from Prolog">
+      <param name="Local" value="gprolog069.html#htoc353">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.3.1  Introduction">
+      <param name="Local" value="gprolog069.html#htoc354">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.3.2  foreign/2 directive">
+      <param name="Local" value="gprolog069.html#htoc355">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.3.3  The C function">
+      <param name="Local" value="gprolog069.html#htoc356">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.3.4  Input arguments">
+      <param name="Local" value="gprolog069.html#htoc357">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.3.5  Output arguments">
+      <param name="Local" value="gprolog069.html#htoc358">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.3.6  Input/output arguments">
+      <param name="Local" value="gprolog069.html#htoc359">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.3.7  Writing non-deterministic C code">
+      <param name="Local" value="gprolog069.html#htoc360">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.3.8  Example: input and output arguments">
+      <param name="Local" value="gprolog069.html#htoc361">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.3.9  Example: non-deterministic code">
+      <param name="Local" value="gprolog069.html#htoc362">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.3.10  Example: input/output arguments">
+      <param name="Local" value="gprolog069.html#htoc363">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.4  Manipulating Prolog terms">
+      <param name="Local" value="gprolog070.html#htoc364">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.4.1  Introduction">
+      <param name="Local" value="gprolog070.html#htoc365">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.4.2  Managing Prolog atoms">
+      <param name="Local" value="gprolog070.html#htoc366">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.4.3  Reading Prolog terms">
+      <param name="Local" value="gprolog070.html#htoc367">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.4.4  Unifying Prolog terms">
+      <param name="Local" value="gprolog070.html#htoc368">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.4.5  Creating Prolog terms">
+      <param name="Local" value="gprolog070.html#htoc369">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.4.6  Testing the type of Prolog terms">
+      <param name="Local" value="gprolog070.html#htoc370">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.4.7  Comparing Prolog terms">
+      <param name="Local" value="gprolog070.html#htoc371">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.4.8  Term processing">
+      <param name="Local" value="gprolog070.html#htoc372">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.4.9  Comparing and evaluating arithmetic expressions">
+      <param name="Local" value="gprolog070.html#htoc373">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.5  Raising Prolog errors">
+      <param name="Local" value="gprolog071.html#htoc374">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.5.1  Managing the error context">
+      <param name="Local" value="gprolog071.html#htoc375">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.5.2  Instantiation error">
+      <param name="Local" value="gprolog071.html#htoc376">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.5.3  Uninstantiation error">
+      <param name="Local" value="gprolog071.html#htoc377">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.5.4  Type error">
+      <param name="Local" value="gprolog071.html#htoc378">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.5.5  Domain error">
+      <param name="Local" value="gprolog071.html#htoc379">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.5.6  Existence error">
+      <param name="Local" value="gprolog071.html#htoc380">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.5.7  Permission error">
+      <param name="Local" value="gprolog071.html#htoc381">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.5.8  Representation error">
+      <param name="Local" value="gprolog071.html#htoc382">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.5.9  Evaluation error">
+      <param name="Local" value="gprolog071.html#htoc383">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.5.10  Resource error">
+      <param name="Local" value="gprolog071.html#htoc384">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.5.11  Syntax error">
+      <param name="Local" value="gprolog071.html#htoc385">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.5.12  System error">
+      <param name="Local" value="gprolog071.html#htoc386">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.6  Calling Prolog from C">
+      <param name="Local" value="gprolog072.html#htoc387">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.6.1  Introduction">
+      <param name="Local" value="gprolog072.html#htoc388">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.6.2  Example: my_call/1 - a call/1 clone">
+      <param name="Local" value="gprolog072.html#htoc389">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.6.3  Example: recovering the list of all operators">
+      <param name="Local" value="gprolog072.html#htoc390">
+      </object>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.7  Defining a new C main() function">
+      <param name="Local" value="gprolog073.html#htoc391">
+      </object>
+  <ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="10.7.1  Example: asking for ancestors">
+      <param name="Local" value="gprolog073.html#htoc392">
+      </object>
+  </ul>
+  </ul>
+  <li><object type="text/sitemap">
+      <param name="Name" value="References">
+      <param name="Local" value="gprolog074.html#@biblio">
+      </object>
+  <li><object type="text/sitemap">
+      <param name="Name" value="Index">
+      <param name="Local" value="gprolog-idx.html#@index">
+      </object>
+  </ul>
+   </ul>
+  </BODY>
+  </HTML>

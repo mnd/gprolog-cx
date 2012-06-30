@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>All solutions</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog032.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog034.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc109">8.9</A>&#XA0;&#XA0;All solutions</H3><UL>
+<LI><A HREF="gprolog033.html#toc78">Introduction</A>
+</LI><LI><A HREF="gprolog033.html#toc79"><TT>findall/3</TT></A>
+</LI><LI><A HREF="gprolog033.html#toc80"><TT>bagof/3</TT>,
+<TT>setof/3</TT></A>
+</LI></UL>
+<H4 CLASS="subsubsection"><A NAME="toc78"></A><A NAME="htoc110">8.9.1</A>&#XA0;&#XA0;Introduction</H4><P>
+<A NAME="Introduction:(All-solutions)"></A>
+It is sometimes useful to collect all solutions for a goal. This can be done
+by repeatedly backtracking and gradually building the list of solutions. The
+following built-in predicates are provided to automate this process.</P><P>The built-in predicates described in this section invoke <TT>call/1</TT>
+(section&#XA0;<A HREF="gprolog023.html#call/1">7.2.3</A>) on the argument <TT>Goal</TT>. When efficiency is crucial
+and <TT>Goal</TT> is complex it is better to define an auxiliary predicate
+which can then be compiled, and have <TT>Goal</TT> call this predicate.</P><H4 CLASS="subsubsection"><A NAME="toc79"></A><A NAME="htoc111">8.9.2</A>&#XA0;&#XA0;<TT>findall/3</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+findall(?term, +callable_term, ?list)</TT></DD></DL><P><B>Description</B></P><P><TT>findall(Template, Goal, Instances)</TT> succeeds if <TT>Instances</TT>
+unifies with the list of values to which a variable <TT>X</TT> not occurring
+in <TT>Template</TT> or <TT>Goal</TT> would be instantiated by successive
+re-executions of <TT>call(Goal), X = Template</TT> after systematic
+replacement of all variables in <TT>X</TT> by new variables. Thus, the order
+of the list <TT>Instances</TT> corresponds to the order in which the proofs
+are found.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Goal</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Goal</TT> is neither a variable nor a callable term</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(callable, Goal)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+The predicate indicator <TT>Pred</TT> of <TT>Goal</TT> does not
+correspond to an existing procedure and the value of the <TT>unknown</TT>
+Prolog flag is <TT>error</TT> (section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>existence_error(procedure, Pred)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Instances</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Instances)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>ISO predicate.</P><H4 CLASS="subsubsection"><A NAME="toc80"></A><A NAME="htoc112">8.9.3</A>&#XA0;&#XA0;<TT>bagof/3</TT>,
+<TT>setof/3</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+bagof(?term, +callable_term, ?list)<BR>
+setof(?term, +callable_term, ?list)</TT></DD></DL><P><B>Description</B></P><P><TT>bagof(Template, Goal, Instances)</TT> assembles as a list the
+set of solutions of <TT>Goal</TT> for each different instantiation of the
+free variables in <TT>Goal</TT>. The elements of each list are in order of
+solution, but the order in which each list is found is undefined.
+This predicate is re-executable on backtracking.</P><P><B>Free variable set</B>: <TT>bagof/3</TT> groups the solutions of
+<TT>Goal</TT> according to the free variables in <TT>Goal</TT>. This set
+corresponds to all variables occurring in <TT>Goal</TT> but not in
+<TT>Template</TT>. It is sometimes useful to exclude some additional
+variables of <TT>Goal</TT>. For that, <TT>bagof/3</TT> recognizes a goal of
+the form <TT>T^Goal</TT> and exclude all variables occurring in <TT>T</TT>
+from the free variable set. <TT>(^)/2</TT> can be viewed as an
+<EM>existential quantifier</EM> (the logical reading of <TT>X^Goal</TT>
+being &#X201C;there exists an <TT>X</TT> such that <TT>Goal</TT> is true&#X201D;). The
+use of this existential qualifier is superfluous outside <TT>bagof/3</TT>
+(and <TT>setof/3</TT>) and then is not recognized.</P><P><TT>(^)/2</TT> is a predefined infix operator (section&#XA0;<A HREF="gprolog038.html#op/3:(Term-input/output)">8.14.10</A>).</P><P><TT>setof(Template, Goal, Instances)</TT> is equivalent to
+<TT>bagof(Template,Goal,I), sort(I,Instances)</TT>. Each list is then a
+sorted list (duplicate elements are removed).</P><P>From the implementation point of view <TT>setof/3</TT> is as fast as
+<TT>bagof/3</TT>. Both predicates use an in-place (i.e. destructive) sort
+(section&#XA0;<A HREF="gprolog044.html#sort/2">8.20.13</A>) and require the same amount of memory.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Goal</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Goal</TT> is neither a variable nor a callable term</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(callable, Goal)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+The predicate indicator <TT>Pred</TT> of <TT>Goal</TT> does not
+correspond to an existing procedure and the value of the <TT>unknown</TT>
+Prolog flag is <TT>error</TT> (section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>existence_error(procedure, Pred)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Instances</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Instances)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>ISO predicates.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog032.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog034.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

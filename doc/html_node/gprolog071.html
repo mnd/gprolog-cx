@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Raising Prolog errors</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog070.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog066.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog072.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc374">10.5</A>&#XA0;&#XA0;Raising Prolog errors</H3><UL>
+<LI><A HREF="gprolog071.html#toc305">Managing the error context</A>
+</LI><LI><A HREF="gprolog071.html#toc306">Instantiation error</A>
+</LI><LI><A HREF="gprolog071.html#toc307">Uninstantiation error</A>
+</LI><LI><A HREF="gprolog071.html#toc308">Type error</A>
+</LI><LI><A HREF="gprolog071.html#toc309">Domain error</A>
+</LI><LI><A HREF="gprolog071.html#toc310">Existence error</A>
+</LI><LI><A HREF="gprolog071.html#toc311">Permission error</A>
+</LI><LI><A HREF="gprolog071.html#toc312">Representation error</A>
+</LI><LI><A HREF="gprolog071.html#toc313">Evaluation error</A>
+</LI><LI><A HREF="gprolog071.html#toc314">Resource error</A>
+</LI><LI><A HREF="gprolog071.html#toc315">Syntax error</A>
+</LI><LI><A HREF="gprolog071.html#toc316">System error</A>
+</LI></UL>
+<P>
+<A NAME="Raising-Prolog-errors"></A>
+The following functions allows a C function to raise a Prolog error. Refer
+to the section concerning Prolog errors for more information about the
+effect of raising an error (section&#XA0;<A HREF="gprolog020.html#Errors">6.3</A>).</P><H4 CLASS="subsubsection"><A NAME="toc305"></A><A NAME="htoc375">10.5.1</A>&#XA0;&#XA0;Managing the error context</H4><P>
+When one of the following error function is invoked it refers to the
+implicit error context (section&#XA0;<A HREF="gprolog020.html#General-format-and-error-context">6.3.1</A>). This
+context indicates the name and the arity of the concerned predicate. When
+using a <TT>foreign/2</TT> declaration this context is set by default to the
+name and arity of the associated Prolog predicate. This can be controlled
+using the <TT>bip_name</TT> option (section&#XA0;<A HREF="gprolog069.html#foreign/2-directive">10.3.2</A>). In any
+case, the following functions can also be used to modify this context:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">void Pl_Set_C_Bip_Name  (const char *functor, int arity)
+void Pl_Unset_C_Bip_Name(void)
+</PRE></DD></DL><P>The function <TT>Pl_Set_C_Bip_Name(functor, arity)</TT> initializes the
+context of the error with <TT>functor</TT> and <TT>arity</TT> (if
+<TT>arity</TT>&lt;0 only <TT>functor</TT> is significant). The function
+<TT>Pl_Unset_C_Bip_Name()</TT> removes such an initialization (the context
+is then reset to the last <TT>Functor</TT>/<TT>Arity</TT> set by a call to
+<TT>set_bip_name/2</TT> (section&#XA0;<A HREF="gprolog046.html#set-bip-name/2">8.22.3</A>). This is useful when
+writing a C routine to define a context for errors occurring in this routine
+and, before exiting to restore the previous context.</P><H4 CLASS="subsubsection"><A NAME="toc306"></A><A NAME="htoc376">10.5.2</A>&#XA0;&#XA0;Instantiation error</H4><P>
+The following function raises an instantiation error (section&#XA0;<A HREF="gprolog020.html#Instantiation-error">6.3.2</A>):</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>void Pl_Err_Instantiation(void)</TT></DD></DL><H4 CLASS="subsubsection"><A NAME="toc307"></A><A NAME="htoc377">10.5.3</A>&#XA0;&#XA0;Uninstantiation error</H4><P>
+The following function raises an uninstantiation error (section&#XA0;<A HREF="gprolog020.html#Uninstantiation-error">6.3.3</A>):</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>void Pl_Err_Uninstantiation( PlTerm culprit)</TT></DD></DL><H4 CLASS="subsubsection"><A NAME="toc308"></A><A NAME="htoc378">10.5.4</A>&#XA0;&#XA0;Type error</H4><P>
+The following function raises a type error (section&#XA0;<A HREF="gprolog020.html#Type-error">6.3.4</A>):</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>void Pl_Err_Type(int atom_type, PlTerm culprit)</TT></DD></DL><P><TT>atom_type</TT> is (the internal key of) the atom associated with the
+expected type. For each type name <I><TT>T</TT></I> there is a
+corresponding predefined atom stored in a global variable whose name is of
+the form <TT>pl_type_<I>T</I></TT>. <TT>culprit</TT> is the argument which
+caused the error.</P><P><B>Example</B>: <TT>x</TT> is an atom while an integer was expected:
+<TT>Pl_Err_Type(pl_type_integer, x)</TT>.</P><H4 CLASS="subsubsection"><A NAME="toc309"></A><A NAME="htoc379">10.5.5</A>&#XA0;&#XA0;Domain error</H4><P>
+The following function raises a domain error (section&#XA0;<A HREF="gprolog020.html#Domain-error">6.3.5</A>):</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>void Pl_Err_Domain(int atom_domain, PlTerm culprit)</TT></DD></DL><P><TT>atom_domain</TT> is (the internal key of) the atom associated with the
+expected domain. For each domain name <I><TT>D</TT></I> there is a
+corresponding predefined atom stored in a global variable whose name is of
+the form <TT>domain_<I>D</I></TT>. <TT>culprit</TT> is the argument which
+caused the error.</P><P><B>Example</B>: <TT>x</TT> is &lt; 0 but should be &#X2265; 0:
+<TT>Pl_Err_Domain(pl_domain_not_less_than_zero, x)</TT>.</P><H4 CLASS="subsubsection"><A NAME="toc310"></A><A NAME="htoc380">10.5.6</A>&#XA0;&#XA0;Existence error</H4><P>
+The following function raises an existence error (section&#XA0;<A HREF="gprolog020.html#Existence-error">6.3.6</A>):</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>void Pl_Err_Existence(int atom_object, PlTerm culprit)</TT></DD></DL><P><TT>atom_object</TT> is (the internal key of) the atom associated with the
+type of the object. For each object name <I><TT>O</TT></I> there is a
+corresponding predefined atom stored in a global variable whose name is of
+the form <TT>pl_existence_<I>O</I></TT>. <TT>culprit</TT> is the argument
+which caused the error.</P><P><B>Example</B>: <TT>x</TT> does not refer to an existing source:
+<TT>Pl_Err_Existence(pl_existence_source_sink, x)</TT>.</P><H4 CLASS="subsubsection"><A NAME="toc311"></A><A NAME="htoc381">10.5.7</A>&#XA0;&#XA0;Permission error</H4><P>
+The following function raises a permission error (section&#XA0;<A HREF="gprolog020.html#Permission-error">6.3.7</A>):</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>void Pl_Err_Permission(int atom_operation, int atom_permission,
+PlTerm culprit)</TT></DD></DL><P><TT>atom_operation</TT> is (the internal key of) the atom associated with the
+operation which caused the error. For each operation name
+<I><TT>O</TT></I> there is a corresponding predefined atom stored in a
+global variable whose name is of the form
+<TT>pl_permission_operation_<I>O</I></TT>. <TT>atom_permission</TT> is
+(the internal key of) the atom associated with the tried permission. For each
+permission name <I><TT>P</TT></I> there is a corresponding predefined atom
+stored in a global variable whose name is of the form
+<TT>pl_permission_type_<I>P</I></TT>. <TT>culprit</TT> is the argument
+which caused the error.</P><P><B>Example</B>: reading from an output stream <TT>x</TT>:
+<TT>Pl_Err_Permission(pl_permission_operation_input,<BR>
+pl_permission_type_stream, x)</TT>.</P><H4 CLASS="subsubsection"><A NAME="toc312"></A><A NAME="htoc382">10.5.8</A>&#XA0;&#XA0;Representation error</H4><P>
+The following function raises a representation error (section&#XA0;<A HREF="gprolog020.html#Representation-error">6.3.8</A>):</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>void Pl_Err_Representation(int atom_limit)</TT></DD></DL><P><TT>atom_limit</TT> is (the internal key of) the atom associated with the
+reached limit. For each limit name <I><TT>L</TT></I> there is a
+corresponding predefined atom stored in a global variable whose name is of
+the form <TT>pl_representation_<I>L</I></TT>.</P><P><B>Example</B>: an arity too big occurs:
+<TT>Pl_Err_Representation(pl_representation_max_arity)</TT>.</P><H4 CLASS="subsubsection"><A NAME="toc313"></A><A NAME="htoc383">10.5.9</A>&#XA0;&#XA0;Evaluation error</H4><P>
+The following function raises an evaluation error (section&#XA0;<A HREF="gprolog020.html#Evaluation-error">6.3.9</A>):</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>void Pl_Err_Evaluation(int atom_error)</TT></DD></DL><P><TT>atom_error</TT> is (the internal key of) the atom associated with the
+error. For each evaluation error name <I><TT>E</TT></I> there is a
+corresponding predefined atom stored in a global variable whose name is of
+the form <TT>pl_evaluation_<I>E</I></TT>.</P><P><B>Example</B>: a division by zero occurs:
+<TT>Pl_Err_Evaluation(pl_evaluation_zero_divisor)</TT>.</P><H4 CLASS="subsubsection"><A NAME="toc314"></A><A NAME="htoc384">10.5.10</A>&#XA0;&#XA0;Resource error</H4><P>
+The following function raises a resource error (section&#XA0;<A HREF="gprolog020.html#Resource-error">6.3.10</A>):</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>void Pl_Err_Resource(int atom_resource)</TT></DD></DL><P><TT>atom_resource</TT> is (the internal key of) the atom associated with the
+resource. For each resource error name <I><TT>R</TT></I> there is a
+corresponding predefined atom stored in a global variable whose name is of
+the form <TT>pl_resource_<I>R</I></TT>.</P><P><B>Example</B>: too many open streams:
+<TT>Pl_Err_Resource(pl_resource_too_many_open_streams)</TT>.</P><H4 CLASS="subsubsection"><A NAME="toc315"></A><A NAME="htoc385">10.5.11</A>&#XA0;&#XA0;Syntax error</H4><P>
+The following function raises a syntax error (section&#XA0;<A HREF="gprolog020.html#Syntax-error">6.3.11</A>):</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>void Pl_Err_Syntax(int atom_error)</TT></DD></DL><P><TT>atom_error</TT> is (the internal key of) the atom associated with the
+error. There is no predefined syntax error atoms.</P><P><B>Example</B>: a <TT>/</TT> is expected:
+<TT>Pl_Err_Syntax(Pl_Create_Atom("/ expected"))</TT>.</P><P>The following function emits a syntax error according to the value of the
+<TT>syntax_error</TT> Prolog flag (section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>). This
+function can then return (if the value of the flag is either
+<TT>warning</TT> or <TT>fail</TT>). In that case the calling function should
+fail (e.g. returning <TT>PL_FALSE</TT>). This function accepts a file name (the
+empty string C <TT>""</TT> can be passed), a line and column number and an
+error message string. Using this function makes it possible to further call
+the built-in predicate <TT>syntax_error_info/4</TT>
+(section&#XA0;<A HREF="gprolog038.html#syntax-error-info/4">8.14.4</A>):</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>void Pl_Emit_Syntax_Error(char *file_name, int line, int column,
+char *message)</TT></DD></DL><P><B>Example</B>: a <TT>/</TT> is expected:
+<TT>Pl_Emit_Syntax_Error("data", 10, 30, "/ expected")</TT>.</P><H4 CLASS="subsubsection"><A NAME="toc316"></A><A NAME="htoc386">10.5.12</A>&#XA0;&#XA0;System error</H4><P>
+The following function raises a system error (4.3.11, page *):</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>void Pl_Err_System(int atom_error)</TT></DD></DL><P><TT>atom_error</TT> is (the internal key of) the atom associated with the
+error. There is no predefined system error atoms.</P><P><B>Example</B>: an invalid pathname is given:
+<TT>Pl_Err_System(Pl_Create_Atom("invalid path name"))</TT>.</P><P>The following function emits a system error associated with an operating
+system error according to the value of the <TT>os_error</TT>
+Prolog flag (section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>). This function can then return (if the value of the flag is either <TT>warning</TT> or <TT>fail</TT>).
+In that case the calling function should fail (e.g. returning
+<TT>PL_FALSE</TT>).</P><P>The following function uses the value of the <TT>errno</TT> C library
+variable (basically it calls <TT>Pl_Err_System</TT> with the result
+of <TT>strerror(errno)</TT>).</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>void Pl_Os_Error(void)</TT></DD></DL><P><B>Example</B>: if a call to the C Unix function <TT>chdir(2)</TT> returns
+<TT>-1</TT> then call <TT>Os_Error()</TT>.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog070.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog066.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog072.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

@@ -1,0 +1,379 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Global variables</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog044.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog046.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc222">8.21</A>&#XA0;&#XA0;Global variables</H3><UL>
+<LI><A HREF="gprolog045.html#toc179">Introduction</A>
+</LI><LI><A HREF="gprolog045.html#toc180"><TT>g_assign/2</TT>,
+<TT>g_assignb/2</TT>,
+<TT>g_link/2</TT></A>
+</LI><LI><A HREF="gprolog045.html#toc181"><TT>g_read/2</TT></A>
+</LI><LI><A HREF="gprolog045.html#toc182"><TT>g_array_size/2</TT></A>
+</LI><LI><A HREF="gprolog045.html#toc183"><TT>g_inc/3</TT>,
+<TT>g_inc/2</TT>,
+<TT>g_inco/2</TT>,
+<TT>g_inc/1</TT>,
+<TT>g_dec/3</TT>,
+<TT>g_dec/2</TT>,
+<TT>g_deco/2</TT>,
+<TT>g_dec/1</TT></A>
+</LI><LI><A HREF="gprolog045.html#toc184"><TT>g_set_bit/2</TT>,
+<TT>g_reset_bit/2</TT>,
+<TT>g_test_set_bit/2</TT>,
+<TT>g_test_reset_bit/2</TT></A>
+</LI><LI><A HREF="gprolog045.html#toc185">Examples</A>
+</LI></UL>
+<H4 CLASS="subsubsection"><A NAME="toc179"></A><A NAME="htoc223">8.21.1</A>&#XA0;&#XA0;Introduction</H4><P>
+<A NAME="Global-variables"></A></P><P>GNU Prolog provides a simple and powerful way to assign and read global
+variables. A global variable is associated with each atom, its initial value is
+the integer 0. A global variable can store 3 kinds of objects:</P><UL CLASS="itemize"><LI CLASS="li-itemize">a copy of a term (the assignment can be made backtrackable or not).</LI><LI CLASS="li-itemize">a link to a term (the assignment is always backtrackable).</LI><LI CLASS="li-itemize">an array of objects (recursively).</LI></UL><P>The space necessary for copies and arrays is dynamically allocated and
+recovered as soon as possible. For instance, when an atom is associated with a
+global variable whose current value is an array, the space for this array is
+recovered (unless the assignment is to be undone when backtracking occurs).</P><P>When a link to a term is associated with a global variable, the reference to
+this term is stored and thus the original term is returned when the content
+of the variable is read.</P><P><B>Global variable naming convention</B>: a global variable is referenced
+by an atom.</P><P>If the variable contains an array, an index (ranging from 0) can be provided
+using a compound term whose principal functor is the corresponding atom and
+the argument is the index. In case of a multi-dimensional array, each index
+is given as the arguments of the compound term.</P><P>If the variable contains a term (link or copy), it is possible to only
+reference a sub-term by giving its argument number (also called argument
+selector). Such a sub-term is specified using a compound term whose
+principal functor is <TT>-/2</TT> and whose first argument is a global
+variable name and the second argument is the argument number (from 1). This
+can be applied recursively to specify a sub-term of any depth. In case of a
+list, a argument number I represents the Ith element of the list. In the
+rest of this section we use the operator notation since <TT>-</TT> is a
+predefined infix operator (section&#XA0;<A HREF="gprolog038.html#op/3:(Term-input/output)">8.14.10</A>).</P><P>In the following, <I><TT>GVarName</TT></I> represents a reference to a global
+variable and its syntax is as follows:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP><I><TT>GVarName</TT></I></TD><TD ALIGN=left NOWRAP>::=</TD><TD ALIGN=left NOWRAP><I><TT>atom</TT></I></TD><TD ALIGN=left NOWRAP>whole content of a variable</TD></TR>
+<TR><TD ALIGN=left NOWRAP>&nbsp;</TD><TD ALIGN=left NOWRAP>&nbsp;</TD><TD ALIGN=left NOWRAP><TT><I>atom</I>(<I>Integer</I>,</TT>&#X2026;<TT>,<I>Integer</I>)</TT></TD><TD ALIGN=left NOWRAP>element of an array</TD></TR>
+<TR><TD ALIGN=left NOWRAP>&nbsp;</TD><TD ALIGN=left NOWRAP>&nbsp;</TD><TD ALIGN=left NOWRAP><TT><I>GVarName</I>-<I>Integer</I></TT></TD><TD ALIGN=left NOWRAP>sub-term selection</TD></TR>
+<TR><TD ALIGN=left NOWRAP><I><TT>Integer</TT></I></TD><TD ALIGN=left NOWRAP>::=</TD><TD ALIGN=left NOWRAP><I><TT>integer</TT></I></TD><TD ALIGN=left NOWRAP>immediate value</TD></TR>
+<TR><TD ALIGN=left NOWRAP>&nbsp;</TD><TD ALIGN=left NOWRAP>&nbsp;</TD><TD ALIGN=left NOWRAP><I><TT>GVarName</TT></I></TD><TD ALIGN=left NOWRAP>indirect value</TD></TR>
+</TABLE>
+</DD></DL><P>When a <I><TT>GVarName</TT></I> is used as an index or an argument number
+(i.e. indirection), the value of this variable must be an integer.</P><P>Here are some examples of the naming convention:</P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP><TT>a</TT></TD><TD ALIGN=left NOWRAP>the content of variable associated with <TT>a</TT> (any kind)</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>t(1)</TT></TD><TD ALIGN=left NOWRAP>the 2nd element of the array associated with <TT>t</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>t(k)</TT></TD><TD ALIGN=left NOWRAP>if the value associated with <TT>k</TT> is I, the Ith element of the array associated with <TT>t</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>a-1-2</TT></TD><TD ALIGN=left NOWRAP>if the value associated with <TT>a</TT> is <TT>f(g(a,b,c),2)</TT>, the sub-term <TT>b</TT></TD></TR>
+</TABLE><P>Here are the errors associated with global variable names and common to all
+predicates.</P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>GVarName</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>GVarName</TT> is neither a variable nor a callable term</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(callable, GVarName)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>GVarName</TT> contains an invalid argument number
+(or <TT>GVarName</TT> is an array)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(g_argument_selector, GVarName)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>GVarName</TT> contains an invalid index
+(or <TT>GVarName</TT> is not an array)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(g_array_index, GVarName)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>GVarName</TT> is used as an indirect index or argument selector
+and is not an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, GVarName)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Arrays</B>: the predicates <TT>g_assign/2</TT>, <TT>g_assignb/2</TT>
+and <TT>g_link/2</TT> (section&#XA0;<A HREF="#g-assign/2">8.21.2</A>) can be used to create an
+array. They recognize some terms as values. For instance, a compound term
+with principal functor <TT>g_array</TT> is used to define an array of fixed
+size. There are 3 forms for the term <TT>g_array</TT>:</P><UL CLASS="itemize"><LI CLASS="li-itemize"><TT>g_array(Size)</TT>: if <TT>Size</TT> is an integer &gt; 0 then
+defines an array of <TT>Size</TT> elements which are all initialized with
+the integer <TT>0</TT>.</LI><LI CLASS="li-itemize"><TT>g_array(Size, Initial)</TT>: as above but the elements are
+initialized with the term <TT>Initial</TT> instead of 0. <TT>Initial</TT>
+can contain other array definitions allowing thus for multi-dimensional
+arrays.</LI><LI CLASS="li-itemize"><TT>g_array(List)</TT>: as above if <TT>List</TT> is a list of length
+<TT>Size</TT> except that the elements of the array are initialized
+according to the elements of <TT>List</TT> (which can contain other array
+definitions).</LI></UL><P>An array can be extended explicitly using a compound term with principal
+functor <TT>g_array_extend</TT> which accept the same 3 forms detailed
+above. In that case, the existing elements of the array are not
+initialized. If <TT>g_array_extend</TT> is used with an object which is not
+an array it is similar to <TT>g_array</TT>.</P><P>Finally, an array can be <I>automatically</I> expanded when needed. The
+programmer does not need to explicitly control the expansion of an automatic
+array. An array is expanded as soon as an index is outside the current size
+of this array. Such an array is defined using a compound term with principal
+functor <TT>g_array_auto</TT>:</P><UL CLASS="itemize"><LI CLASS="li-itemize"><TT>g_array_auto(Size)</TT>: if <TT>Size</TT> is an integer &gt; 0
+then defines an automatic array whose initial size is <TT>Size</TT>. All
+elements are initialized with the integer <TT>0</TT>. Elements
+created during implicit expansions will be initialized with <TT>0</TT>.</LI><LI CLASS="li-itemize"><TT>g_array_auto(Size, Initial)</TT>: as above but the elements are
+initialized with the term <TT>Initial</TT> instead of 0. <TT>Initial</TT> can
+contain other array definitions allowing thus for multi-dimensional
+arrays. Elements created during implicit expansions will be initialized with
+<TT>Initial</TT>.</LI><LI CLASS="li-itemize"><TT>g_array_auto(List)</TT>: as above if <TT>List</TT> is a list of
+length <TT>Size</TT> except that the elements of the array are initialized
+according to the elements of <TT>List</TT> (which can contain other array
+definitions). Elements created during implicit expansions will be initialized
+with <TT>0</TT>.</LI></UL><P>In any case, when an array is read, a term of the form
+<TT>g_array([Elem0,..., ElemSize-1])</TT> is returned.</P><P>Some examples using global variables are presented later (section&#XA0;<A HREF="#Examples">8.21.7</A>).</P><H4 CLASS="subsubsection"><A NAME="toc180"></A><A NAME="htoc224">8.21.2</A>&#XA0;&#XA0;<TT>g_assign/2</TT>,
+<TT>g_assignb/2</TT>,
+<TT>g_link/2</TT></H4><P>
+<A NAME="g-assign/2"></A>
+
+
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+g_assign(+callable_term, ?term)<BR>
+g_assignb(+callable_term, ?term)<BR>
+g_link(+callable_term, ?term)</TT></DD></DL><P><B>Description</B></P><P><TT>g_assign(GVarName, Value)</TT> assigns a copy of the term
+<TT>Value</TT> to <TT>GVarName</TT>. This assignment is not undone when
+backtracking occurs.</P><P><TT>g_assignb/2</TT> is similar to <TT>g_assign/2</TT> but the assignment
+is undone at backtracking.</P><P><TT>g_link(GVarName, Value)</TT> makes a link between <TT>GVarName</TT> to
+the term <TT>Value</TT>. This allows the user to give a name to any Prolog
+term (in particular non-ground terms). Such an assignment is always undone
+when backtracking occurs (since the term may no longer exist). If
+<TT>Value</TT> is an atom or an integer, <TT>g_link/2</TT> and
+<TT>g_assignb/2</TT> have the same behavior. Since <TT>g_link/2</TT> only
+handles links to existing terms it does not require extra memory space and
+is not expensive in terms of execution time.</P><P>NB: argument selectors can only be used with g_assign/2 (i.e. when using
+an argument selector inside an assignment, this one must not be
+backtrackable).</P><P><B>Errors</B></P><P>See common errors detailed in the introduction (section&#XA0;<A HREF="#Global-variables">8.21.1</A>)</P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>GVarName</TT> contains an argument selector and the assignment
+is backtrackable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(g_argument_selector, GVarName)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc181"></A><A NAME="htoc225">8.21.3</A>&#XA0;&#XA0;<TT>g_read/2</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+g_read(+callable_term, ?term)</TT></DD></DL><P><B>Description</B></P><P><TT>g_read(GVarName, Value)</TT> unifies <TT>Value</TT> with the term
+assigned to <TT>GVarName</TT>.</P><P><B>Errors</B></P><P>See common errors detailed in the introduction (section&#XA0;<A HREF="#Global-variables">8.21.1</A>)</P><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc182"></A><A NAME="htoc226">8.21.4</A>&#XA0;&#XA0;<TT>g_array_size/2</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+g_array_size(+callable_term, ?integer)</TT></DD></DL><P><B>Description</B></P><P><TT>g_array_size(GVarName, Value)</TT> unifies <TT>Size</TT> with the
+dimension (an integer &gt; 0) of the array assigned to <TT>GVarName</TT>.
+Fails if <TT>GVarName</TT> is not an array.</P><P><B>Errors</B></P><P>See common errors detailed in the introduction (section&#XA0;<A HREF="#Global-variables">8.21.1</A>)</P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Size</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Size)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc183"></A><A NAME="htoc227">8.21.5</A>&#XA0;&#XA0;<TT>g_inc/3</TT>,
+<TT>g_inc/2</TT>,
+<TT>g_inco/2</TT>,
+<TT>g_inc/1</TT>,
+<TT>g_dec/3</TT>,
+<TT>g_dec/2</TT>,
+<TT>g_deco/2</TT>,
+<TT>g_dec/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+g_inc(+callable_term, ?integer, ?integer)<BR>
+g_inc(+callable_term, ?integer)<BR>
+g_inco(+callable_term, ?integer)<BR>
+g_inc(+callable_term)<BR>
+g_dec(+callable_term, ?integer, ?integer)<BR>
+g_dec(+callable_term, ?integer)<BR>
+g_deco(+callable_term, ?integer)<BR>
+g_dec(+callable_term)</TT></DD></DL><P><B>Description</B></P><P><TT>g_inc(GVarName, Old, New)</TT> unifies <TT>Old</TT> with the
+integer assigned to <TT>GVarName</TT>, increments <TT>GVarName</TT> and
+then unifies <TT>New</TT> with the incremented value.</P><P><TT>g_inc(GVarName, New)</TT> is equivalent to
+<TT>g_inc(GVarName, _, New)</TT>.</P><P><TT>g_inco(GVarName, Old)</TT> is equivalent to
+<TT>g_inc(GVarName, Old, _)</TT>.</P><P><TT>g_inc(GVarName)</TT> is equivalent to <TT>g_inc(GVarName, _, _)</TT>.</P><P>Predicates <TT>g_dec</TT> are similar but decrement the content of
+<TT>GVarName</TT> instead.</P><P><B>Errors</B></P><P>See common errors detailed in the introduction (section&#XA0;<A HREF="#Global-variables">8.21.1</A>)</P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Old</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Old)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>New</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, New)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>GVarName</TT> stores an array</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, g_array)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>GVarName</TT> stores a term <TT>T</TT> which is not an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, T)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc184"></A><A NAME="htoc228">8.21.6</A>&#XA0;&#XA0;<TT>g_set_bit/2</TT>,
+<TT>g_reset_bit/2</TT>,
+<TT>g_test_set_bit/2</TT>,
+<TT>g_test_reset_bit/2</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+g_set_bit(+callable_term, +integer)<BR>
+g_reset_bit(+callable_term, +integer)<BR>
+g_test_set_bit(+callable_term, +integer)<BR>
+g_test_reset_bit(+callable_term, +integer)</TT></DD></DL><P><B>Description</B></P><P><TT>g_set_bit(GVarName, Bit)</TT> sets to 1 the bit number specified by
+<TT>Bit</TT> of the integer assigned to <TT>GVarName</TT> to 1. Bit numbers
+range from 0 to the maximum number allowed for integers (this is architecture dependent). If <TT>Bit</TT> is greater than this limit,
+the modulo with this limit is taken.</P><P><TT>g_reset_bit(GVarName, Bit)</TT> is similar to <TT>g_set_bit/2</TT> but
+sets the specified bit to 0.</P><P><TT>g_test_set_bit/2</TT> succeeds if the specified bit is set to 1.</P><P><TT>g_test_reset_bit/2</TT> succeeds if the specified bit is set to 0.</P><P><B>Errors</B></P><P>See common errors detailed in the introduction (section&#XA0;<A HREF="#Global-variables">8.21.1</A>)</P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Bit</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Bit</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Bit)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Bit</TT> is an integer &lt; 0</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(not_less_than_zero, Bit)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>GVarName</TT> stores an array</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, g_array)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>GVarName</TT> stores a term <TT>T</TT> which is not an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, T)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc185"></A><A NAME="htoc229">8.21.7</A>&#XA0;&#XA0;Examples</H4><P>
+<A NAME="Examples"></A></P><P><B>Simulating <TT>g_inc/3</TT></B>: this predicate behaves like:
+global variable:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">my_g_inc(Var, Old, New) :-
+        g_read(Var, Old),
+        N is Value + 1,
+        g_assign(Var, X),
+ New = N.
+</PRE></DD></DL><P>The query: <TT>my_g_inc(c, X, _)</TT> will succeed unifying <TT>X</TT> with
+<TT>0</TT>, another call to <TT>my_g_inc(a, Y, _)</TT> will then unify
+<TT>Y</TT> with <TT>1</TT>, and so on.</P><P><B>Difference between <TT>g_assign/2</TT> and <TT>g_assignb/2</TT></B>:
+<TT>g_assign/2</TT> does not undo its assignment when backtracking occurs
+whereas <TT>g_assignb/2</TT> undoes it.</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+</TT><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD VALIGN=top ALIGN=left><TT>test(Old) :-</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>&#XA0;&#XA0;</TT></TD><TD VALIGN=top ALIGN=left NOWRAP><TT>testb(Old) :-</TT></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><TT>&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;g_assign(x,1),</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>&#XA0;&#XA0;</TT></TD><TD VALIGN=top ALIGN=left NOWRAP><TT>&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;g_assign(x,1),</TT></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><TT>&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;(&#XA0;&#XA0;&#XA0;g_read(x, Old),</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>&#XA0;&#XA0;</TT></TD><TD VALIGN=top ALIGN=left NOWRAP><TT>&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;(&#XA0;&#XA0;&#XA0;g_read(x, Old),</TT></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><TT>&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;<I>g_assign</I>(x, 2)</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>&#XA0;&#XA0;</TT></TD><TD VALIGN=top ALIGN=left NOWRAP><TT>&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;<I>g_assignb</I>(x, 2)</TT></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><TT>&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;;&#XA0;&#XA0;&#XA0;g_read(x,&#XA0;Old),</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>&#XA0;&#XA0;</TT></TD><TD VALIGN=top ALIGN=left NOWRAP><TT>&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;;&#XA0;&#XA0;&#XA0;g_read(x, Old),</TT></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><TT>&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;g_assign(x, 3)</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>&#XA0;&#XA0;</TT></TD><TD VALIGN=top ALIGN=left NOWRAP><TT>&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;g_assign(x, 3)</TT></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><TT>&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;).</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>&#XA0;&#XA0;</TT></TD><TD VALIGN=top ALIGN=left NOWRAP><TT>&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;).</TT></TD></TR>
+</TABLE><TT>
+</TT></DD></DL><P>The query <TT>test(Old)</TT> will succeed unifying <TT>Old</TT> with
+<TT>1</TT> and on backtracking with <TT>2</TT> (i.e. the assignment of the
+value <TT>2</TT> has not been undone). The query <TT>testb(Old)</TT> will
+succeed unifying <TT>Old</TT> with <TT>1</TT> and on backtracking with
+<TT>1</TT> (i.e. the assignment of the value <TT>2</TT> has been undone).</P><P><B>Difference between <TT>g_assign/2</TT> and <TT>g_link/2</TT></B>:
+<TT>g_assign/2</TT> (and <TT>g_assignb/2</TT>) creates a copy of the term
+whereas <TT>g_link/2</TT> does not. <TT>g_link/2</TT> can be used to avoid
+passing big data structures (e.g. dictionaries,&#X2026;) as arguments to
+predicates.</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+</TT><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD VALIGN=top ALIGN=left><TT>test(B) :-</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>&#XA0;&#XA0;</TT></TD><TD VALIGN=top ALIGN=left NOWRAP><TT>test(B) :-</TT></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><TT>&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;<I>g_assign</I>(b, f(X)),</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>&#XA0;&#XA0;</TT></TD><TD VALIGN=top ALIGN=left NOWRAP><TT>&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;<I>g_link</I>(b, f(X)),</TT></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><TT>&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;X = 12,</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>&#XA0;&#XA0;</TT></TD><TD VALIGN=top ALIGN=left NOWRAP><TT>&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;X = 12,</TT></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><TT>&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;g_read(b, B).</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>&#XA0;&#XA0;</TT></TD><TD VALIGN=top ALIGN=left NOWRAP><TT>&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;g_read(b, B).</TT></TD></TR>
+</TABLE><TT>
+</TT></DD></DL><P>The query <TT>test(B)</TT> will succeed unifying <TT>B</TT> with
+<TT>f(_)</TT> (<TT>g_assign/2</TT> assigns a copy of the value). The query
+<TT>test(B)</TT> will succeed unifying <TT>B</TT> with <TT>f(12)</TT>
+(<TT>g_link/2</TT> assigns a pointer to the term).</P><P><B>Simple array definition</B>: here are some queries to show how arrays
+can be handled:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">| ?- g_assign(w, g_array(3)), g_read(w, X).
+
+X = g_array([0,0,0])
+
+| ?- g_assign(w(0), 16), g_assign(w(1), 32), g_assign(w(2), 64), g_read(w, X).
+
+X = g_array([16,32,64])
+</PRE></DD></DL><P>this is equivalent to:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">| ?- g_assign(k, g_array([16,32,64])), g_read(k, X).
+
+X = g_array([16,32,64])
+
+| ?- g_assign(k, g_array(3,null)), g_read(k, X), g_array_size(k, S).
+
+S = 3
+X = g_array([null,null,null])
+</PRE></DD></DL><P><B>2-D array definition</B>:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">| ?- g_assign(w, g_array(2, g_array(3))), g_read(w, X).
+
+X = g_array([g_array([0,0,0]),g_array([0,0,0])])
+
+| ?- (   for(I,0,1), for(J,0,2), K is I*3+J, g_assign(w(I,J), K),
+         fail
+     ;   g_read(w, X)
+     ).
+
+X = g_array([g_array([0,1,2]),g_array([3,4,5])])
+
+| ?- g_read(w(1),X).
+
+X = g_array([3,4,5])
+</PRE></DD></DL><P><B>Hybrid array</B>:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">| ?- g_assign(w,g_array([1,2,g_array([a,b,c]), g_array(2,z),5])), g_read(w, X).
+
+X = g_array([1,2,g_array([a,b,c]), g_array([z,z]),5])
+
+| ?- g_read(w(1), X), g_read(w(2,1), Y), g_read(w(3,1), Z).
+
+X = 2
+Y = b
+Z = z
+
+| ?- g_read(w(1,2),X).
+uncaught exception: error(domain_error(g_array_index,w(1,2)),g_read/2)
+</PRE></DD></DL><P><B>Array extension</B>:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">| ?- g_assign(a, g_array([10,20,30])), g_read(a, X).
+
+X = g_array([10,20,30])
+
+| ?- g_assign(a, g_array_extend(5,null)), g_read(a, X).
+
+X = g_array([10,20,30,null,null])
+
+| ?- g_assign(a, g_array([10,20,30])), g_read(a, X).
+
+X = g_array([10,20,30])
+
+| ?- g_assign(a, g_array_extend([1,2,3,4,5,6])), g_read(a, X).
+
+X = g_array([10,20,30,4,5,6])
+</PRE></DD></DL><P><B>Automatic array</B>:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">| ?- g_assign(t, g_array_auto(3)), g_assign(t(1), foo), g_read(t,X).
+
+X = g_array([0,foo,0])
+
+| ?- g_assign(t(5), bar), g_read(t,X).
+
+X = g_array([0,foo,0,0,0,bar,0,0])
+
+| ?- g_assign(t, g_array_auto(2, g_array(2))), g_assign(t(1,1), foo),
+     g_read(t,X).
+
+X = g_array([g_array([0,0]),g_array([0,foo])])
+
+| ?- g_assign(t(3,0), bar), g_read(t,X).
+
+X = g_array([g_array([0,0]),g_array([0,foo]),g_array([0,0]),g_array([bar,0])])
+
+| ?- g_assign(t(3,4), bar), g_read(t,X).
+uncaught exception: error(domain_error(g_array_index,t(3,4)),g_assign/2)
+
+| ?- g_assign(t, g_array_auto(2, g_array_auto(2))), g_assign(t(1,1), foo),
+     g_read(t,X).
+
+X = g_array([g_array([0,0]),g_array([0,foo])])
+
+| ?- g_assign(t(3,3), bar), g_read(t,X).
+
+X = g_array([g_array([0,0]),g_array([0,foo]),g_array([0,0]),
+    g_array([0,0,0,bar])])
+
+| ?- g_assign(t, g_array_auto(2, g_array_auto(2, null))), g_read(t(2,3), U),
+     g_read(t, X).
+
+U = null
+X = g_array([g_array([null,null]),g_array([null,null]),
+             g_array([null,null,null,null]),g_array([null,null])])
+</PRE></DD></DL>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog044.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog046.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

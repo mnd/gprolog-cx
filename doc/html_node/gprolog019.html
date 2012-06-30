@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Types and modes</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog018.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog017.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog020.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc33">6.2</A>&#XA0;&#XA0;Types and modes</H3><P>
+<A NAME="Types-and-modes"></A>
+The templates part defines, for each argument of the concerned built-in
+predicate, its mode and type. The mode specifies whether or not the argument
+must be instantiated when the built-in predicate is called. The mode is
+encoded with a symbol just before the type. Possible modes are:</P><UL CLASS="itemize"><LI CLASS="li-itemize"><TT>+</TT>: the argument must be instantiated.</LI><LI CLASS="li-itemize"><TT>-</TT>: the argument must be a variable (will be instantiated if
+the built-in predicate succeeds).</LI><LI CLASS="li-itemize"><TT>?</TT>: the argument can be instantiated or a variable.</LI></UL><P>The type of an argument is defined by the following table:</P><TABLE BORDER=1 CELLSPACING=0 CELLPADDING=1><TR><TD VALIGN=top ALIGN=left NOWRAP>
+Type</TD><TD VALIGN=top ALIGN=left>Description</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT><I>TYPE</I>_list</TT></TD><TD VALIGN=top ALIGN=left>a list whose the type of each element is
+<I><TT>TYPE</TT></I></TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT><I>TYPE1</I>_or_<I>TYPE2</I></TT></TD><TD VALIGN=top ALIGN=left>a term whose type is either
+<I><TT>TYPE1</TT></I> or <I><TT>TYPE2</TT></I></TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>atom</TT></TD><TD VALIGN=top ALIGN=left>an atom</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>atom_property</TT></TD><TD VALIGN=top ALIGN=left>an atom property (section&#XA0;<A HREF="gprolog043.html#atom-property/2">8.19.12</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>boolean</TT></TD><TD VALIGN=top ALIGN=left>the atom <TT>true</TT> or <TT>false</TT></TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>byte</TT></TD><TD VALIGN=top ALIGN=left>an integer &#X2265; 0 and &#X2264; 255</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>callable_term</TT></TD><TD VALIGN=top ALIGN=left>an atom or a compound term</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>character</TT></TD><TD VALIGN=top ALIGN=left>a single character atom</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>character_code</TT></TD><TD VALIGN=top ALIGN=left>an integer &#X2265; 1 and &#X2264; 255</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>clause</TT></TD><TD VALIGN=top ALIGN=left>a clause (fact or rule)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>close_option</TT></TD><TD VALIGN=top ALIGN=left>a close option (section&#XA0;<A HREF="gprolog034.html#close/2">8.10.7</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>compound_term</TT></TD><TD VALIGN=top ALIGN=left>a compound term</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>evaluable</TT></TD><TD VALIGN=top ALIGN=left>an arithmetic expression (section&#XA0;<A HREF="gprolog030.html#Evaluation-of-an-arithmetic-expression">8.6.1</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>fd_bool_evaluable</TT></TD><TD VALIGN=top ALIGN=left>a boolean FD expression (section&#XA0;<A HREF="gprolog062.html#Boolean-FD-expressions">9.7.1</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>fd_labeling_option</TT></TD><TD VALIGN=top ALIGN=left>an FD labeling option (section&#XA0;<A HREF="gprolog064.html#fd-labeling/2">9.9.1</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>fd_evaluable</TT></TD><TD VALIGN=top ALIGN=left>an arithmetic FD expression (section&#XA0;<A HREF="gprolog061.html#FD-arithmetic-expressions">9.6.1</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>fd_variable</TT></TD><TD VALIGN=top ALIGN=left>an FD variable</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>flag</TT></TD><TD VALIGN=top ALIGN=left>a Prolog flag (section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>float</TT></TD><TD VALIGN=top ALIGN=left>a floating point number</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>head</TT></TD><TD VALIGN=top ALIGN=left>a head of a clause (atom or compound term)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>integer</TT></TD><TD VALIGN=top ALIGN=left>an integer</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>in_byte</TT></TD><TD VALIGN=top ALIGN=left>an integer &#X2265; 0 and &#X2264; 255 or <TT>-1</TT> (for
+the end-of-file)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>in_character</TT></TD><TD VALIGN=top ALIGN=left>a single character atom or the atom
+<TT>end_of_file</TT> (for the end-of-file)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>in_character_code</TT></TD><TD VALIGN=top ALIGN=left>an integer &#X2265; 1 and &#X2264; 255 or
+<TT>-1</TT> (for the end-of-file)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>io_mode</TT></TD><TD VALIGN=top ALIGN=left>an atom in: <TT>read</TT>, <TT>write</TT> or
+<TT>append</TT></TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>list</TT></TD><TD VALIGN=top ALIGN=left>the empty list <TT>[]</TT> or a non-empty list
+<TT>[_|_]</TT></TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>nonvar</TT></TD><TD VALIGN=top ALIGN=left>any term that is not a variable</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>number</TT></TD><TD VALIGN=top ALIGN=left>an integer or a floating point number</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>operator_specifier</TT></TD><TD VALIGN=top ALIGN=left>an operator specifier (section&#XA0;<A HREF="gprolog038.html#op/3:(Term-input/output)">8.14.10</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>os_file_property</TT></TD><TD VALIGN=top ALIGN=left>an operating system file property (section&#XA0;<A HREF="gprolog051.html#file-property/2">8.27.11</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>predicate_indicator</TT></TD><TD VALIGN=top ALIGN=left>a term <TT>Name/Arity</TT> where
+<TT>Name</TT> is an atom and <TT>Arity</TT> an integer &#X2265; 0. A callable
+term can be given if the <TT>strict_iso</TT> Prolog flag is switched
+off (section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>predicate_property</TT></TD><TD VALIGN=top ALIGN=left>a predicate property
+(section&#XA0;<A HREF="gprolog032.html#predicate-property/2">8.8.2</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>read_option</TT></TD><TD VALIGN=top ALIGN=left>a read option (section&#XA0;<A HREF="gprolog038.html#read-term/3">8.14.1</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>socket_address</TT></TD><TD VALIGN=top ALIGN=left>a term of the form <TT>&#X2019;AF_UNIX&#X2019;(A)</TT> or
+<TT>&#X2019;AF_INET&#X2019;(A,N)</TT> where <TT>A</TT> is an atom and <TT>N</TT> an
+integer</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>socket_domain</TT></TD><TD VALIGN=top ALIGN=left>an atom in: <TT>&#X2019;AF_UNIX&#X2019;</TT> or
+<TT>&#X2019;AF_INET&#X2019;</TT></TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>source_sink</TT></TD><TD VALIGN=top ALIGN=left>an atom identifying a source or a sink</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>stream</TT></TD><TD VALIGN=top ALIGN=left>a stream-term: a term of the form <TT>&#X2019;$stream&#X2019;(N)</TT>
+where <TT>N</TT> is an integer &#X2265; 0</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>stream_option</TT></TD><TD VALIGN=top ALIGN=left>a stream option (section&#XA0;<A HREF="gprolog034.html#open/4">8.10.6</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>stream_or_alias</TT></TD><TD VALIGN=top ALIGN=left>a stream-term or an alias (atom)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>stream_position</TT></TD><TD VALIGN=top ALIGN=left>a stream position: a term
+<TT>&#X2019;$stream_position&#X2019;(I1, I2, I3, I4)</TT> where
+<TT>I1</TT>, <TT>I2</TT>, <TT>I3</TT> and <TT>I4</TT> are integers</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>stream_property</TT></TD><TD VALIGN=top ALIGN=left>a stream property (section&#XA0;<A HREF="gprolog034.html#stream-property/2">8.10.10</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>stream_seek_method</TT></TD><TD VALIGN=top ALIGN=left>an atom in: <TT>bof</TT>, <TT>current</TT>
+or <TT>eof</TT></TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>term</TT></TD><TD VALIGN=top ALIGN=left>any term</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>var_binding_option</TT></TD><TD VALIGN=top ALIGN=left>a variable binding option
+(section&#XA0;<A HREF="gprolog029.html#bind-variables/2">8.5.3</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>write_option</TT></TD><TD VALIGN=top ALIGN=left>a write option (section&#XA0;<A HREF="gprolog038.html#write-term/3">8.14.6</A>)</TD></TR>
+</TABLE>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog018.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog017.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog020.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

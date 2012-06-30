@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Labeling constraints</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog063.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog055.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog065.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc346">9.9</A>&#XA0;&#XA0;Labeling constraints</H3><UL>
+<LI><A HREF="gprolog064.html#toc284"><TT>fd_labeling/2</TT>,
+<TT>fd_labeling/1</TT>,
+<TT>fd_labelingff/1</TT></A>
+</LI></UL>
+<H4 CLASS="subsubsection"><A NAME="toc284"></A><A NAME="htoc347">9.9.1</A>&#XA0;&#XA0;<TT>fd_labeling/2</TT>,
+<TT>fd_labeling/1</TT>,
+<TT>fd_labelingff/1</TT></H4><P>
+<A NAME="fd-labeling/2"></A>
+
+
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+fd_labeling(+fd_variable_list, +fd_labeling_option_list)<BR>
+fd_labeling(+fd_variable, +fd_labeling_option_list)<BR>
+fd_labeling(+fd_variable_list)<BR>
+fd_labeling(+fd_variable)<BR>
+fd_labelingff(+fd_variable_list)<BR>
+fd_labelingff(+fd_variable)</TT></DD></DL><P><B>Description</B></P><P><TT>fd_labeling(Vars, Options)</TT> assigns a value to each variable
+<TT>X</TT> of the list <TT>Vars</TT> according to the list of labeling
+options given by <TT>Options</TT>. <TT>Vars</TT> can be also a single FD
+variable. This predicate is re-executable on backtracking.</P><P><B>FD labeling options</B>: <TT>Options</TT> is a list of labeling
+options. If this list contains contradictory options, the rightmost option
+is the one which applies. Possible options are:</P><UL CLASS="itemize"><LI CLASS="li-itemize"><TT>variable_method(V)</TT>: specifies the
+heuristics to select the variable to enumerate:<UL CLASS="itemize"><LI CLASS="li-itemize"><TT>standard</TT>: no heuristics, the leftmost variable is selected.</LI><LI CLASS="li-itemize"><TT>first_fail</TT> (or <TT>ff</TT>): selects the variable with the
+smallest number of elements in its domain. If several variables have the
+same number of elements the leftmost variable is selected.</LI><LI CLASS="li-itemize"><TT>most_constrained</TT>: like <TT>first_fail</TT> but when
+several variables have the same number of elements selects the
+variable that appears in most constraints.</LI><LI CLASS="li-itemize"><TT>smallest</TT>: selects the variable that has the smallest value
+in its domain. If there is more than one such variable selects the
+variable that appears in most constraints.</LI><LI CLASS="li-itemize"><TT>largest</TT>: selects the variable that has the greatest value in
+its domain. If there is more than one such variable selects the variable
+that appears in most constraints.</LI><LI CLASS="li-itemize"><TT>max_regret</TT>: selects the variable that has the greatest
+difference between the smallest value and the next value of its domain. If
+there is more than one such variable selects the variable that appears in
+most constraints.</LI><LI CLASS="li-itemize"><TT>random</TT>: selects randomly a variable. Each variable is only
+chosen once.</LI></UL><P>The default value is <TT>standard</TT>.</P></LI><LI CLASS="li-itemize"><TT>reorder(true/false)</TT>: specifies if the variable
+heuristics should dynamically reorder the list of variable (<TT>true</TT>) or
+not (<TT>false</TT>). Dynamic reordering is generally more efficient but in
+some cases a static ordering is faster. The default value is
+<TT>true</TT>.</LI><LI CLASS="li-itemize"><TT>value_method(V)</TT>: specifies the heuristics
+to select the value to assign to the chosen variable:<UL CLASS="itemize"><LI CLASS="li-itemize"><TT>min</TT>: enumerates the values from the smallest to the greatest
+(default).</LI><LI CLASS="li-itemize"><TT>max</TT>: enumerates the values from the greatest to the smallest.</LI><LI CLASS="li-itemize"><TT>middle</TT>: enumerates the values from the middle to the bounds.</LI><LI CLASS="li-itemize"><TT>bounds</TT>: enumerates the values from the bounds to the middle.</LI><LI CLASS="li-itemize"><TT>random</TT>: enumerates the values randomly. Each value is only
+tried once.</LI></UL><P>The default value is <TT>min</TT>.</P></LI><LI CLASS="li-itemize"><TT>backtracks(B)</TT>: unifies <TT>B</TT> with the
+number of backtracks during the enumeration.</LI></UL><P><TT>fd_labeling(Vars)</TT> is equivalent to <TT>fd_labeling(Vars,
+[])</TT>.</P><P><TT>fd_labelingff(Vars)</TT> is equivalent to <TT>fd_labeling(Vars,
+[variable_method(ff)])</TT>.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Vars</TT> is a partial list or a list with an element
+<TT>E</TT> which is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Vars</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Vars)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Vars</TT> list is neither a
+variable nor an integer nor an FD variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(fd_variable, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Options</TT> is a partial list or a list with an element
+<TT>E</TT> which is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Options</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Options)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Options</TT> list is neither a
+variable nor a labeling option</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(fd_labeling_option, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog063.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog055.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog065.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

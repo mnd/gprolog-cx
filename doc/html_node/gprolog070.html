@@ -1,0 +1,354 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Manipulating Prolog terms</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog069.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog066.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog071.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc364">10.4</A>&#XA0;&#XA0;Manipulating Prolog terms</H3><UL>
+<LI><A HREF="gprolog070.html#toc296">Introduction</A>
+</LI><LI><A HREF="gprolog070.html#toc297">Managing Prolog atoms</A>
+</LI><LI><A HREF="gprolog070.html#toc298">Reading Prolog terms</A>
+</LI><LI><A HREF="gprolog070.html#toc299">Unifying Prolog terms</A>
+</LI><LI><A HREF="gprolog070.html#toc300">Creating Prolog terms</A>
+</LI><LI><A HREF="gprolog070.html#toc301">Testing the type of Prolog terms</A>
+</LI><LI><A HREF="gprolog070.html#toc302">Comparing Prolog terms</A>
+</LI><LI><A HREF="gprolog070.html#toc303">Term processing</A>
+</LI><LI><A HREF="gprolog070.html#toc304">Comparing and evaluating arithmetic expressions</A>
+</LI></UL>
+<P>
+<A NAME="Manipulating-Prolog-terms"></A></P><H4 CLASS="subsubsection"><A NAME="toc296"></A><A NAME="htoc365">10.4.1</A>&#XA0;&#XA0;Introduction</H4><P>
+<A NAME="Introduction:(Manipulating-Prolog-terms)"></A>
+In the following we presents a set of functions to manipulate Prolog terms.
+For simple foreign terms the functions manipulate simple C types
+(section&#XA0;<A HREF="gprolog069.html#foreign/2-directive">10.3.2</A>).</P><P>Functions managing lists handle an array of 2 elements (of type
+<TT>PlTerm</TT>) containing the terms corresponding to the head and the tail
+of the list. For the empty list <TT>NULL</TT> is passed as the array. These
+functions require to flatten a list in each sub-list. To simplify the
+management of proper lists (i.e. lists terminated by <TT>[]</TT>) a set of
+functions is provided that handle the number of elements of the list (an
+integer) and an array whose elements (of type <TT>PlTerm</TT>) are the
+elements of the list. The caller of these functions must provide the array.</P><P>Functions managing compound terms handle a functor (the principal functor of
+the term), an arity <I><TT>N</TT></I> &#X2265; 0 and an array of <I><TT>N</TT></I> elements
+(of type <TT>PlTerm</TT>) containing the sub-terms of the compound term.
+Since a list is a special case of compound term (functor = <TT>&#X2019;.&#X2019;</TT> and
+arity=2) it is possible to use any function managing compound terms to deal
+with a list but the error detection is not the same. Indeed many functions
+check if the Prolog argument is correct. The name of a read or unify
+function checking the Prolog arguments is of the form
+<TT><I>Name</I>_Check()</TT>. For each of these functions there is a also
+check-free version called <TT><I>Name</I>()</TT>. We then only present the
+name of checking functions.</P><H4 CLASS="subsubsection"><A NAME="toc297"></A><A NAME="htoc366">10.4.2</A>&#XA0;&#XA0;Managing Prolog atoms</H4><P>Each atom has a unique internal key (an integer) which corresponds to its index in the
+GNU Prolog atom table. It is possible to obtain the information about an atom
+and to create new atoms using:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">char   *Pl_Atom_Name           (int atom)
+int     Pl_Atom_Length         (int atom)
+PlBool  Pl_Atom_Needs_Quote    (int atom)
+PlBool  Pl_Atom_Needs_Scan     (int atom)
+PlBool  Pl_Is_Valid_Atom       (int atom)
+int     Pl_Create_Atom         (const char *str)
+int     Pl_Create_Allocate_Atom(const char *str)
+int     Pl_Find_Atom           (const char *str)
+int     Pl_Atom_Char           (char c)
+int     Pl_Atom_Nil            (void)
+int     Pl_Atom_False          (void)
+int     Pl_Atom_True           (void)
+int     Pl_Atom_End_Of_File    (void)
+</PRE></DD></DL><P>The function <TT>Pl_Atom_Name(atom)</TT> returns the internal string of
+<TT>atom</TT> (this string should not be modified). The function
+<TT>Pl_Atom_Length(atom)</TT> returns the length (of the name) of
+<TT>atom</TT>.</P><P>The function <TT>Pl_Atom_Needs_Scan(atom)</TT> indicates if the canonical
+form of <TT>atom</TT> needs to be quoted as done by <TT>writeq/2</TT>
+(section&#XA0;<A HREF="gprolog038.html#write-term/3">8.14.6</A>). In that case <TT>Pl_Atom_Needs_Scan(atom)</TT>
+indicates if this simply comes down to write quotes around the name of
+<TT>atom</TT> or if it necessary to scan each character of the name because
+there are some non-printable characters (or included quote characters). The
+function <TT>Pl_Is_Valid_Atom(atom)</TT> is true only if <TT>atom</TT> is the
+internal key of an existing atom.</P><P>The function <TT>Pl_Create_Atom(str)</TT> adds a new atom whose name is the
+content of <TT>str</TT> to the system and returns its internal key. If the
+atom already exists its key is simply returned. The string <TT>str</TT>
+passed to the function should not be modified later. The function
+<TT>Pl_Create_Allocate_Atom(str)</TT> is provided when this condition cannot
+be ensured. It simply makes a dynamic copy of <TT>str</TT>
+(using <TT>strdup(3)</TT>).</P><P>The function <TT>Pl_Find_Atom(str)</TT> returns the internal key of the
+atom whose name is <TT>str</TT> or <TT>-1</TT> if does not exist.</P><P>All atoms corresponding to a single character already exist and their
+key can be obtained via the function <TT>Pl_Atom_Char</TT>. For
+instance <TT>Pl_Atom_Char(&#X2019;.&#X2019;)</TT> is the atom associated with
+<TT>&#X2019;.&#X2019;</TT> (this atom is the functor of lists). The other functions return
+the internal key of frequently used atoms: <TT>[]</TT>,
+<TT>false</TT>, <TT>true</TT> and <TT>end_of_file</TT>.</P><H4 CLASS="subsubsection"><A NAME="toc298"></A><A NAME="htoc367">10.4.3</A>&#XA0;&#XA0;Reading Prolog terms</H4><P>
+<A NAME="Reading-Prolog-terms"></A>
+The name of all functions presented here are of the form
+<TT>Pl_Rd_<I>Name</I>_Check()</TT>. They all check the validity of the
+Prolog term to read emitting appropriate errors if necessary. Each function
+has a check-free version called <TT>Pl_Rd_<I>Name</I>()</TT>.</P><P><B>Simple foreign types</B>: for each simple foreign type
+(section&#XA0;<A HREF="gprolog069.html#foreign/2-directive">10.3.2</A>) there is a read function (used by the
+interface when an input argument is provided):</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">PlLong  Pl_Rd_Integer_Check  (PlTerm term)
+PlLong  Pl_Rd_Positive_Check (PlTerm term)
+double  Pl_Rd_Float_Check    (PlTerm term)
+double  Pl_Rd_Number_Check   (PlTerm term)
+int     Pl_Rd_Atom_Check     (PlTerm term)
+int     Pl_Rd_Boolean_Check  (PlTerm term)
+int     Pl_Rd_Char_Check     (PlTerm term)
+int     Pl_Rd_In_Char_Check  (PlTerm term)
+int     Pl_Rd_Code_Check     (PlTerm term)
+int     Pl_Rd_In_Code_Check  (PlTerm term)
+int     Pl_Rd_Byte_Check     (PlTerm term)
+int     Pl_Rd_In_Byte_Check  (PlTerm term)
+char   *Pl_Rd_String_Check   (PlTerm term)
+char   *Pl_Rd_Chars_Check    (PlTerm term)
+char   *Pl_Rd_Codes_Check    (PlTerm term)
+int     Pl_Rd_Chars_Str_Check(PlTerm term, char *str)
+int     Pl_Rd_Codes_Str_Check(PlTerm term, char *str)
+</PRE></DD></DL><P>All functions returning a C string (<TT>char *</TT>) use a same buffer. The
+function <TT>Pl_Rd_Chars_Str_Check()</TT> is similar to
+<TT>Pl_Rd_Chars_Check()</TT> but accepts as argument a string to store the
+result and returns the length of that string (which is also the length of
+the Prolog list). Similarly for <TT>Pl_Rd_Codes_Str_Check()</TT>.</P><P><B>Complex terms</B>: the following functions return the sub-arguments
+(terms) of complex terms as an array of <TT>PlTerm</TT> except
+<TT>Pl_Rd_Proper_List_Check()</TT> which returns the size of the list read
+(and initializes the array <TT>element</TT>). Refer to the introduction of
+this section for more information about the arguments of complex functions
+(section&#XA0;<A HREF="#Introduction:(Manipulating-Prolog-terms)">10.4.1</A>).</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">int     Pl_Rd_Proper_List_Check(PlTerm term, PlTerm *arg)
+PlTerm *Pl_Rd_List_Check       (PlTerm term)
+PlTerm *Pl_Rd_Compound_Check   (PlTerm term, int *functor, int *arity)
+PlTerm *Pl_Rd_Callable_Check   (PlTerm term, int *functor, int *arity)
+</PRE></DD></DL><H4 CLASS="subsubsection"><A NAME="toc299"></A><A NAME="htoc368">10.4.4</A>&#XA0;&#XA0;Unifying Prolog terms</H4><P>
+The name of all functions presented here are of the form
+<TT>Pl_Un_<I>Name</I>_Check()</TT>. They all check the validity of the
+Prolog term to unify emitting appropriate errors if necessary. Each function
+has a check-free version called <TT>Pl_Un_<I>Name</I>()</TT>.</P><P><B>Simple foreign types</B>: for each simple foreign type
+(section&#XA0;<A HREF="gprolog069.html#foreign/2-directive">10.3.2</A>) there is an unify function (used by the
+interface when an output argument is provided):</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">PlBool Pl_Un_Integer_Check (PlLong n,          PlTerm term)
+PlBool Pl_Un_Positive_Check(PlLong n,          PlTerm term)
+PlBool Pl_Un_Float_Check   (double n,        PlTerm term)
+PlBool Pl_Un_Number_Check  (double n,        PlTerm term)
+PlBool Pl_Un_Atom_Check    (int atom,        PlTerm term)
+PlBool Pl_Un_Boolean_Check (int b,           PlTerm term)
+PlBool Pl_Un_Char_Check    (int c,           PlTerm term)
+PlBool Pl_Un_In_Char_Check (int c,           PlTerm term)
+PlBool Pl_Un_Code_Check    (int c,           PlTerm term)
+PlBool Pl_Un_In_Code_Check (int c,           PlTerm term)
+PlBool Pl_Un_Byte_Check    (int b,           PlTerm term)
+PlBool Pl_Un_In_Byte_Check (int b,           PlTerm term)
+PlBool Pl_Un_String_Check  (const char *str, PlTerm term)
+PlBool Pl_Un_Chars_Check   (const char *str, PlTerm term)
+PlBool Pl_Un_Codes_Check   (const char *str, PlTerm term)
+</PRE></DD></DL><P>The function <TT>Pl_Un_Number_Check(n, term)</TT> unifies <TT>term</TT> with
+an integer if <TT>n</TT> is an integer, with a floating point number
+otherwise. The function <TT>Pl_Un_String_Check(str, term)</TT> creates the
+atom corresponding to <TT>str</TT> and then unifies term with it (same as
+<TT>Pl_Un_Atom_Check(Pl_Create_Allocate_Atom(str), term)</TT>).</P><P>The following functions perform a general unification (between 2 terms). The
+second one performs a occurs-check test (while the first one does not).</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">PlBool Pl_Unif(PlTerm term1, PlTerm term2)
+PlBool Pl_Unif_With_Occurs_Check(PlTerm term1, PlTerm term2)
+</PRE></DD></DL><P><B>Complex terms</B>: the following functions accept the sub-arguments
+(terms) of complex terms as an array of <TT>PlTerm</TT>. Refer to the
+introduction of this section for more information about the arguments of
+complex functions (section&#XA0;<A HREF="#Introduction:(Manipulating-Prolog-terms)">10.4.1</A>).</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">PlBool Pl_Un_Proper_List_Check(int size, PlTerm *arg, PlTerm term)
+PlBool Pl_Un_List_Check       (PlTerm *arg, PlTerm term)
+PlBool Pl_Un_Compound_Check   (int functor, int arity, PlTerm *arg,
+                               PlTerm term)
+PlBool Pl_Un_Callable_Check   (int functor, int arity, PlTerm *arg,
+                               PlTerm term)
+</PRE></DD></DL><P>All these functions check the type of the term to unify and return the
+result of the unification. Generally if an unification fails the C function
+returns <TT>PL_FALSE</TT> to enforce a failure. However if there are several
+arguments to unify and if an unification fails then the C function returns
+<TT>PL_FALSE</TT> and the type of other arguments has not been checked.
+Normally all error cases are tested before doing any work to be sure that
+the predicate fails/succeeds only if no error condition is satisfied. So a
+good method is to check the validity of all arguments to unify and later
+to do the unification (using check-free functions). Obviously if there is
+only one to unify it is more efficient to use a unify function checking the
+argument. For the other cases the interface provides a set of functions to
+check the type of a term.</P><P><B>Simple foreign types</B>: for each simple foreign type
+(section&#XA0;<A HREF="gprolog069.html#foreign/2-directive">10.3.2</A>) there is check-for-unification function (used
+by the interface when an output argument is provided):</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">void Pl_Check_For_Un_Integer (PlTerm term)
+void Pl_Check_For_Un_Positive(PlTerm term)
+void Pl_Check_For_Un_Float   (PlTerm term)
+void Pl_Check_For_Un_Number  (PlTerm term)
+void Pl_Check_For_Un_Atom    (PlTerm term)
+void Pl_Check_For_Un_Boolean (PlTerm term)
+void Pl_Check_For_Un_Char    (PlTerm term)
+void Pl_Check_For_Un_In_Char (PlTerm term)
+void Pl_Check_For_Un_Code    (PlTerm term)
+void Pl_Check_For_Un_In_Code (PlTerm term)
+void Pl_Check_For_Un_Byte    (PlTerm term)
+void Pl_Check_For_Un_In_Byte (PlTerm term)
+void Pl_Check_For_Un_String  (PlTerm term)
+void Pl_Check_For_Un_Chars   (PlTerm term)
+void Pl_Check_For_Un_Codes   (PlTerm term)
+</PRE></DD></DL><P><B>Complex terms</B>: the following functions check the validity of
+complex terms:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">void Pl_Check_For_Un_List    (PlTerm term)
+void Pl_Check_For_Un_Compound(PlTerm term)
+void Pl_Check_For_Un_Callable(PlTerm term)
+void Pl_Check_For_Un_Variable(PlTerm term)
+</PRE></DD></DL><P>The function <TT>Pl_Check_For_Un_List(term)</TT> checks if <TT>term</TT> can
+be unified with a list. This test is done for the entire list (not only for
+the functor/arity of <TT>term</TT> but also recursively on the tail of the
+list). The function <TT>Pl_Check_For_Un_Variable(term)</TT> ensures that
+<TT>term</TT> is not currently instantiated. These functions can be defined
+using functions to test the type of a Prolog term (section&#XA0;<A HREF="#Testing-the-type-of-Prolog-terms">10.4.6</A>) and functions to raise Prolog errors (section&#XA0;<A HREF="gprolog071.html#Raising-Prolog-errors">10.5</A>). For instance <TT>Pl_Check_For_Un_List(term)</TT> is defined
+as follows:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">void Pl_Check_For_Un_List(PlTerm term)
+{
+ if (!Pl_Builtin_List_Or_Partial_List(term))
+     Pl_Err_Type(type_list, term);
+}
+</PRE></DD></DL><H4 CLASS="subsubsection"><A NAME="toc300"></A><A NAME="htoc369">10.4.5</A>&#XA0;&#XA0;Creating Prolog terms</H4><P>
+<A NAME="Creating-Prolog-terms"></A>
+These functions are provided to creates Prolog terms. Each function returns
+a <TT>PlTerm</TT> containing the created term.</P><P><B>Simple foreign types</B>: for each simple foreign type
+(section&#XA0;<A HREF="gprolog069.html#foreign/2-directive">10.3.2</A>) there is a creation function:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">PlTerm Pl_Mk_Integer (PlLong n)
+PlTerm Pl_Mk_Positive(PlLong n)
+PlTerm Pl_Mk_Float   (double n)
+PlTerm Pl_Mk_Number  (double n)
+PlTerm Pl_Mk_Atom    (int atom)
+PlTerm Pl_Mk_Boolean (int b)
+PlTerm Pl_Mk_Char    (int c)
+PlTerm Pl_Mk_In_Char (int c)
+PlTerm Pl_Mk_Code    (int c)
+PlTerm Pl_Mk_In_Code (int c)
+PlTerm Pl_Mk_Byte    (int b)
+PlTerm Pl_Mk_In_Byte (int b)
+PlTerm Pl_Mk_String  (const char *str)
+PlTerm Pl_Mk_Chars   (const char *str)
+PlTerm Pl_Mk_Codes   (const char *str)
+</PRE></DD></DL><P>The function <TT>Pl_Mk_Number(n, term)</TT> initializes <TT>term</TT> with an
+integer if <TT>n</TT> is an integer, with a floating point number otherwise.
+The function <TT>Pl_Mk_String(str)</TT> first creates an atom corresponding to
+<TT>str</TT> and then returns that Prolog atom (i.e. equivalent to
+<TT>Pl_Mk_Atom(Pl_Create_Allocate_Atom(str))</TT>).</P><P><B>Complex terms</B>: the following functions accept the sub-arguments
+(terms) of complex terms as an array of <TT>PlTerm</TT>. Refer to the
+introduction of this section for more information about the arguments of
+complex functions (section&#XA0;<A HREF="#Introduction:(Manipulating-Prolog-terms)">10.4.1</A>).</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">PlTerm Pl_Mk_Proper_List(int size, const PlTerm *arg)
+PlTerm Pl_Mk_List       (PlTerm *arg)
+PlTerm Pl_Mk_Compound   (int functor, int arity, const PlTerm *arg)
+PlTerm Pl_Mk_Callable   (int functor, int arity, const PlTerm *arg)
+</PRE></DD></DL><H4 CLASS="subsubsection"><A NAME="toc301"></A><A NAME="htoc370">10.4.6</A>&#XA0;&#XA0;Testing the type of Prolog terms</H4><P>
+<A NAME="Testing-the-type-of-Prolog-terms"></A>
+The following functions test the type of a Prolog term. Each function
+corresponds to a type testing built-in predicate (section&#XA0;<A HREF="gprolog025.html#var/1">8.1.1</A>).</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">PlBool Pl_Builtin_Var                 (PlTerm term)
+PlBool Pl_Builtin_Non_Var             (PlTerm term)
+PlBool Pl_Builtin_Atom                (PlTerm term)
+PlBool Pl_Builtin_Integer             (PlTerm term)
+PlBool Pl_Builtin_Float               (PlTerm term)
+PlBool Pl_Builtin_Number              (PlTerm term)
+PlBool Pl_Builtin_Atomic              (PlTerm term)
+PlBool Pl_Builtin_Compound            (PlTerm term)
+PlBool Pl_Builtin_Callable            (PlTerm term)
+PlBool Pl_Builtin_List                (PlTerm term)
+PlBool Pl_Builtin_Partial_List        (PlTerm term)
+PlBool Pl_Builtin_List_Or_Partial_List(PlTerm term)
+PlBool Pl_Builtin_Fd_Var              (PlTerm term)
+PlBool Pl_Builtin_Non_Fd_Var          (PlTerm term)
+PlBool Pl_Builtin_Generic_Var         (PlTerm term)
+PlBool Pl_Builtin_Non_Generic_Var     (PlTerm term)
+int    Pl_Type_Of_Term                (PlTerm term)
+PlLong   Pl_List_Length                 (PlTerm list)
+</PRE></DD></DL><P>The function <TT>Pl_Type_Of_Term(term)</TT> returns the type of
+<TT>term</TT>, the following constants can be used to test this type (e.g.
+in a <TT>switch</TT> instruction):</P><UL CLASS="itemize"><LI CLASS="li-itemize">
+<TT>PL_PLV</TT>: Prolog variable.</LI><LI CLASS="li-itemize"><TT>PL_FDV</TT>: finite domain variable.</LI><LI CLASS="li-itemize"><TT>PL_INT</TT>: integer.</LI><LI CLASS="li-itemize"><TT>PL_FLT</TT>: floating point number.</LI><LI CLASS="li-itemize"><TT>PL_ATM</TT>: atom.</LI><LI CLASS="li-itemize"><TT>PL_LST</TT>: list.</LI><LI CLASS="li-itemize"><TT>PL_STC</TT>: structure
+</LI></UL><P>The tag <TT>PL_LST</TT> means a term whose principal functor is <TT>&#X2019;.&#X2019;</TT>
+and whose arity is 2 (recall that the empty list is the atom <TT>[]</TT>).
+The tag <TT>PL_STC</TT> means any other compound term.</P><P>The function <TT>Pl_List_Length(list)</TT> returns the number of elements of
+the <TT>list</TT> (<TT>0</TT> for the empty list). If list is not a list
+this function returns <TT>-1</TT>.</P><H4 CLASS="subsubsection"><A NAME="toc302"></A><A NAME="htoc371">10.4.7</A>&#XA0;&#XA0;Comparing Prolog terms</H4><P>The following functions compares Prolog terms. Each function corresponds to
+a comparison built-in predicate (section&#XA0;<A HREF="gprolog027.html#(==)/2">8.3.2</A>).</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">PlBool Pl_Builtin_Term_Eq (PlTerm term1, PlTerm term2)
+PlBool Pl_Builtin_Term_Neq(PlTerm term1, PlTerm term2)
+PlBool Pl_Builtin_Term_Lt (PlTerm term1, PlTerm term2)
+PlBool Pl_Builtin_Term_Lte(PlTerm term1, PlTerm term2)
+PlBool Pl_Builtin_Term_Gt (PlTerm term1, PlTerm term2)
+PlBool Pl_Builtin_Term_Gte(PlTerm term1, PlTerm term2)
+</PRE></DD></DL><P>All these functions are based on a general comparison function returning a
+negative integer if <TT>term1</TT> is less than <TT>term2</TT>, 0 if they
+are equal and a positive integer otherwise:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">PlLong Term_Compare(PlTerm term1, PlTerm term2)
+</PRE></DD></DL><P>Finally, the following function gives an access to the <TT>compare/3</TT>
+built-in (section&#XA0;<A HREF="gprolog027.html#compare/3">8.3.3</A>) unifying <TT>cmp</TT> with the
+atom <TT>&lt;</TT>, <TT>=</TT> or <TT>&gt;</TT> depending on the result of
+the comparison of <TT>term1</TT> and <TT>term2</TT>.</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">PlBool Pl_Builtin_Compare(PlTerm cmp, PlTerm term1, PlTerm term2)
+</PRE></DD></DL><H4 CLASS="subsubsection"><A NAME="toc303"></A><A NAME="htoc372">10.4.8</A>&#XA0;&#XA0;Term processing</H4><P>The following functions give access to the built-in predicates:
+<TT>functor/3</TT> (section&#XA0;<A HREF="gprolog028.html#functor/3">8.4.1</A>), <TT>arg/3</TT> (section&#XA0;<A HREF="gprolog028.html#arg/3">8.4.2</A>)
+and <TT>(=..)/2</TT> (section&#XA0;<A HREF="gprolog028.html#(=..)/2">8.4.3</A>).</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">PlBool Pl_Builtin_Functor(PlTerm term, PlTerm functor, PlTerm arity)
+
+PlBool Pl_Builtin_Arg(PlTerm arg_no, PlTerm term, PlTerm sub_term)
+
+PlBool Pl_Builtin_Univ(PlTerm term, PlTerm list)
+</PRE></DD></DL><P>The following functions make a copy of a Prolog term:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">void Pl_Copy_Term           (PlTerm *dst_term, const PlTerm *src_term)
+void Pl_Copy_Contiguous_Term(PlTerm *dst_term, const PlTerm *src_term)
+int  Pl_Term_Size           (PlTerm term)
+</PRE></DD></DL><P>The function <TT>Pl_Copy_Term(dst_term, src_term)</TT> makes a copy of the
+term located at <TT>src_term</TT> and stores it from the address given by
+<TT>dst_term</TT>. The result is a contiguous term. If it can be ensured
+that the source term is a contiguous term (i.e. result of a previous copy)
+the function <TT>Pl_Copy_Contiguous_Term()</TT> can be used instead (it is
+faster). In any case, sufficient space should be available for the copy
+(i.e. from <TT>dst_term</TT>). The function <TT>Pl_Term_Size(term)</TT>
+returns the number of <TT>PlTerm</TT> needed by <TT>term</TT>.</P><H4 CLASS="subsubsection"><A NAME="toc304"></A><A NAME="htoc373">10.4.9</A>&#XA0;&#XA0;Comparing and evaluating arithmetic expressions</H4><P>
+The following functions compare arithmetic expressions. Each function
+corresponds to a comparison built-in predicate (section&#XA0;<A HREF="gprolog030.html#(=:=)/2">8.6.3</A>).</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">PlBool Pl_Builtin_Eq (PlTerm expr1, PlTerm expr2)
+PlBool Pl_Builtin_Neq(PlTerm expr1, PlTerm expr2)
+PlBool Pl_Builtin_Lt (PlTerm expr1, PlTerm expr2)
+PlBool Pl_Builtin_Lte(PlTerm expr1, PlTerm expr2)
+PlBool Pl_Builtin_Gt (PlTerm expr1, PlTerm expr2)
+PlBool Pl_Builtin_Gte(PlTerm expr1, PlTerm expr2)
+</PRE></DD></DL><P>The following function evaluates the expression <TT>expr</TT> and stores its
+result as a Prolog number (integer or floating point number) in
+<TT>result</TT>:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">void Pl_Math_Evaluate(PlTerm expr, PlTerm *result)
+</PRE></DD></DL><P>This function can be followed by a read function (section&#XA0;<A HREF="#Reading-Prolog-terms">10.4.3</A>)
+to obtain the result.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog069.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog066.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog071.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

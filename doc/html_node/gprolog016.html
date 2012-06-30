@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>The WAM debugger</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog015.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog010.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc30">5.6</A>&#XA0;&#XA0;The WAM debugger</H3><P>
+<A NAME="The-WAM-debugger"></A>
+In some cases it is interesting to have access to the WAM data
+structures. This sub-debugger allows the user to inspect/modify the contents
+of any stack or register of the WAM. The WAM debugger is invoked
+using the built-in predicate <TT>wam_debug/0</TT> (section&#XA0;<A HREF="gprolog013.html#Running-and-stopping-the-debugger">5.3.1</A>) or the <TT>W</TT> debugger command (section&#XA0;<A HREF="gprolog015.html#Debugger-commands">5.5</A>). The following table presents the specific commands of the WAM
+debugger:</P><TABLE BORDER=1 CELLSPACING=0 CELLPADDING=1><TR><TD ALIGN=left NOWRAP>
+Command</TD><TD ALIGN=left NOWRAP>Description</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>write</TT> <I><TT>A</TT></I> [<I><TT>N</TT></I>]</TD><TD ALIGN=left NOWRAP>write
+<I><TT>N</TT></I> terms starting at the address <I><TT>A</TT></I> using <TT>write/1</TT>
+(section&#XA0;<A HREF="gprolog038.html#write-term/3">8.14.6</A>)</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>data</TT> <I><TT>A</TT></I> [<I><TT>N</TT></I>]</TD><TD ALIGN=left NOWRAP>display <I><TT>N</TT></I> words starting at
+the address <I><TT>A</TT></I></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>modify</TT> <I><TT>A</TT></I> [<I><TT>N</TT></I>]</TD><TD ALIGN=left NOWRAP>display and modify <I><TT>N</TT></I> words
+starting at the address <I><TT>A</TT></I></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>where</TT> <I><TT>A</TT></I></TD><TD ALIGN=left NOWRAP>display the real address corresponding to
+<I><TT>A</TT></I></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>what</TT> <I><TT>RA</TT></I></TD><TD ALIGN=left NOWRAP>display what corresponds to the real address
+<I><TT>RA</TT></I></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>deref</TT> <I><TT>A</TT></I></TD><TD ALIGN=left NOWRAP>display the dereferenced word starting at the
+address <I><TT>A</TT></I></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>envir</TT> [<I><TT>SA</TT></I>]</TD><TD ALIGN=left NOWRAP>display the contents of the environment
+located at <I><TT>SA</TT></I> (or the current one)</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>backtrack</TT> [<I><TT>SA</TT></I>]</TD><TD ALIGN=left NOWRAP>display the contents of the choice-point
+located at <I><TT>SA</TT></I> (or the current one)</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>backtrack all</TT></TD><TD ALIGN=left NOWRAP>display all choice-points</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>quit</TT></TD><TD ALIGN=left NOWRAP>quit the WAM debugger</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>help</TT></TD><TD ALIGN=left NOWRAP>display a summary of available commands</TD></TR>
+</TABLE><P>In the above table the following conventions apply:</P><UL CLASS="itemize"><LI CLASS="li-itemize">elements between [ and ] are optional.</LI><LI CLASS="li-itemize"><I><TT>N</TT></I> is an optional integer (defaults to 1).</LI><LI CLASS="li-itemize"><I><TT>A</TT></I> is a WAM address, its syntax is:
+<I><TT>BANK_NAME</TT></I> [ <TT>[ <I>N</I> ]</TT> ], i.e. a bank name
+possibly followed by an index (defaults to 0). <I><TT>BANK_NAME</TT></I>
+is either:<UL CLASS="itemize"><LI CLASS="li-itemize"><TT>reg</TT>: WAM general register (stack pointers, continuation,
+...).</LI><LI CLASS="li-itemize"><TT>x</TT>: WAM X register (temporary variables, i.e. arguments).</LI><LI CLASS="li-itemize"><TT>y</TT>: WAM Y register (permanent variables).</LI><LI CLASS="li-itemize"><TT>ab</TT>: WAM X register saved in the current choice-point.</LI><LI CLASS="li-itemize"><I><TT>STACK_NAME</TT></I>: WAM stack
+(<I><TT>STACK_NAME</TT></I> in <TT>local</TT>, <TT>global</TT>, <TT>trail</TT>,
+<TT>cstr</TT>).</LI></UL></LI><LI CLASS="li-itemize"><I><TT>SA</TT></I> is a WAM stack address, i.e.
+<I><TT>STACK_NAME</TT></I> [ <TT>[ <I>N</I> ]</TT> ] (special case of
+WAM addresses).</LI><LI CLASS="li-itemize"><I><TT>RA</TT></I> is a real address, its syntax is the syntax of C
+integers (in particular the notation <TT>0x&#X2026;</TT> is recognized).</LI></UL><P>It is possible to only use the first letters of a commands and bank names
+when there is no ambiguity. Also the square brackets <TT>[</TT> <TT>]</TT>
+enclosing the index of a bank name can be omitted. For instance the
+following command (showing the contents of 25 consecutive words of the
+global stack from the index 3): <TT>data global[3] 25</TT> can be
+abbreviated as: <TT>d g 3 25</TT>.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog015.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog010.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+</BODY>
+</HTML>

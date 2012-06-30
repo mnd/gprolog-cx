@@ -1,0 +1,59 @@
+#!/bin/sh
+
+ROOT_DIR=`cd ../..;pwd`
+NAME=`cut -d - -f 1 ../VERSION`
+VERSION=`cut -d - -f 2 ../VERSION`
+PKG_NAME=$NAME-$VERSION
+
+RPMBUILD=rpmbuild
+
+BUILD_ROOT=/var/tmp/$NAME-build-rpm
+PREFIX=/usr
+PKG_DIR=$PREFIX/lib/$PKG_NAME
+DOC_DIR=$PREFIX/doc/$PKG_NAME
+BIN_DIR=$PREFIX/bin
+SRC_LNK=../lib/$PKG_NAME/bin
+
+# more complex :-)
+# X=`echo $BIN_DIR | sed -e "s#$PREFIX##" -e 's!/[^/]\{1,\}!../!g'`
+# Y=`echo $PKG_DIR | sed -e "s#$PREFIX##"`
+# SRC_LNK=$X$Y/bin
+
+
+# running a dummy rpm to find RPM environment
+# if you find better solution email me
+
+$RPMBUILD -bp rpm_env.spec >/dev/null 2>&1
+.  /tmp/rpm_env
+
+cp ../$PKG_NAME.tar.gz $RPM_SOURCES_DIR || exit 1
+
+if test "$1" = link; then
+	keep=@LINK@
+	remove=@REAL@
+        specfile=$NAME-link.spec
+else
+	keep=@REAL@
+	remove=@LINK@
+        specfile=$NAME.spec
+fi
+
+
+sed -e "s!@ROOT_DIR@!$ROOT_DIR!g" \
+    -e "s!@NAME@!$NAME!g" \
+    -e "s!@VERSION@!$VERSION!g" \
+    -e "s!@PKG_NAME@!$PKG_NAME!g" \
+    -e "s!@BUILD_ROOT@!$BUILD_ROOT!g" \
+    -e "s!@PREFIX@!$PREFIX!g" \
+    -e "s!@PKG_DIR@!$PKG_DIR!g" \
+    -e "s!@BIN_DIR@!$BIN_DIR!g" \
+    -e "s!@DOC_DIR@!$DOC_DIR!g" \
+    -e "s!@SRC_LNK@!$SRC_LNK!g" \
+    -e "s!$keep !!" \
+    -e "/^$remove.*/d" \
+    initial.spec > $specfile
+
+echo Spec file $specfile created
+
+test -d $RPM_SPECS_DIR && cp $specfile $RPM_SPECS_DIR
+exit 0

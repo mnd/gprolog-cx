@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Linedit management</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog052.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog054.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc291">8.29</A>&#XA0;&#XA0;Linedit management</H3><UL>
+<LI><A HREF="gprolog053.html#toc240"><TT>get_linedit_prompt/1</TT></A>
+</LI><LI><A HREF="gprolog053.html#toc241"><TT>set_linedit_prompt/1</TT></A>
+</LI><LI><A HREF="gprolog053.html#toc242"><TT>add_linedit_completion/1</TT></A>
+</LI><LI><A HREF="gprolog053.html#toc243"><TT>find_linedit_completion/2</TT></A>
+</LI></UL>
+<P>
+The following predicates are only available if the <TT>linedit</TT> part of
+GNU Prolog has been installed.</P><H4 CLASS="subsubsection"><A NAME="toc240"></A><A NAME="htoc292">8.29.1</A>&#XA0;&#XA0;<TT>get_linedit_prompt/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+get_linedit_prompt(?atom)</TT></DD></DL><P><B>Description</B></P><P><TT>get_linedit_prompt(Prompt)</TT> succeeds if <TT>Prompt</TT> is the
+current <TT>linedit</TT> prompt, e.g. the top-level prompt is
+<TT>&#X2019;| ?-&#X2019;</TT>. By default all other reads have an empty prompt.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Prompt</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Pred)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc241"></A><A NAME="htoc293">8.29.2</A>&#XA0;&#XA0;<TT>set_linedit_prompt/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+set_linedit_prompt(+atom)</TT></DD></DL><P><B>Description</B></P><P><TT>set_linedit_prompt(Prompt)</TT> sets the current <TT>linedit</TT>
+prompt to <TT>Prompt</TT>. This prompt will be displayed for reads from a
+terminal (except for top-level reads).</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Prompt</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Prompt</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Pred)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc242"></A><A NAME="htoc294">8.29.3</A>&#XA0;&#XA0;<TT>add_linedit_completion/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+add_linedit_completion(+atom)</TT></DD></DL><P><B>Description</B></P><P><TT>add_linedit_completion(Word)</TT> adds <TT>Word</TT> in the list of
+completion words maintained by <TT>linedit</TT>
+(section&#XA0;<A HREF="gprolog007.html#The-line-editor">4.2.6</A>). Only words containing letters, digits and
+the underscore character are added (if <TT>Word</TT> does not respect
+this restriction the predicate fails).</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Word</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Word</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Word)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc243"></A><A NAME="htoc295">8.29.4</A>&#XA0;&#XA0;<TT>find_linedit_completion/2</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+find_linedit_completion(+atom, ?atom)</TT></DD></DL><P><B>Description</B></P><P><TT>find_linedit_completion(Prefix, Word)</TT> succeeds if <TT>Word</TT>
+is a word beginning by <TT>Prefix</TT> and belongs to the list of
+completion words maintained by <TT>linedit</TT>
+(section&#XA0;<A HREF="gprolog007.html#The-line-editor">4.2.6</A>). This predicate is re-executable on backtracking.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Prefix</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Prefix</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Prefix)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Word</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Word)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog052.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog054.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Introduction</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog066.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog068.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc351">10.1</A>&#XA0;&#XA0;Introduction</H3><P>The foreign code interface allows the use to link Prolog and C in both
+directions.</P><P>A Prolog predicate can call a C function passing different kinds of arguments
+(input, output or input/output). The interface performs implicit Prolog
+&#X2194; C data conversions for simple types (for instance a Prolog
+integer is automatically converted into a C integer) and provides a set of
+API (Application Programming Interface) functions to convert more complex
+types (lists or structures). The interface also performs automatic error
+detection depending on the actual type of the passed argument. An important
+feature is the ability to write non-deterministic code in C.</P><P>It is also possible to call (or callback) a Prolog predicate from a C
+function and to manage Prolog non-determinism: the C code can ask for next
+solutions, remove all remaining solutions or terminate and keep
+alternatives for the calling Prolog predicate).</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog066.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog068.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

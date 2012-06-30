@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>System statistics</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog047.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog049.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc240">8.24</A>&#XA0;&#XA0;System statistics</H3><UL>
+<LI><A HREF="gprolog048.html#toc194"><TT>statistics/0</TT>,
+<TT>statistics/2</TT></A>
+</LI><LI><A HREF="gprolog048.html#toc195"><TT>user_time/1</TT>,
+<TT>system_time/1</TT>,
+<TT>cpu_time/1</TT>,
+<TT>real_time/1</TT></A>
+</LI></UL>
+<H4 CLASS="subsubsection"><A NAME="toc194"></A><A NAME="htoc241">8.24.1</A>&#XA0;&#XA0;<TT>statistics/0</TT>,
+<TT>statistics/2</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+statistics<BR>
+statistics(?atom, ?list)</TT></DD></DL><P><B>Description</B></P><P><TT>statistics</TT> displays statistics about memory usage and run times.</P><P><TT>statistics(Key, Value)</TT> unifies <TT>Value</TT> with the current
+value of the statistics key <TT>Key</TT>. <TT>Value</TT> a list of two
+elements. Times are in milliseconds, sizes of areas in bytes.</P><TABLE BORDER=1 CELLSPACING=0 CELLPADDING=1><TR><TD ALIGN=left NOWRAP>
+Key</TD><TD ALIGN=left NOWRAP>Description</TD><TD ALIGN=left NOWRAP>Value</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>user_time</TT></TD><TD ALIGN=left NOWRAP>user CPU time</TD><TD ALIGN=left NOWRAP><TT>[SinceStart, SinceLast]</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>system_time</TT></TD><TD ALIGN=left NOWRAP>system CPU time</TD><TD ALIGN=left NOWRAP><TT>[SinceStart, SinceLast]</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>cpu_time</TT></TD><TD ALIGN=left NOWRAP>total CPU time (user + system)</TD><TD ALIGN=left NOWRAP><TT>[SinceStart,
+SinceLast]</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>real_time</TT></TD><TD ALIGN=left NOWRAP>absolute time</TD><TD ALIGN=left NOWRAP><TT>[SinceStart, SinceLast]</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>local_stack</TT></TD><TD ALIGN=left NOWRAP>local stack sizes (control, environments, choices)</TD><TD ALIGN=left NOWRAP><TT>[UsedSize, FreeSize]</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>global_stack</TT></TD><TD ALIGN=left NOWRAP>global stack sizes (compound terms)</TD><TD ALIGN=left NOWRAP><TT>[UsedSize, FreeSize]</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>trail_stack</TT></TD><TD ALIGN=left NOWRAP>trail stack sizes (variable bindings to undo)</TD><TD ALIGN=left NOWRAP><TT>[UsedSize, FreeSize]</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>cstr_stack</TT></TD><TD ALIGN=left NOWRAP>constraint trail sizes (finite domain constraints)</TD><TD ALIGN=left NOWRAP><TT>[UsedSize, FreeSize]</TT></TD></TR>
+</TABLE><P>Note that the key <TT>runtime</TT> is recognized as <TT>user_time</TT> for
+compatibility purpose.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Key</TT> is neither a variable nor a valid key</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(statistics_key, Key)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Value</TT> is neither a variable nor a list of two elements</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(statistics_value, Value)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Value</TT> is a list of two elements and an element <TT>E</TT>
+is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc195"></A><A NAME="htoc242">8.24.2</A>&#XA0;&#XA0;<TT>user_time/1</TT>,
+<TT>system_time/1</TT>,
+<TT>cpu_time/1</TT>,
+<TT>real_time/1</TT></H4><P>
+<A NAME="user-time/1"></A>
+
+
+
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+user_time(?integer)<BR>
+system_time(?integer)<BR>
+cpu_time(?integer)<BR>
+real_time(?integer)</TT></DD></DL><P><B>Description</B></P><P><TT>user_time(Time)</TT> unifies <TT>Time</TT> with the user
+CPU time elapsed since the start of Prolog.</P><P><TT>system_time(Time)</TT> unifies <TT>Time</TT> with the
+system CPU time elapsed since the start of Prolog.</P><P><TT>cpu_time(Time)</TT> unifies <TT>Time</TT> with the CPU
+time (user + system) elapsed since the start of Prolog.</P><P><TT>real_time(Time)</TT> unifies <TT>Time</TT> with the
+absolute time elapsed since the start of Prolog.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Time</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Time)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog047.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog049.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

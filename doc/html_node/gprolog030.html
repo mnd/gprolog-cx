@@ -1,0 +1,312 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Arithmetic</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog029.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog031.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc94">8.6</A>&#XA0;&#XA0;Arithmetic</H3><UL>
+<LI><A HREF="gprolog030.html#toc66">Evaluation of an arithmetic expression</A>
+</LI><LI><A HREF="gprolog030.html#toc67"><TT>(is)/2</TT> - evaluate expression</A>
+</LI><LI><A HREF="gprolog030.html#toc68"><TT>(=:=)/2</TT> - arithmetic equal,
+<TT>(=</TT><TT>\</TT><TT>=)/2</TT> - arithmetic not equal,<BR>
+ <TT>(</TT><TT>&lt;</TT><TT>)/2</TT> - arithmetic less than,
+<TT>(=</TT><TT>&lt;</TT><TT>)/2</TT> - arithmetic less than or equal to,<BR>
+ <TT>(</TT><TT>&gt;</TT><TT>)/2</TT> - arithmetic greater than,
+<TT>(</TT><TT>&gt;</TT><TT>=)/2</TT> - arithmetic greater than or equal to</A>
+</LI><LI><A HREF="gprolog030.html#toc69"><TT>succ/2</TT></A>
+</LI></UL>
+<H4 CLASS="subsubsection"><A NAME="toc66"></A><A NAME="htoc95">8.6.1</A>&#XA0;&#XA0;Evaluation of an arithmetic expression</H4><P>
+<A NAME="Evaluation-of-an-arithmetic-expression"></A>
+An arithmetic expression is a Prolog term built from numbers,
+variables, and functors (or operators) that represent arithmetic functions.
+When an expression is evaluated each variable must be bound to a
+non-variable expression. An expression evaluates to a number, which may be
+an integer or a floating point number. The following table details the
+components of an arithmetic expression, how they are evaluated, the types
+expected/returned and if they are ISO or an extension:</P><BLOCKQUOTE CLASS="table"><DIV CLASS="center"><HR WIDTH="80%" SIZE=2></DIV><TABLE BORDER=1 CELLSPACING=0 CELLPADDING=1><TR><TD VALIGN=top ALIGN=left NOWRAP>Expression</TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">Result = <I>eval</I>(Expression)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>Signature</TD><TD VALIGN=top ALIGN=center NOWRAP>ISO</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>a variable</TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">bound to an expression <TT>E</TT>, result is <I>eval</I>(<TT>E</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF &#X2192; IF</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+an integer number</TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">this number</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>I</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+a floating point number</TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">this number</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>F</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>pi</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">the value of &#X3C0; = 3.141592...</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>F</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>e</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">the value of <I>e</I> = 2.718281...</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>F</TD><TD VALIGN=top ALIGN=center NOWRAP>N</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>epsilon</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">difference between 1.0 and minimum float &gt; 1.0</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>F</TD><TD VALIGN=top ALIGN=center NOWRAP>N</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>+ E</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><I>eval</I>(<TT>E</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF &#X2192; IF</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>- E</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">- <I>eval</I>(<TT>E</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF &#X2192; IF</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>inc(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><I>eval</I>(<TT>E</TT>) + 1</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF &#X2192; IF</TD><TD VALIGN=top ALIGN=center NOWRAP>N</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>dec(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><I>eval</I>(<TT>E</TT>) - 1</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF &#X2192; IF</TD><TD VALIGN=top ALIGN=center NOWRAP>N</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>E1 + E2</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><I>eval</I>(<TT>E1</TT>) + <I>eval</I>(<TT>E2</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF, IF &#X2192; IF</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>E1 - E2</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><I>eval</I>(<TT>E1</TT>) - <I>eval</I>(<TT>E2</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF, IF &#X2192; IF</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>E1 * E2</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><I>eval</I>(<TT>E1</TT>) * <I>eval</I>(<TT>E2</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF, IF &#X2192; IF</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>E1 / E2</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><I>eval</I>(<TT>E1</TT>) / <I>eval</I>(<TT>E2</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF, IF &#X2192; F</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>E1 // E2</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><I>rnd</I>(<I>eval</I>(<TT>E1</TT>) /
+<I>eval</I>(<TT>E2</TT>))</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>I, I &#X2192; I</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>E1 rem E2</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><I>eval</I>(<TT>E1</TT>) -
+(<I>rnd</I>(<I>eval</I>(<TT>E1</TT>) /
+<I>eval</I>(<TT>E2</TT>)) * <I>eval</I>(<TT>E2</TT>))</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>I, I &#X2192;
+I</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>E1 div E2</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">&#X230A;(<I>eval</I>(<TT>E1</TT>) -
+<I>eval</I>(<TT>E1</TT>) <TT>mod</TT> <I>eval</I>(<TT>E2</TT>)) /
+<I>eval</I>(<TT>E2</TT>)&#X230B;</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>I, I &#X2192; I</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>E1 mod E2</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><I>eval</I>(<TT>E1</TT>) -
+(&#X230A;<I>eval</I>(<TT>E1</TT>) / <I>eval</I>(<TT>E2</TT>)&#X230B;
+* <I>eval</I>(<TT>E2</TT>))</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>I, I &#X2192; I</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>E1 /\ E2</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><I>eval</I>(<TT>E1</TT>) bitwise_and
+<I>eval</I>(<TT>E2</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>I, I &#X2192; I</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>E1 \/ E2</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><I>eval</I>(<TT>E1</TT>) bitwise_or
+<I>eval</I>(<TT>E2</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>I, I &#X2192; I</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>xor(E1,E2)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><I>eval</I>(<TT>E1</TT>) bitwise_xor
+<I>eval</I>(<TT>E2</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>I, I &#X2192; I</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>\ E</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">bitwise_not <I>eval</I>(<TT>E</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>I &#X2192;
+I</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>E1 &lt;&lt; E2</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><I>eval</I>(<TT>E1</TT>) integer_shift_left
+<I>eval</I>(<TT>E2</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>I, I &#X2192; I</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>E1 &gt;&gt; E2</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><I>eval</I>(<TT>E1</TT>) integer_shift_right
+<I>eval</I>(<TT>E2</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>I, I &#X2192; I</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>lsb(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">least significant bit (from 0) of <I>eval</I>(<TT>E</TT>) or -1</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>I
+&#X2192; I</TD><TD VALIGN=top ALIGN=center NOWRAP>N</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>msb(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">most significant bit (from 0) of <I>eval</I>(<TT>E</TT>) or -1</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>I
+&#X2192; I</TD><TD VALIGN=top ALIGN=center NOWRAP>N</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>popcount(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">number of 1-bits in <I>eval</I>(<TT>E</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>I
+&#X2192; I</TD><TD VALIGN=top ALIGN=center NOWRAP>N</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>abs(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">absolute value of <I>eval</I>(<TT>E</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF
+&#X2192; IF</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>sign(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">sign of <I>eval</I>(<TT>E</TT>) (-1 if &lt; 0, 0 if = 0,
++1 if &gt; 0)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF &#X2192; IF</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>min(E1,E2)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">minimal value between <I>eval</I>(<TT>E1</TT>) and
+<I>eval</I>(<TT>E2</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF, IF &#X2192; ?</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>max(E1,E2)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">maximal value between <I>eval</I>(<TT>E1</TT>) and
+<I>eval</I>(<TT>E2</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF, IF &#X2192; ?</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>gcd(E1,E2)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">greatest common divisor of <I>eval</I>(<TT>E1</TT>) and
+<I>eval</I>(<TT>E2</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>I, I &#X2192; I</TD><TD VALIGN=top ALIGN=center NOWRAP>N</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>E1 ^ E2</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><I>eval</I>(<TT>E1</TT>) raised to the power of
+<I>eval</I>(<TT>E2</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF, IF &#X2192; IF</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>E1 ** E2</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><I>eval</I>(<TT>E1</TT>) raised to the power of
+<I>eval</I>(<TT>E2</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF, IF &#X2192; F</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>sqrt(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">square root of <I>eval</I>(<TT>E</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF
+&#X2192; F</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>tan(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">tangent of <I>eval</I>(<TT>E</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF
+&#X2192; F</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>atan(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">arc tangent of <I>eval</I>(<TT>E</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF
+&#X2192; F</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>atan2(Y,X)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">principal value of arc tangent
+of <I>eval</I>(<TT>Y</TT>) / <I>eval</I>(<TT>X</TT>) using both signs for the quadrant</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF
+&#X2192; F</TD><TD VALIGN=top ALIGN=center NOWRAP>N</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>cos(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">cosine of <I>eval</I>(<TT>E</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF &#X2192; F</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>acos(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">arc cosine of <I>eval</I>(<TT>E</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF, IF &#X2192; F</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>sin(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">sine of <I>eval</I>(<TT>E</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF &#X2192; F</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>asin(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">arc sine of <I>eval</I>(<TT>E</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF &#X2192; F</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>tanh(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">hyperbolic tangent of <I>eval</I>(<TT>E</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF
+&#X2192; F</TD><TD VALIGN=top ALIGN=center NOWRAP>N</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>atanh(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">hyperbolic arc tangent of <I>eval</I>(<TT>E</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF
+&#X2192; F</TD><TD VALIGN=top ALIGN=center NOWRAP>N</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>cosh(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">hyperbolic cosine of <I>eval</I>(<TT>E</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF &#X2192; F</TD><TD VALIGN=top ALIGN=center NOWRAP>N</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>acosh(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">hyperbolic arc cosine of <I>eval</I>(<TT>E</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF, IF &#X2192; F</TD><TD VALIGN=top ALIGN=center NOWRAP>N</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>sinh(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">hyperbolic sine of <I>eval</I>(<TT>E</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF &#X2192; F</TD><TD VALIGN=top ALIGN=center NOWRAP>N</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>asinh(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">hyperbolic arc sine of <I>eval</I>(<TT>E</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF &#X2192; F</TD><TD VALIGN=top ALIGN=center NOWRAP>N</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>exp(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><I>e</I> raised to the power of <I>eval</I>(<TT>E</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF &#X2192; F</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>log(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">natural logarithm of <I>eval</I>(<TT>E</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF
+&#X2192; F</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>log10(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">base 10 logarithm of <I>eval</I>(<TT>E</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF
+&#X2192; F</TD><TD VALIGN=top ALIGN=center NOWRAP>N</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>log(R, E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">base <I>eval</I>(<TT>R</TT>) logarithm of <I>eval</I>(<TT>E</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>F, IF
+&#X2192; F</TD><TD VALIGN=top ALIGN=center NOWRAP>N</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>float(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">the floating point number equal to
+<I>eval</I>(<TT>E</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>IF &#X2192; F</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>ceiling(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">rounds <I>eval</I>(<TT>E</TT>) upward to the
+nearest integer</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>F &#X2192; I</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>floor(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">rounds <I>eval</I>(<TT>E</TT>) downward to the
+nearest integer</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>F &#X2192; I</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>round(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">rounds <I>eval</I>(<TT>E</TT>) to the nearest integer</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>F &#X2192; I</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>truncate(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">the integer value of <I>eval</I>(<TT>E</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>F
+&#X2192; I</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>float_fractional_part(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">the float equal to the fractional part
+of <I>eval</I>(<TT>E</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>F &#X2192; F</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>float_integer_part(E)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">the float equal to the integer part of
+<I>eval</I>(<TT>E</TT>)</DIV></TD><TD VALIGN=top ALIGN=center NOWRAP>F &#X2192; F</TD><TD VALIGN=top ALIGN=center NOWRAP>Y</TD></TR>
+</TABLE><DIV CLASS="center"><HR WIDTH="80%" SIZE=2></DIV></BLOCKQUOTE><P>The meaning of the signature field is as follows:</P><UL CLASS="itemize"><LI CLASS="li-itemize">I &#X2192; I: unary function, the operand must be an integer and
+the result is an integer.</LI><LI CLASS="li-itemize">F &#X2192; F: unary function, the operand must be a floating
+point number and the result is a floating point number.</LI><LI CLASS="li-itemize">F &#X2192; I: unary function, the operand must be a floating
+point number and the result is an integer.</LI><LI CLASS="li-itemize">IF &#X2192; F: unary function, the operand can be an integer or a
+floating point number and the result is a floating point number.</LI><LI CLASS="li-itemize">IF &#X2192; IF: unary function, the operand can be an integer or
+a floating point number and the result has the same type as the operand.</LI><LI CLASS="li-itemize">I, I &#X2192; I: binary function: each operand must be an integer
+and the result is an integer.</LI><LI CLASS="li-itemize">IF, IF &#X2192; IF: binary function: each operand can be an
+integer or a floating point number and the result is a floating point number
+if at least one operand is a floating point number, an integer otherwise.</LI><LI CLASS="li-itemize">IF, IF &#X2192; ?: binary function: each operand can be an
+integer or a floating point number and the result has the same type as the
+selected operand. This is used for <TT>min</TT> and <TT>max</TT>. Note that
+in case of equality between an integer and a floating point number the
+result is an integer.</LI></UL><P><TT>is</TT>, <TT>+</TT>, <TT>-</TT>, <TT>*</TT>, <TT>/</TT>, <TT>//</TT>,
+<TT>div</TT>, <TT>rem</TT>, <TT>mod</TT>, <TT>/\</TT>, <TT>\/</TT>,
+<TT>&lt;&lt;</TT>, <TT>&gt;&gt;</TT>, <TT>**</TT> and <TT>^</TT> are predefined infix
+operators. <TT>+</TT>, <TT>-</TT> and <TT>\</TT>, are predefined prefix
+operators (section&#XA0;<A HREF="gprolog038.html#op/3:(Term-input/output)">8.14.10</A>).</P><P><B>Integer division rounding function</B>: the integer division rounding
+function <TT><I>rnd</I>(X)</TT> rounds the floating point number
+<TT>X</TT> to an integer. There are two possible definitions (depending on
+the target machine) for this function which differ on negative numbers:</P><UL CLASS="itemize"><LI CLASS="li-itemize"><TT><I>rnd</I>(X)</TT> = integer part of <TT>X</TT>, e.g.
+<TT><I>rnd</I>(-1.5)</TT> = <TT>-1</TT> (round toward 0)</LI><LI CLASS="li-itemize"><TT><I>rnd</I>(X)</TT> = &#X230A;<TT>X</TT>&#X230B;, e.g.
+<TT><I>rnd</I>(-1.5)</TT> = <TT>-2</TT> (round toward &#X2212;&#X221E;)</LI></UL><P>The definition of this function determines the definition of the integer
+division and remainder (<TT>(//)/2</TT> and <TT>(rem)/2</TT>). It is
+possible to test the value (<TT>toward_zero</TT> or <TT>down</TT>) of the
+<TT>integer_rounding_function</TT> Prolog flag to determine which
+function being used (section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>). Since rounding toward zero is
+the most common case, two additional evaluable functors (<TT>(div)/2</TT> and
+<TT>(mod)/2</TT>) are available which consider rounding toward &#X2212;&#X221E;.</P><P><B>Fast mathematical mode</B>: in order to speed-up integer computations,
+the GNU Prolog compiler can generate faster code when invoked with the
+<TT>--fast-math</TT> option (section&#XA0;<A HREF="gprolog009.html#Using-the-compiler">4.4.3</A>). In this mode only
+integer operations are allowed and a variable in an expression must be bound
+at evaluation time to an integer. No type checking is done.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+a sub-expression <TT>E</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+a sub-expression <TT>E</TT> is neither a number nor an evaluable
+functor</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(evaluable, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+a sub-expression <TT>E</TT> is a floating point number while an
+integer is expected</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+a sub-expression <TT>E</TT> is an integer while a floating point
+number is expected</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(float, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+a division by zero occurs</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>evaluation_error(zero_divisor)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>Refer to the above table to determine which evaluable functors are ISO
+and which are GNU Prolog extensions. For efficiency reasons, GNU
+Prolog does not detect the following ISO arithmetic errors:
+<TT>float_overflow</TT>,
+<TT>int_overflow, int_underflow</TT>, and <TT>undefined</TT>.</P><H4 CLASS="subsubsection"><A NAME="toc67"></A><A NAME="htoc96">8.6.2</A>&#XA0;&#XA0;<TT>(is)/2</TT> - evaluate expression</H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+is(?term, +evaluable)</TT></DD></DL><P><B>Description</B></P><P><TT>Result is Expression</TT> succeeds if <TT>Result</TT> can be
+unified with <I>eval</I>(<TT>Expression</TT>). Refer to the
+evaluation of an arithmetic expression for the definition of the
+<I>eval</I> function
+(section&#XA0;<A HREF="#Evaluation-of-an-arithmetic-expression">8.6.1</A>).</P><P><TT>is</TT> is a predefined infix operator (section&#XA0;<A HREF="gprolog038.html#op/3:(Term-input/output)">8.14.10</A>).</P><P><B>Errors</B></P><P>Refer to the evaluation of an arithmetic expression for possible errors
+(section&#XA0;<A HREF="#Evaluation-of-an-arithmetic-expression">8.6.1</A>).</P><P><B>Portability</B></P><P>ISO predicate.</P><H4 CLASS="subsubsection"><A NAME="toc68"></A><A NAME="htoc97">8.6.3</A>&#XA0;&#XA0;<TT>(=:=)/2</TT> - arithmetic equal,
+<TT>(=\=)/2</TT> - arithmetic not equal,<BR>
+ <TT>(&lt;)/2</TT> - arithmetic less than,
+<TT>(=&lt;)/2</TT> - arithmetic less than or equal to,<BR>
+ <TT>(&gt;)/2</TT> - arithmetic greater than,
+<TT>(&gt;=)/2</TT> - arithmetic greater than or equal to</H4><P>
+<A NAME="(=:=)/2"></A>
+
+
+
+
+
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+=:=(+evaluable, +evaluable)<BR>
+=\=(+evaluable, +evaluable)<BR>
+&lt;(+evaluable, +evaluable)<BR>
+=&lt;(+evaluable, +evaluable)<BR>
+&gt;(+evaluable, +evaluable)<BR>
+&gt;=(+evaluable, +evaluable)</TT></DD></DL><P><B>Description</B></P><P><TT>Expr1 =:= Expr2</TT> succeeds if <I>eval</I>(<TT>Expr1</TT>) =
+<I>eval</I>(<TT>Expr2</TT>).</P><P><TT>Expr1 =\= Expr2</TT> succeeds if <I>eval</I>(<TT>Expr1</TT>)
+&#X2260; <I>eval</I>(<TT>Expr2</TT>).</P><P><TT>Expr1 &lt; Expr2</TT> succeeds if <I>eval</I>(<TT>Expr1</TT>) &lt;
+<I>eval</I>(<TT>Expr2</TT>).</P><P><TT>Expr1 =&lt; Expr2</TT> succeeds if <I>eval</I>(<TT>Expr1</TT>)
+&#X2264; <I>eval</I>(<TT>Expr2</TT>).</P><P><TT>Expr1 &gt; Expr2</TT> succeeds if <I>eval</I>(<TT>Expr1</TT>) &gt;
+<I>eval</I>(<TT>Expr2</TT>).</P><P><TT>Expr1 &gt;= Expr2</TT> succeeds if <I>eval</I>(<TT>Expr1</TT>)
+&#X2265; <I>eval</I>(<TT>Expr2</TT>).</P><P>Refer to the evaluation of an arithmetic expression for the definition of
+the <I>eval</I> function (section&#XA0;<A HREF="#Evaluation-of-an-arithmetic-expression">8.6.1</A>).</P><P><TT>=:=</TT>, <TT>=\=</TT>, <TT>&lt;</TT>, <TT>=&lt;</TT>,
+<TT>&gt;</TT> and <TT>&gt;=</TT> are predefined infix operators
+(section&#XA0;<A HREF="gprolog038.html#op/3:(Term-input/output)">8.14.10</A>).</P><P><B>Errors</B></P><P>Refer to the evaluation of an arithmetic expression for possible errors
+(section&#XA0;<A HREF="#Evaluation-of-an-arithmetic-expression">8.6.1</A>).</P><P><B>Portability</B></P><P>ISO predicates.</P><H4 CLASS="subsubsection"><A NAME="toc69"></A><A NAME="htoc98">8.6.4</A>&#XA0;&#XA0;<TT>succ/2</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+succ(+integer, ?integer)<BR>
+succ(-integer, +integer) </TT></DD></DL><P><B>Description</B></P><P><TT>succ(X, Y)</TT> is true iff <TT>Y</TT> is the successor of the non-negative integer <TT>X</TT>. </P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>X</TT> and <TT>Y</TT> are both variables</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>X</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, X)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Y</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Y)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>X</TT> is an integer &lt; 0</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(not_less_than_zero, X)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Y</TT> is an integer &lt; 0</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(not_less_than_zero, Y)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog029.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog031.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

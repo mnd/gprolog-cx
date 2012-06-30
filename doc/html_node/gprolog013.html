@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Debugging predicates</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog012.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog010.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog014.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc24">5.3</A>&#XA0;&#XA0;Debugging predicates</H3><UL>
+<LI><A HREF="gprolog013.html#toc13">Running and stopping the debugger</A>
+</LI><LI><A HREF="gprolog013.html#toc14">Leashing ports</A>
+</LI><LI><A HREF="gprolog013.html#toc15">Spy-points</A>
+</LI></UL>
+<H4 CLASS="subsubsection"><A NAME="toc13"></A><A NAME="htoc25">5.3.1</A>&#XA0;&#XA0;Running and stopping the debugger</H4><P>
+<A NAME="Running-and-stopping-the-debugger"></A>
+
+
+
+
+
+</P><P><TT>trace/0</TT> activates the debugger. The next invocation of a predicate
+will be traced.</P><P><TT>debug/0</TT> activates the debugger. The next invocation of a predicate
+on which a spy-point has been set will be traced.</P><P>It is important to understand that the information associated with the control
+flow is only available when the debugger is on. For efficiency reasons, when
+the debugger is off the information concerning the control flow (i.e. the
+boxes) is not retained. So, if the debugger is activated in the middle of a
+computation (by a call to <TT>debug/0</TT> or <TT>trace/0</TT> in the
+program or after the interrupt key sequence (<TT>Ctl-C</TT>) by choosing
+<TT>trace</TT> or <TT>debug</TT>), information prior to this point is not
+available.</P><P><TT>debugging/0</TT>: prints onto the terminal information about the current
+debugging state (whether the debugger is switched on, what are the leashed
+ports, spy-points defined,&#X2026;).</P><P><TT>notrace/0</TT> or <TT>nodebug/0</TT> switches the debugger off.</P><P><TT>wam_debug/0</TT> invokes the sub-debugger devoted to the WAM data
+structures (section&#XA0;<A HREF="gprolog016.html#The-WAM-debugger">5.6</A>). It can be also invoked using the
+<TT>W</TT> debugger command (section&#XA0;<A HREF="gprolog015.html#Debugger-commands">5.5</A>).</P><H4 CLASS="subsubsection"><A NAME="toc14"></A><A NAME="htoc26">5.3.2</A>&#XA0;&#XA0;Leashing ports</H4><P>
+<A NAME="Leashing-ports"></A>
+</P><P><TT>leash(Ports)</TT> requests the debugger to prompt the user, as
+he creeps through the program, for every port defined in the <TT>Ports</TT>
+list. Each element of <TT>Ports</TT> is an atom in <TT>call</TT>,
+<TT>exit</TT>, <TT>redo</TT>, <TT>fail</TT>, <TT>exception</TT>.
+<TT>Ports</TT> can also be an atom defining a shorthand:</P><UL CLASS="itemize"><LI CLASS="li-itemize"><TT>full</TT>: equivalent to <TT>[call, exit, redo, fail,
+exception]</TT></LI><LI CLASS="li-itemize"><TT>half</TT>: equivalent to <TT>[call, redo]</TT></LI><LI CLASS="li-itemize"><TT>loose</TT>: equivalent to <TT>[call]</TT></LI><LI CLASS="li-itemize"><TT>none</TT>: equivalent to <TT>[]</TT></LI><LI CLASS="li-itemize"><TT>tight</TT>: equivalent to <TT>[call, redo, fail,
+exception]</TT></LI></UL><P>When an unleashed port is encountered the debugger continues to show the
+associated goal but does not stop the execution to prompt the user.</P><H4 CLASS="subsubsection"><A NAME="toc15"></A><A NAME="htoc27">5.3.3</A>&#XA0;&#XA0;Spy-points</H4><P>
+<A NAME="Spy-points"></A>
+
+
+
+</P><P>When dealing with big sources it is not very practical to creep through the
+entire program. It is preferable to define a set of spy-points on
+interesting predicates to be prompted when the debugger reaches one of these
+predicates. Spy-points can be added either using <TT>spy/1</TT> (or
+<TT>spypoint_condition/3</TT>) or dynamically when prompted by the debugger
+using the <TT>+</TT> (or <TT>*</TT>) debugger command
+(section&#XA0;<A HREF="gprolog015.html#Debugger-commands">5.5</A>). The current mode of leashing does not
+affect spy-points in the sense that user interaction is requested on
+every port.</P><P><TT>spy(PredSpec)</TT> sets a spy-point on all the predicates given by
+<TT>PredSpec</TT>. <TT>PredSpec</TT> defines one or several predicates and
+has one of the following forms:</P><UL CLASS="itemize"><LI CLASS="li-itemize"><TT>[PredSpec1, PredSpec2,&#X2026;]</TT>: set a spy-point for each
+element of the list.</LI><LI CLASS="li-itemize"><TT>Name</TT>: set a spy-point for any predicate whose name is
+<TT>Name</TT> (whatever the arity).</LI><LI CLASS="li-itemize"><TT>Name/Arity</TT>: set a spy-point for the predicate whose name is
+<TT>Name</TT> and arity is <TT>Arity</TT>.</LI><LI CLASS="li-itemize"><TT>Name/A1-A2</TT>: set a spy-point for the each predicate whose name
+is <TT>Name</TT> and arity is between <TT>A1</TT> and <TT>A2</TT>.</LI></UL><P>It is not possible to set a spy-point on an undefined predicate.</P><P>The following predicate is used to remove one or several spy-points:</P><P><TT>nospy(PredSpec)</TT> removes the spy-points from the specified
+predicates.</P><P><TT>nospyall/0</TT> removes all spy-points:</P><P>It is also possible to define conditional spy-points.</P><P><TT>spypoint_condition(Goal, Port, Test)</TT> sets a
+conditional spy-point on the predicate for <TT>Goal</TT>. When the debugger
+reaches a conditional spy-point it only shows the associated goal if the
+following conditions are verified:</P><UL CLASS="itemize"><LI CLASS="li-itemize">the actual goal unifies with <TT>Goal</TT>.</LI><LI CLASS="li-itemize">the actual port unifies with <TT>Port</TT>.</LI><LI CLASS="li-itemize">the Prolog goal <TT>Test</TT> succeeds.</LI></UL>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog012.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog010.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog014.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

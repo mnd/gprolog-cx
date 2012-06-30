@@ -1,0 +1,757 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Contents</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="index.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog002.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H2 CLASS="section">Contents</H2><UL CLASS="ftoc1"><LI CLASS="li-toc">
+<A HREF="gprolog002.html#htoc1">1&#XA0;&#XA0;Acknowledgements</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog003.html#htoc2">2&#XA0;&#XA0;GNU Prolog License Conditions</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog004.html#htoc3">3&#XA0;&#XA0;Introduction</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog005.html#htoc4">4&#XA0;&#XA0;Using GNU Prolog</A>
+<UL CLASS="ftoc2"><LI CLASS="li-toc">
+<A HREF="gprolog006.html#htoc5">4.1&#XA0;&#XA0;Introduction</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog007.html#htoc6">4.2&#XA0;&#XA0;The GNU Prolog interactive interpreter</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog007.html#htoc7">4.2.1&#XA0;&#XA0;Starting/exiting the interactive interpreter</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog007.html#htoc8">4.2.2&#XA0;&#XA0;The interactive interpreter read-execute-write loop</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog007.html#htoc9">4.2.3&#XA0;&#XA0;Consulting a Prolog program</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog007.html#htoc10">4.2.4&#XA0;&#XA0;Scripting Prolog</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog007.html#htoc11">4.2.5&#XA0;&#XA0;Interrupting a query</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog007.html#htoc12">4.2.6&#XA0;&#XA0;The line editor</A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog008.html#htoc13">4.3&#XA0;&#XA0;Adjusting the size of Prolog stacks</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog009.html#htoc14">4.4&#XA0;&#XA0;The GNU Prolog compiler</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog009.html#htoc15">4.4.1&#XA0;&#XA0;Different kinds of codes</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog009.html#htoc16">4.4.2&#XA0;&#XA0;Compilation scheme</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog009.html#htoc17">4.4.3&#XA0;&#XA0;Using the compiler</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog009.html#htoc18">4.4.4&#XA0;&#XA0;Running an executable</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog009.html#htoc19">4.4.5&#XA0;&#XA0;Generating a new interactive interpreter</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog009.html#htoc20">4.4.6&#XA0;&#XA0;The name mangling scheme</A>
+</LI></UL>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog010.html#htoc21">5&#XA0;&#XA0;Debugging</A>
+<UL CLASS="ftoc2"><LI CLASS="li-toc">
+<A HREF="gprolog011.html#htoc22">5.1&#XA0;&#XA0;Introduction</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog012.html#htoc23">5.2&#XA0;&#XA0;The procedure box model</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog013.html#htoc24">5.3&#XA0;&#XA0;Debugging predicates</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog013.html#htoc25">5.3.1&#XA0;&#XA0;Running and stopping the debugger</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog013.html#htoc26">5.3.2&#XA0;&#XA0;Leashing ports</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog013.html#htoc27">5.3.3&#XA0;&#XA0;Spy-points</A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog014.html#htoc28">5.4&#XA0;&#XA0;Debugging messages</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog015.html#htoc29">5.5&#XA0;&#XA0;Debugger commands</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog016.html#htoc30">5.6&#XA0;&#XA0;The WAM debugger</A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog017.html#htoc31">6&#XA0;&#XA0;Format of definitions</A>
+<UL CLASS="ftoc2"><LI CLASS="li-toc">
+<A HREF="gprolog018.html#htoc32">6.1&#XA0;&#XA0;General format</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog019.html#htoc33">6.2&#XA0;&#XA0;Types and modes</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog020.html#htoc34">6.3&#XA0;&#XA0;Errors</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog020.html#htoc35">6.3.1&#XA0;&#XA0;General format and error context</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog020.html#htoc36">6.3.2&#XA0;&#XA0;Instantiation error</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog020.html#htoc37">6.3.3&#XA0;&#XA0;Uninstantiation error</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog020.html#htoc38">6.3.4&#XA0;&#XA0;Type error</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog020.html#htoc39">6.3.5&#XA0;&#XA0;Domain error</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog020.html#htoc40">6.3.6&#XA0;&#XA0;Existence error</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog020.html#htoc41">6.3.7&#XA0;&#XA0;Permission error</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog020.html#htoc42">6.3.8&#XA0;&#XA0;Representation error</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog020.html#htoc43">6.3.9&#XA0;&#XA0;Evaluation error</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog020.html#htoc44">6.3.10&#XA0;&#XA0;Resource error</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog020.html#htoc45">6.3.11&#XA0;&#XA0;Syntax error</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog020.html#htoc46">6.3.12&#XA0;&#XA0;System error</A>
+</LI></UL>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog021.html#htoc47">7&#XA0;&#XA0;Prolog directives and control constructs</A>
+<UL CLASS="ftoc2"><LI CLASS="li-toc">
+<A HREF="gprolog022.html#htoc48">7.1&#XA0;&#XA0;Prolog directives</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog022.html#htoc49">7.1.1&#XA0;&#XA0;Introduction</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog022.html#htoc50">7.1.2&#XA0;&#XA0;<TT>dynamic/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog022.html#htoc51">7.1.3&#XA0;&#XA0;<TT>public/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog022.html#htoc52">7.1.4&#XA0;&#XA0;<TT>multifile/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog022.html#htoc53">7.1.5&#XA0;&#XA0;<TT>discontiguous/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog022.html#htoc54">7.1.6&#XA0;&#XA0;<TT>ensure_linked/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog022.html#htoc55">7.1.7&#XA0;&#XA0;<TT>built_in/0</TT>,
+<TT>built_in/1</TT>,
+<TT>built_in_fd/0</TT>,
+<TT>built_in_fd/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog022.html#htoc56">7.1.8&#XA0;&#XA0;<TT>include/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog022.html#htoc57">7.1.9&#XA0;&#XA0;<TT>if/1</TT>, <TT>else/0</TT>, <TT>endif/0</TT>, <TT>elif/1</TT> </A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog022.html#htoc58">7.1.10&#XA0;&#XA0;<TT>ensure_loaded/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog022.html#htoc59">7.1.11&#XA0;&#XA0;<TT>op/3</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog022.html#htoc60">7.1.12&#XA0;&#XA0;<TT>char_conversion/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog022.html#htoc61">7.1.13&#XA0;&#XA0;<TT>set_prolog_flag/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog022.html#htoc62">7.1.14&#XA0;&#XA0;<TT>initialization/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog022.html#htoc63">7.1.15&#XA0;&#XA0;<TT>foreign/2</TT>,
+<TT>foreign/1</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog023.html#htoc64">7.2&#XA0;&#XA0;Prolog control constructs</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog023.html#htoc65">7.2.1&#XA0;&#XA0;<TT>true/0</TT>,
+<TT>fail/0</TT>,
+<TT>!/0</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog023.html#htoc66">7.2.2&#XA0;&#XA0;<TT>(&#X2019;,&#X2019;)/2</TT> - conjunction,
+<TT>(;)/2</TT> - disjunction,
+<TT>(-&gt;)/2</TT> - if-then,
+<TT>(*-&gt;)/2</TT> - soft-cut (soft if-then)</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog023.html#htoc67">7.2.3&#XA0;&#XA0;<TT>call/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog023.html#htoc68">7.2.4&#XA0;&#XA0;<TT>catch/3</TT>,
+<TT>throw/1</TT></A>
+</LI></UL>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog024.html#htoc69">8&#XA0;&#XA0;Prolog built-in predicates</A>
+<UL CLASS="ftoc2"><LI CLASS="li-toc">
+<A HREF="gprolog025.html#htoc70">8.1&#XA0;&#XA0;Type testing</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog025.html#htoc71">8.1.1&#XA0;&#XA0;<TT>var/1</TT>,
+<TT>nonvar/1</TT>,
+<TT>atom/1</TT>,
+<TT>integer/1</TT>,
+<TT>float/1</TT>,
+<TT>number/1</TT>,
+<TT>atomic/1</TT>,<BR>
+ <TT>compound/1</TT>,
+<TT>callable/1</TT>,
+<TT>ground/1</TT>,
+<TT>is_list/1</TT>,
+<TT>list/1</TT>,
+<TT>partial_list/1</TT>,
+<TT>list_or_partial_list/1</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog026.html#htoc72">8.2&#XA0;&#XA0;Term unification</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog026.html#htoc73">8.2.1&#XA0;&#XA0;<TT>(=)/2</TT> - Prolog unification</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog026.html#htoc74">8.2.2&#XA0;&#XA0;<TT>unify_with_occurs_check/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog026.html#htoc75">8.2.3&#XA0;&#XA0;<TT>(\=)/2</TT> - not Prolog unifiable</A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog027.html#htoc76">8.3&#XA0;&#XA0;Term comparison</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog027.html#htoc77">8.3.1&#XA0;&#XA0;Standard total ordering of terms</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog027.html#htoc78">8.3.2&#XA0;&#XA0;<TT>(==)/2</TT> - term identical,
+<TT>(\==)/2</TT> - term not identical,<BR>
+ <TT>(@&lt;)/2</TT> - term less than,
+<TT>(@=&lt;)/2</TT> - term less than or equal to,<BR>
+ <TT>(@&gt;)/2</TT> - term greater than,
+<TT>(@&gt;=)/2</TT> - term greater than or equal to</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog027.html#htoc79">8.3.3&#XA0;&#XA0;<TT>compare/3</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog028.html#htoc80">8.4&#XA0;&#XA0;Term processing</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog028.html#htoc81">8.4.1&#XA0;&#XA0;<TT>functor/3</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog028.html#htoc82">8.4.2&#XA0;&#XA0;<TT>arg/3</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog028.html#htoc83">8.4.3&#XA0;&#XA0;<TT>(=..)/2</TT> - univ</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog028.html#htoc84">8.4.4&#XA0;&#XA0;<TT>copy_term/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog028.html#htoc85">8.4.5&#XA0;&#XA0;<TT>term_variables/2</TT>,
+		<TT>term_variables/3</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog028.html#htoc86">8.4.6&#XA0;&#XA0;<TT>subsumes_term/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog028.html#htoc87">8.4.7&#XA0;&#XA0;<TT>acyclic_term/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog028.html#htoc88">8.4.8&#XA0;&#XA0;<TT>setarg/4</TT>,
+<TT>setarg/3</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog029.html#htoc89">8.5&#XA0;&#XA0;Variable naming/numbering</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog029.html#htoc90">8.5.1&#XA0;&#XA0;<TT>name_singleton_vars/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog029.html#htoc91">8.5.2&#XA0;&#XA0;<TT>name_query_vars/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog029.html#htoc92">8.5.3&#XA0;&#XA0;<TT>bind_variables/2</TT>,
+<TT>numbervars/3</TT>,
+<TT>numbervars/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog029.html#htoc93">8.5.4&#XA0;&#XA0;<TT>term_ref/2</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog030.html#htoc94">8.6&#XA0;&#XA0;Arithmetic</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog030.html#htoc95">8.6.1&#XA0;&#XA0;Evaluation of an arithmetic expression</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog030.html#htoc96">8.6.2&#XA0;&#XA0;<TT>(is)/2</TT> - evaluate expression</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog030.html#htoc97">8.6.3&#XA0;&#XA0;<TT>(=:=)/2</TT> - arithmetic equal,
+<TT>(=\=)/2</TT> - arithmetic not equal,<BR>
+ <TT>(&lt;)/2</TT> - arithmetic less than,
+<TT>(=&lt;)/2</TT> - arithmetic less than or equal to,<BR>
+ <TT>(&gt;)/2</TT> - arithmetic greater than,
+<TT>(&gt;=)/2</TT> - arithmetic greater than or equal to</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog030.html#htoc98">8.6.4&#XA0;&#XA0;<TT>succ/2</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog031.html#htoc99">8.7&#XA0;&#XA0;Dynamic clause management</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog031.html#htoc100">8.7.1&#XA0;&#XA0;Introduction</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog031.html#htoc101">8.7.2&#XA0;&#XA0;<TT>asserta/1</TT>,
+<TT>assertz/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog031.html#htoc102">8.7.3&#XA0;&#XA0;<TT>retract/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog031.html#htoc103">8.7.4&#XA0;&#XA0;<TT>retractall/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog031.html#htoc104">8.7.5&#XA0;&#XA0;<TT>clause/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog031.html#htoc105">8.7.6&#XA0;&#XA0;<TT>abolish/1</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog032.html#htoc106">8.8&#XA0;&#XA0;Predicate information</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog032.html#htoc107">8.8.1&#XA0;&#XA0;<TT>current_predicate/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog032.html#htoc108">8.8.2&#XA0;&#XA0;<TT>predicate_property/2</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog033.html#htoc109">8.9&#XA0;&#XA0;All solutions</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog033.html#htoc110">8.9.1&#XA0;&#XA0;Introduction</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog033.html#htoc111">8.9.2&#XA0;&#XA0;<TT>findall/3</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog033.html#htoc112">8.9.3&#XA0;&#XA0;<TT>bagof/3</TT>,
+<TT>setof/3</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog034.html#htoc113">8.10&#XA0;&#XA0;Streams</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog034.html#htoc114">8.10.1&#XA0;&#XA0;Introduction</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog034.html#htoc115">8.10.2&#XA0;&#XA0;<TT>current_input/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog034.html#htoc116">8.10.3&#XA0;&#XA0;<TT>current_output/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog034.html#htoc117">8.10.4&#XA0;&#XA0;<TT>set_input/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog034.html#htoc118">8.10.5&#XA0;&#XA0;<TT>set_output/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog034.html#htoc119">8.10.6&#XA0;&#XA0;<TT>open/4</TT>,
+<TT>open/3</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog034.html#htoc120">8.10.7&#XA0;&#XA0;<TT>close/2</TT>,
+<TT>close/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog034.html#htoc121">8.10.8&#XA0;&#XA0;<TT>flush_output/1</TT>,
+<TT>flush_output/0</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog034.html#htoc122">8.10.9&#XA0;&#XA0;<TT>current_stream/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog034.html#htoc123">8.10.10&#XA0;&#XA0;<TT>stream_property/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog034.html#htoc124">8.10.11&#XA0;&#XA0;<TT>at_end_of_stream/1</TT>,
+<TT>at_end_of_stream/0</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog034.html#htoc125">8.10.12&#XA0;&#XA0;<TT>stream_position/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog034.html#htoc126">8.10.13&#XA0;&#XA0;<TT>set_stream_position/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog034.html#htoc127">8.10.14&#XA0;&#XA0;<TT>seek/4</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog034.html#htoc128">8.10.15&#XA0;&#XA0;<TT>character_count/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog034.html#htoc129">8.10.16&#XA0;&#XA0;<TT>line_count/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog034.html#htoc130">8.10.17&#XA0;&#XA0;<TT>line_position/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog034.html#htoc131">8.10.18&#XA0;&#XA0;<TT>stream_line_column/3</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog034.html#htoc132">8.10.19&#XA0;&#XA0;<TT>set_stream_line_column/3</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog034.html#htoc133">8.10.20&#XA0;&#XA0;<TT>add_stream_alias/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog034.html#htoc134">8.10.21&#XA0;&#XA0;<TT>current_alias/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog034.html#htoc135">8.10.22&#XA0;&#XA0;<TT>add_stream_mirror/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog034.html#htoc136">8.10.23&#XA0;&#XA0;<TT>remove_stream_mirror/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog034.html#htoc137">8.10.24&#XA0;&#XA0;<TT>current_mirror/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog034.html#htoc138">8.10.25&#XA0;&#XA0;<TT>set_stream_type/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog034.html#htoc139">8.10.26&#XA0;&#XA0;<TT>set_stream_eof_action/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog034.html#htoc140">8.10.27&#XA0;&#XA0;<TT>set_stream_buffering/2</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog035.html#htoc141">8.11&#XA0;&#XA0;Constant term streams</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog035.html#htoc142">8.11.1&#XA0;&#XA0;Introduction</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog035.html#htoc143">8.11.2&#XA0;&#XA0;<TT>open_input_atom_stream/2</TT>,
+<TT>open_input_chars_stream/2</TT>,<BR>
+ <TT>open_input_codes_stream/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog035.html#htoc144">8.11.3&#XA0;&#XA0;<TT>close_input_atom_stream/1</TT>,
+<TT>close_input_chars_stream/1</TT>,<BR>
+ <TT>close_input_codes_stream/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog035.html#htoc145">8.11.4&#XA0;&#XA0;<TT>open_output_atom_stream/1</TT>,
+<TT>open_output_chars_stream/1</TT>,<BR>
+ <TT>open_output_codes_stream/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog035.html#htoc146">8.11.5&#XA0;&#XA0;<TT>close_output_atom_stream/2</TT>,
+<TT>close_output_chars_stream/2</TT>,<BR>
+ <TT>close_output_codes_stream/2</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog036.html#htoc147">8.12&#XA0;&#XA0;Character input/output</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog036.html#htoc148">8.12.1&#XA0;&#XA0;<TT>get_char/2</TT>,
+<TT>get_char/1</TT>,
+<TT>get_code/1</TT>,
+<TT>get_code/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog036.html#htoc149">8.12.2&#XA0;&#XA0;<TT>get_key/2</TT>,
+<TT>get_key/1</TT>
+	 <TT>get_key_no_echo/2</TT>,
+<TT>get_key_no_echo/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog036.html#htoc150">8.12.3&#XA0;&#XA0;<TT>peek_char/2</TT>,
+<TT>peek_char/1</TT>,
+<TT>peek_code/1</TT>,
+<TT>peek_code/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog036.html#htoc151">8.12.4&#XA0;&#XA0;<TT>unget_char/2</TT>,
+<TT>unget_char/1</TT>,
+<TT>unget_code/2</TT>,
+<TT>unget_code/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog036.html#htoc152">8.12.5&#XA0;&#XA0;<TT>put_char/2</TT>,
+<TT>put_char/1</TT>,
+<TT>put_code/1</TT>,
+<TT>put_code/2</TT>,
+<TT>nl/1</TT>,
+<TT>nl/0</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog037.html#htoc153">8.13&#XA0;&#XA0;Byte input/output</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog037.html#htoc154">8.13.1&#XA0;&#XA0;<TT>get_byte/2</TT>,
+<TT>get_byte/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog037.html#htoc155">8.13.2&#XA0;&#XA0;<TT>peek_byte/2</TT>,
+<TT>peek_byte/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog037.html#htoc156">8.13.3&#XA0;&#XA0;<TT>unget_byte/2</TT>,
+<TT>unget_byte/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog037.html#htoc157">8.13.4&#XA0;&#XA0;<TT>put_byte/2</TT>,
+<TT>put_byte/1</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog038.html#htoc158">8.14&#XA0;&#XA0;Term input/output</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog038.html#htoc159">8.14.1&#XA0;&#XA0;<TT>read_term/3</TT>,
+<TT>read_term/2</TT>,
+<TT>read/2</TT>,
+<TT>read/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog038.html#htoc160">8.14.2&#XA0;&#XA0;<TT>read_atom/2</TT>,
+<TT>read_atom/1</TT>,
+<TT>read_integer/2</TT>,
+<TT>read_integer/1</TT>,<BR>
+ <TT>read_number/2</TT>,
+<TT>read_number/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog038.html#htoc161">8.14.3&#XA0;&#XA0;<TT>read_token/2</TT>,
+<TT>read_token/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog038.html#htoc162">8.14.4&#XA0;&#XA0;<TT>syntax_error_info/4</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog038.html#htoc163">8.14.5&#XA0;&#XA0;<TT>last_read_start_line_column/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog038.html#htoc164">8.14.6&#XA0;&#XA0;
+<TT>write_term/3</TT>,
+<TT>write_term/2</TT>,
+<TT>write/2</TT>,
+<TT>write/1</TT>,
+<TT>writeq/2</TT>,
+<TT>writeq/1</TT>,<BR>
+ <TT>write_canonical/2</TT>,
+<TT>write_canonical/1</TT>,
+<TT>display/2</TT>,
+<TT>display/1</TT>,
+<TT>print/2</TT>,<BR>
+ <TT>print/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog038.html#htoc165">8.14.7&#XA0;&#XA0;<TT>format/3</TT>,
+<TT>format/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog038.html#htoc166">8.14.8&#XA0;&#XA0;<TT>portray_clause/2</TT>,
+<TT>portray_clause/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog038.html#htoc167">8.14.9&#XA0;&#XA0;<TT>get_print_stream/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog038.html#htoc168">8.14.10&#XA0;&#XA0;<TT>op/3</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog038.html#htoc169">8.14.11&#XA0;&#XA0;<TT>current_op/3</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog038.html#htoc170">8.14.12&#XA0;&#XA0;<TT>char_conversion/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog038.html#htoc171">8.14.13&#XA0;&#XA0;<TT>current_char_conversion/2</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog039.html#htoc172">8.15&#XA0;&#XA0;Input/output from/to constant terms</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog039.html#htoc173">8.15.1&#XA0;&#XA0;<TT>read_term_from_atom/3</TT>,
+<TT>read_from_atom/2</TT>,
+<TT>read_token_from_atom/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog039.html#htoc174">8.15.2&#XA0;&#XA0;<TT>read_term_from_chars/3</TT>,
+<TT>read_from_chars/2</TT>,
+<TT>read_token_from_chars/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog039.html#htoc175">8.15.3&#XA0;&#XA0;<TT>read_term_from_codes/3</TT>,
+<TT>read_from_codes/2</TT>,
+<TT>read_token_from_codes/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog039.html#htoc176">8.15.4&#XA0;&#XA0;<TT>write_term_to_atom/3</TT>,
+<TT>write_to_atom/2</TT>,
+<TT>writeq_to_atom/2</TT>,<BR>
+ <TT>write_canonical_to_atom/2</TT>,
+<TT>display_to_atom/2</TT>,
+<TT>print_to_atom/2</TT>,<BR>
+ <TT>format_to_atom/3</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog039.html#htoc177">8.15.5&#XA0;&#XA0;<TT>write_term_to_chars/3</TT>,
+<TT>write_to_chars/2</TT>,
+<TT>writeq_to_chars/2</TT>,<BR>
+ <TT>write_canonical_to_chars/2</TT>,
+<TT>display_to_chars/2</TT>,
+<TT>print_to_chars/2</TT>,<BR>
+ <TT>format_to_chars/3</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog039.html#htoc178">8.15.6&#XA0;&#XA0;<TT>write_term_to_codes/3</TT>,
+<TT>write_to_codes/2</TT>,
+<TT>writeq_to_codes/2</TT>,<BR>
+ <TT>write_canonical_to_codes/2</TT>,
+<TT>display_to_codes/2</TT>,
+<TT>print_to_codes/2</TT>,<BR>
+ <TT>format_to_codes/3</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog040.html#htoc179">8.16&#XA0;&#XA0;DEC-10 compatibility input/output</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog040.html#htoc180">8.16.1&#XA0;&#XA0;Introduction</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog040.html#htoc181">8.16.2&#XA0;&#XA0;<TT>see/1</TT>,
+<TT>tell/1</TT>,
+<TT>append/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog040.html#htoc182">8.16.3&#XA0;&#XA0;<TT>seeing/1</TT>,
+<TT>telling/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog040.html#htoc183">8.16.4&#XA0;&#XA0;<TT>seen/0</TT>,
+<TT>told/0</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog040.html#htoc184">8.16.5&#XA0;&#XA0;<TT>get0/1</TT>,
+<TT>get/1</TT>,
+<TT>skip/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog040.html#htoc185">8.16.6&#XA0;&#XA0;<TT>put/1</TT>,
+<TT>tab/1</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog041.html#htoc186">8.17&#XA0;&#XA0;Term expansion</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog041.html#htoc187">8.17.1&#XA0;&#XA0;Definite clause grammars</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog041.html#htoc188">8.17.2&#XA0;&#XA0;<TT>expand_term/2</TT>,
+<TT>term_expansion/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog041.html#htoc189">8.17.3&#XA0;&#XA0;<TT>phrase/3</TT>,
+<TT>phrase/2</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog042.html#htoc190">8.18&#XA0;&#XA0;Logic, control and exceptions</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog042.html#htoc191">8.18.1&#XA0;&#XA0;<TT>abort/0</TT>,
+<TT>stop/0</TT>,
+<TT>top_level/0</TT>,
+<TT>break/0</TT>,
+<TT>halt/1</TT>,
+<TT>halt/0</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog042.html#htoc192">8.18.2&#XA0;&#XA0;<TT>false/0</TT>, <TT>once/1</TT>, <TT>(\+)/1</TT> - not provable,
+<TT>call/2-11</TT>,
+	 <TT>call_with_args/1-11</TT>, <TT>call_det/2</TT>, <TT>forall/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog042.html#htoc193">8.18.3&#XA0;&#XA0;<TT>repeat/0</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog042.html#htoc194">8.18.4&#XA0;&#XA0;<TT>between/3</TT>, <TT>for/3</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog043.html#htoc195">8.19&#XA0;&#XA0;Atomic term processing</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog043.html#htoc196">8.19.1&#XA0;&#XA0;<TT>atom_length/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog043.html#htoc197">8.19.2&#XA0;&#XA0;<TT>atom_concat/3</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog043.html#htoc198">8.19.3&#XA0;&#XA0;<TT>sub_atom/5</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog043.html#htoc199">8.19.4&#XA0;&#XA0;<TT>char_code/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog043.html#htoc200">8.19.5&#XA0;&#XA0;<TT>lower_upper/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog043.html#htoc201">8.19.6&#XA0;&#XA0;<TT>atom_chars/2</TT>,
+<TT>atom_codes/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog043.html#htoc202">8.19.7&#XA0;&#XA0;<TT>number_atom/2</TT>,
+<TT>number_chars/2</TT>,
+<TT>number_codes/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog043.html#htoc203">8.19.8&#XA0;&#XA0;<TT>name/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog043.html#htoc204">8.19.9&#XA0;&#XA0;<TT>atom_hash/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog043.html#htoc205">8.19.10&#XA0;&#XA0;<TT>new_atom/3</TT>,
+<TT>new_atom/2</TT>,
+<TT>new_atom/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog043.html#htoc206">8.19.11&#XA0;&#XA0;<TT>current_atom/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog043.html#htoc207">8.19.12&#XA0;&#XA0;<TT>atom_property/2</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog044.html#htoc208">8.20&#XA0;&#XA0;List processing</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog044.html#htoc209">8.20.1&#XA0;&#XA0;<TT>append/3</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog044.html#htoc210">8.20.2&#XA0;&#XA0;<TT>member/2</TT>,
+<TT>memberchk/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog044.html#htoc211">8.20.3&#XA0;&#XA0;<TT>reverse/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog044.html#htoc212">8.20.4&#XA0;&#XA0;<TT>delete/3</TT>,
+<TT>select/3</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog044.html#htoc213">8.20.5&#XA0;&#XA0;<TT>permutation/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog044.html#htoc214">8.20.6&#XA0;&#XA0;<TT>prefix/2</TT>,
+<TT>suffix/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog044.html#htoc215">8.20.7&#XA0;&#XA0;<TT>sublist/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog044.html#htoc216">8.20.8&#XA0;&#XA0;<TT>last/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog044.html#htoc217">8.20.9&#XA0;&#XA0;<TT>length/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog044.html#htoc218">8.20.10&#XA0;&#XA0;<TT>nth/3</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog044.html#htoc219">8.20.11&#XA0;&#XA0;<TT>max_list/2</TT>,
+<TT>min_list/2</TT>,
+<TT>sum_list/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog044.html#htoc220">8.20.12&#XA0;&#XA0;<TT>maplist/2-8</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog044.html#htoc221">8.20.13&#XA0;&#XA0;<TT>sort/2</TT>,
+<TT>msort/2</TT>,
+<TT>keysort/2</TT>
+<TT>sort/1</TT>,
+<TT>msort/1</TT>,
+<TT>keysort/1</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog045.html#htoc222">8.21&#XA0;&#XA0;Global variables</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog045.html#htoc223">8.21.1&#XA0;&#XA0;Introduction</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog045.html#htoc224">8.21.2&#XA0;&#XA0;<TT>g_assign/2</TT>,
+<TT>g_assignb/2</TT>,
+<TT>g_link/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog045.html#htoc225">8.21.3&#XA0;&#XA0;<TT>g_read/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog045.html#htoc226">8.21.4&#XA0;&#XA0;<TT>g_array_size/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog045.html#htoc227">8.21.5&#XA0;&#XA0;<TT>g_inc/3</TT>,
+<TT>g_inc/2</TT>,
+<TT>g_inco/2</TT>,
+<TT>g_inc/1</TT>,
+<TT>g_dec/3</TT>,
+<TT>g_dec/2</TT>,
+<TT>g_deco/2</TT>,
+<TT>g_dec/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog045.html#htoc228">8.21.6&#XA0;&#XA0;<TT>g_set_bit/2</TT>,
+<TT>g_reset_bit/2</TT>,
+<TT>g_test_set_bit/2</TT>,
+<TT>g_test_reset_bit/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog045.html#htoc229">8.21.7&#XA0;&#XA0;Examples</A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog046.html#htoc230">8.22&#XA0;&#XA0;Prolog state</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog046.html#htoc231">8.22.1&#XA0;&#XA0;<TT>set_prolog_flag/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog046.html#htoc232">8.22.2&#XA0;&#XA0;<TT>current_prolog_flag/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog046.html#htoc233">8.22.3&#XA0;&#XA0;<TT>set_bip_name/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog046.html#htoc234">8.22.4&#XA0;&#XA0;<TT>current_bip_name/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog046.html#htoc235">8.22.5&#XA0;&#XA0;<TT>write_pl_state_file/1</TT>,
+<TT>read_pl_state_file/1</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog047.html#htoc236">8.23&#XA0;&#XA0;Program state</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog047.html#htoc237">8.23.1&#XA0;&#XA0;<TT>consult/1</TT>,
+<TT>&#X2019;.&#X2019;/2</TT> - program consult</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog047.html#htoc238">8.23.2&#XA0;&#XA0;<TT>load/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog047.html#htoc239">8.23.3&#XA0;&#XA0;<TT>listing/1</TT>,
+<TT>listing/0</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog048.html#htoc240">8.24&#XA0;&#XA0;System statistics</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog048.html#htoc241">8.24.1&#XA0;&#XA0;<TT>statistics/0</TT>,
+<TT>statistics/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog048.html#htoc242">8.24.2&#XA0;&#XA0;<TT>user_time/1</TT>,
+<TT>system_time/1</TT>,
+<TT>cpu_time/1</TT>,
+<TT>real_time/1</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog049.html#htoc243">8.25&#XA0;&#XA0;Random number generator</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog049.html#htoc244">8.25.1&#XA0;&#XA0;<TT>set_seed/1</TT>,
+<TT>randomize/0</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog049.html#htoc245">8.25.2&#XA0;&#XA0;<TT>get_seed/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog049.html#htoc246">8.25.3&#XA0;&#XA0;<TT>random/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog049.html#htoc247">8.25.4&#XA0;&#XA0;<TT>random/3</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog050.html#htoc248">8.26&#XA0;&#XA0;File name processing</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog050.html#htoc249">8.26.1&#XA0;&#XA0;<TT>absolute_file_name/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog050.html#htoc250">8.26.2&#XA0;&#XA0;<TT>decompose_file_name/4</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog050.html#htoc251">8.26.3&#XA0;&#XA0;<TT>prolog_file_name/2</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc252">8.27&#XA0;&#XA0;Operating system interface</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog051.html#htoc253">8.27.1&#XA0;&#XA0;<TT>argument_counter/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc254">8.27.2&#XA0;&#XA0;<TT>argument_value/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc255">8.27.3&#XA0;&#XA0;<TT>argument_list/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc256">8.27.4&#XA0;&#XA0;<TT>environ/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc257">8.27.5&#XA0;&#XA0;<TT>make_directory/1</TT>,
+<TT>delete_directory/1</TT>,
+<TT>change_directory/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc258">8.27.6&#XA0;&#XA0;<TT>working_directory/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc259">8.27.7&#XA0;&#XA0;<TT>directory_files/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc260">8.27.8&#XA0;&#XA0;<TT>rename_file/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc261">8.27.9&#XA0;&#XA0;<TT>delete_file/1</TT>,
+<TT>unlink/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc262">8.27.10&#XA0;&#XA0;<TT>file_permission/2</TT>,
+<TT>file_exists/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc263">8.27.11&#XA0;&#XA0;<TT>file_property/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc264">8.27.12&#XA0;&#XA0;<TT>temporary_name/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc265">8.27.13&#XA0;&#XA0;<TT>temporary_file/3</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc266">8.27.14&#XA0;&#XA0;<TT>date_time/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc267">8.27.15&#XA0;&#XA0;<TT>host_name/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc268">8.27.16&#XA0;&#XA0;<TT>os_version/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc269">8.27.17&#XA0;&#XA0;<TT>architecture/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc270">8.27.18&#XA0;&#XA0;<TT>shell/2</TT>,
+<TT>shell/1</TT>,
+<TT>shell/0</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc271">8.27.19&#XA0;&#XA0;<TT>system/2</TT>,
+<TT>system/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc272">8.27.20&#XA0;&#XA0;<TT>spawn/3</TT>,
+<TT>spawn/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc273">8.27.21&#XA0;&#XA0;<TT>popen/3</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc274">8.27.22&#XA0;&#XA0;<TT>exec/5</TT>,
+<TT>exec/4</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc275">8.27.23&#XA0;&#XA0;<TT>fork_prolog/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc276">8.27.24&#XA0;&#XA0;<TT>create_pipe/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc277">8.27.25&#XA0;&#XA0;<TT>wait/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc278">8.27.26&#XA0;&#XA0;<TT>prolog_pid/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc279">8.27.27&#XA0;&#XA0;<TT>send_signal/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc280">8.27.28&#XA0;&#XA0;<TT>sleep/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog051.html#htoc281">8.27.29&#XA0;&#XA0;<TT>select/5</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog052.html#htoc282">8.28&#XA0;&#XA0;Sockets input/output</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog052.html#htoc283">8.28.1&#XA0;&#XA0;Introduction</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog052.html#htoc284">8.28.2&#XA0;&#XA0;<TT>socket/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog052.html#htoc285">8.28.3&#XA0;&#XA0;<TT>socket_close/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog052.html#htoc286">8.28.4&#XA0;&#XA0;<TT>socket_bind/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog052.html#htoc287">8.28.5&#XA0;&#XA0;<TT>socket_connect/4</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog052.html#htoc288">8.28.6&#XA0;&#XA0;<TT>socket_listen/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog052.html#htoc289">8.28.7&#XA0;&#XA0;<TT>socket_accept/4</TT>,
+<TT>socket_accept/3</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog052.html#htoc290">8.28.8&#XA0;&#XA0;<TT>hostname_address/2</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog053.html#htoc291">8.29&#XA0;&#XA0;Linedit management</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog053.html#htoc292">8.29.1&#XA0;&#XA0;<TT>get_linedit_prompt/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog053.html#htoc293">8.29.2&#XA0;&#XA0;<TT>set_linedit_prompt/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog053.html#htoc294">8.29.3&#XA0;&#XA0;<TT>add_linedit_completion/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog053.html#htoc295">8.29.4&#XA0;&#XA0;<TT>find_linedit_completion/2</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog054.html#htoc296">8.30&#XA0;&#XA0;Source reader facility</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog054.html#htoc297">8.30.1&#XA0;&#XA0;Introduction</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog054.html#htoc298">8.30.2&#XA0;&#XA0;<TT>sr_open/3</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog054.html#htoc299">8.30.3&#XA0;&#XA0;<TT>sr_change_options/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog054.html#htoc300">8.30.4&#XA0;&#XA0;<TT>sr_close/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog054.html#htoc301">8.30.5&#XA0;&#XA0;<TT>sr_read_term/4</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog054.html#htoc302">8.30.6&#XA0;&#XA0;<TT>sr_current_descriptor/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog054.html#htoc303">8.30.7&#XA0;&#XA0;<TT>sr_get_stream/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog054.html#htoc304">8.30.8&#XA0;&#XA0;<TT>sr_get_module/3</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog054.html#htoc305">8.30.9&#XA0;&#XA0;<TT>sr_get_file_name/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog054.html#htoc306">8.30.10&#XA0;&#XA0;<TT>sr_get_position/3</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog054.html#htoc307">8.30.11&#XA0;&#XA0;<TT>sr_get_include_list/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog054.html#htoc308">8.30.12&#XA0;&#XA0;<TT>sr_get_include_stream_list/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog054.html#htoc309">8.30.13&#XA0;&#XA0;<TT>sr_get_size_counters/3</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog054.html#htoc310">8.30.14&#XA0;&#XA0;<TT>sr_get_error_counters/3</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog054.html#htoc311">8.30.15&#XA0;&#XA0;<TT>sr_set_error_counters/3</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog054.html#htoc312">8.30.16&#XA0;&#XA0;<TT>sr_error_from_exception/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog054.html#htoc313">8.30.17&#XA0;&#XA0;<TT>sr_write_message/8</TT>,
+<TT>sr_write_message/6</TT>,
+<TT>sr_write_message/4</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog054.html#htoc314">8.30.18&#XA0;&#XA0;<TT>sr_write_error/6</TT>,
+<TT>sr_write_error/4</TT>,
+<TT>sr_write_error/2</TT></A>
+</LI></UL>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog055.html#htoc315">9&#XA0;&#XA0;Finite domain solver and built-in predicates</A>
+<UL CLASS="ftoc2"><LI CLASS="li-toc">
+<A HREF="gprolog056.html#htoc316">9.1&#XA0;&#XA0;Introduction</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog056.html#htoc317">9.1.1&#XA0;&#XA0;Finite Domain variables</A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog057.html#htoc318">9.2&#XA0;&#XA0;FD variable parameters</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog057.html#htoc319">9.2.1&#XA0;&#XA0;<TT>fd_max_integer/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog057.html#htoc320">9.2.2&#XA0;&#XA0;<TT>fd_vector_max/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog057.html#htoc321">9.2.3&#XA0;&#XA0;<TT>fd_set_vector_max/1</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog058.html#htoc322">9.3&#XA0;&#XA0;Initial value constraints</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog058.html#htoc323">9.3.1&#XA0;&#XA0;<TT>fd_domain/3</TT>,
+<TT>fd_domain_bool/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog058.html#htoc324">9.3.2&#XA0;&#XA0;<TT>fd_domain/2</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog059.html#htoc325">9.4&#XA0;&#XA0;Type testing</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog059.html#htoc326">9.4.1&#XA0;&#XA0;<TT>fd_var/1</TT>, <TT>non_fd_var/1</TT>,
+<TT>generic_var/1</TT>,
+<TT>non_generic_var/1</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog060.html#htoc327">9.5&#XA0;&#XA0;FD variable information</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog060.html#htoc328">9.5.1&#XA0;&#XA0;<TT>fd_min/2</TT>,
+<TT>fd_max/2</TT>,
+<TT>fd_size/2</TT>,
+<TT>fd_dom/2</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog060.html#htoc329">9.5.2&#XA0;&#XA0;<TT>fd_has_extra_cstr/1</TT>,
+<TT>fd_has_vector/1</TT>,
+<TT>fd_use_vector/1</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog061.html#htoc330">9.6&#XA0;&#XA0;Arithmetic constraints</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog061.html#htoc331">9.6.1&#XA0;&#XA0;FD arithmetic expressions</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog061.html#htoc332">9.6.2&#XA0;&#XA0;Partial AC: <TT>(#=)/2</TT> - constraint equal,
+<TT>(#\=)/2</TT> - constraint not equal,<BR>
+ <TT>(#&lt;)/2</TT> - constraint less than,
+<TT>(#=&lt;)/2</TT> - constraint less than or equal,<BR>
+ <TT>(#&gt;)/2</TT> - constraint greater than,
+<TT>(#&gt;=)/2</TT> - constraint greater than or equal</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog061.html#htoc333">9.6.3&#XA0;&#XA0;Full AC: <TT>(#=#)/2</TT> - constraint equal,
+<TT>(#\=#)/2</TT> - constraint not equal,<BR>
+ <TT>(#&lt;#)/2</TT> - constraint less than,
+<TT>(#=&lt;#)/2</TT> - constraint less than or equal,<BR>
+ <TT>(#&gt;#)/2</TT> - constraint greater than,
+<TT>(#&gt;=#)/2</TT> - constraint greater than or equal</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog061.html#htoc334">9.6.4&#XA0;&#XA0;<TT>fd_prime/1</TT>,
+<TT>fd_not_prime/1</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog062.html#htoc335">9.7&#XA0;&#XA0;Boolean and reified constraints</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog062.html#htoc336">9.7.1&#XA0;&#XA0;Boolean FD expressions</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog062.html#htoc337">9.7.2&#XA0;&#XA0;<TT>fd_reified_in/4</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog062.html#htoc338">9.7.3&#XA0;&#XA0;<TT>(#\)/1</TT> - constraint NOT,
+<TT>(#&lt;=&gt;)/2</TT> - constraint equivalent,<BR>
+ <TT>(#\&lt;=&gt;)/2</TT> - constraint different,
+<TT>(##)/2</TT> - constraint XOR,<BR>
+ <TT>(#==&gt;)/2</TT> - constraint imply,
+<TT>(#\==&gt;)/2</TT> - constraint not imply,<BR>
+ <TT>(#/\)/2</TT> - constraint AND,
+<TT>(#\/\)/2</TT> - constraint NAND,<BR>
+ <TT>(#\/)/2</TT> - constraint OR,
+<TT>(#\\/)/2</TT> - constraint NOR</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog062.html#htoc339">9.7.4&#XA0;&#XA0;<TT>fd_cardinality/2</TT>,
+<TT>fd_cardinality/3</TT>,
+<TT>fd_at_least_one/1</TT>,
+<TT>fd_at_most_one/1</TT>,<BR>
+ <TT>fd_only_one/1</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog063.html#htoc340">9.8&#XA0;&#XA0;Symbolic constraints</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog063.html#htoc341">9.8.1&#XA0;&#XA0;<TT>fd_all_different/1</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog063.html#htoc342">9.8.2&#XA0;&#XA0;<TT>fd_element/3</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog063.html#htoc343">9.8.3&#XA0;&#XA0;<TT>fd_element_var/3</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog063.html#htoc344">9.8.4&#XA0;&#XA0;<TT>fd_atmost/3</TT>,
+<TT>fd_atleast/3</TT>,
+<TT>fd_exactly/3</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog063.html#htoc345">9.8.5&#XA0;&#XA0;<TT>fd_relation/2</TT>,
+<TT>fd_relationc/2</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog064.html#htoc346">9.9&#XA0;&#XA0;Labeling constraints</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog064.html#htoc347">9.9.1&#XA0;&#XA0;<TT>fd_labeling/2</TT>,
+<TT>fd_labeling/1</TT>,
+<TT>fd_labelingff/1</TT></A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog065.html#htoc348">9.10&#XA0;&#XA0;Optimization constraints</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog065.html#htoc349">9.10.1&#XA0;&#XA0;<TT>fd_minimize/2</TT>,
+<TT>fd_maximize/2</TT></A>
+</LI></UL>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog066.html#htoc350">10&#XA0;&#XA0;Interfacing Prolog and C</A>
+<UL CLASS="ftoc2"><LI CLASS="li-toc">
+<A HREF="gprolog067.html#htoc351">10.1&#XA0;&#XA0;Introduction</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog068.html#htoc352">10.2&#XA0;&#XA0;Including and using <TT>gprolog.h</TT></A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog069.html#htoc353">10.3&#XA0;&#XA0;Calling C from Prolog</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog069.html#htoc354">10.3.1&#XA0;&#XA0;Introduction</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog069.html#htoc355">10.3.2&#XA0;&#XA0;<TT>foreign/2</TT> directive</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog069.html#htoc356">10.3.3&#XA0;&#XA0;The C function</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog069.html#htoc357">10.3.4&#XA0;&#XA0;Input arguments</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog069.html#htoc358">10.3.5&#XA0;&#XA0;Output arguments</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog069.html#htoc359">10.3.6&#XA0;&#XA0;Input/output arguments</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog069.html#htoc360">10.3.7&#XA0;&#XA0;Writing non-deterministic C code</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog069.html#htoc361">10.3.8&#XA0;&#XA0;Example: input and output arguments</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog069.html#htoc362">10.3.9&#XA0;&#XA0;Example: non-deterministic code</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog069.html#htoc363">10.3.10&#XA0;&#XA0;Example: input/output arguments</A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog070.html#htoc364">10.4&#XA0;&#XA0;Manipulating Prolog terms</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog070.html#htoc365">10.4.1&#XA0;&#XA0;Introduction</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog070.html#htoc366">10.4.2&#XA0;&#XA0;Managing Prolog atoms</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog070.html#htoc367">10.4.3&#XA0;&#XA0;Reading Prolog terms</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog070.html#htoc368">10.4.4&#XA0;&#XA0;Unifying Prolog terms</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog070.html#htoc369">10.4.5&#XA0;&#XA0;Creating Prolog terms</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog070.html#htoc370">10.4.6&#XA0;&#XA0;Testing the type of Prolog terms</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog070.html#htoc371">10.4.7&#XA0;&#XA0;Comparing Prolog terms</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog070.html#htoc372">10.4.8&#XA0;&#XA0;Term processing</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog070.html#htoc373">10.4.9&#XA0;&#XA0;Comparing and evaluating arithmetic expressions</A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog071.html#htoc374">10.5&#XA0;&#XA0;Raising Prolog errors</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog071.html#htoc375">10.5.1&#XA0;&#XA0;Managing the error context</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog071.html#htoc376">10.5.2&#XA0;&#XA0;Instantiation error</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog071.html#htoc377">10.5.3&#XA0;&#XA0;Uninstantiation error</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog071.html#htoc378">10.5.4&#XA0;&#XA0;Type error</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog071.html#htoc379">10.5.5&#XA0;&#XA0;Domain error</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog071.html#htoc380">10.5.6&#XA0;&#XA0;Existence error</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog071.html#htoc381">10.5.7&#XA0;&#XA0;Permission error</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog071.html#htoc382">10.5.8&#XA0;&#XA0;Representation error</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog071.html#htoc383">10.5.9&#XA0;&#XA0;Evaluation error</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog071.html#htoc384">10.5.10&#XA0;&#XA0;Resource error</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog071.html#htoc385">10.5.11&#XA0;&#XA0;Syntax error</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog071.html#htoc386">10.5.12&#XA0;&#XA0;System error</A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog072.html#htoc387">10.6&#XA0;&#XA0;Calling Prolog from C</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog072.html#htoc388">10.6.1&#XA0;&#XA0;Introduction</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog072.html#htoc389">10.6.2&#XA0;&#XA0;Example: <TT>my_call/1</TT> - a <TT>call/1</TT> clone</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog072.html#htoc390">10.6.3&#XA0;&#XA0;Example: recovering the list of all operators</A>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog073.html#htoc391">10.7&#XA0;&#XA0;Defining a new C <TT>main()</TT> function</A>
+<UL CLASS="ftoc3"><LI CLASS="li-toc">
+<A HREF="gprolog073.html#htoc392">10.7.1&#XA0;&#XA0;Example: asking for ancestors</A>
+</LI></UL>
+</LI></UL>
+</LI><LI CLASS="li-toc"><A HREF="gprolog074.html#@biblio">References</A>
+</LI><LI CLASS="li-toc"><A HREF="gprolog-idx.html#@index">Index</A>
+</LI></UL>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="index.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog002.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

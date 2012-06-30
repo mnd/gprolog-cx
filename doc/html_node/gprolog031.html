@@ -1,0 +1,183 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Dynamic clause management</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog030.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog032.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc99">8.7</A>&#XA0;&#XA0;Dynamic clause management</H3><UL>
+<LI><A HREF="gprolog031.html#toc70">Introduction</A>
+</LI><LI><A HREF="gprolog031.html#toc71"><TT>asserta/1</TT>,
+<TT>assertz/1</TT></A>
+</LI><LI><A HREF="gprolog031.html#toc72"><TT>retract/1</TT></A>
+</LI><LI><A HREF="gprolog031.html#toc73"><TT>retractall/1</TT></A>
+</LI><LI><A HREF="gprolog031.html#toc74"><TT>clause/2</TT></A>
+</LI><LI><A HREF="gprolog031.html#toc75"><TT>abolish/1</TT></A>
+</LI></UL>
+<H4 CLASS="subsubsection"><A NAME="toc70"></A><A NAME="htoc100">8.7.1</A>&#XA0;&#XA0;Introduction</H4><P>
+<A NAME="Introduction:(Dynamic-clause-management)"></A>
+<B>Static and dynamic procedures</B>: a procedure is either dynamic or
+static. All built-in predicates are static. A user-defined procedure is
+static by default unless a <TT>dynamic/1</TT> directive precedes its
+definition (section&#XA0;<A HREF="gprolog022.html#dynamic/1">7.1.2</A>). Adding a clause to a non-existent procedure
+creates a dynamic procedure. The clauses of a dynamic procedure can be
+altered (e.g. using <TT>asserta/1</TT>), the clauses of a static procedure
+cannot be altered.</P><P><B>Private and public procedures</B>: each procedure is either public or
+private. A dynamic procedure is always public. Each built-in predicate is
+private, and a static user-defined procedure is private by default unless a
+<TT>public/1</TT> directive precedes its definition (section&#XA0;<A HREF="gprolog022.html#public/1">7.1.3</A>). If a
+dynamic declaration exists it is unnecessary to add a public declaration
+since a dynamic procedure is also public. A clause of a public procedure can
+be inspected (e.g. using <TT>clause/2</TT>), a clause of a private procedure
+cannot be inspected.</P><P><B>A logical database update view</B>: any change in the database that
+occurs as the result of executing a goal (e.g. when a sub-goal is a call of
+<TT>assertz/1</TT> or <TT>retract/1</TT>) only affects subsequent
+activations. The change does not affect any activation that is currently
+being executed. Thus the database is frozen during the execution of a goal,
+and the list of clauses defining a predication is fixed at the moment of its
+execution.</P><H4 CLASS="subsubsection"><A NAME="toc71"></A><A NAME="htoc101">8.7.2</A>&#XA0;&#XA0;<TT>asserta/1</TT>,
+<TT>assertz/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+asserta(+clause)<BR>
+assertz(+clause)</TT></DD></DL><P><B>Description</B></P><P><TT>asserta(Clause)</TT> first converts the term <TT>Clause</TT> to a clause
+and then adds it to the current internal database. The predicate concerned
+must be dynamic (section&#XA0;<A HREF="#Introduction:(Dynamic-clause-management)">8.7.1</A>) or
+undefined and the clause is inserted before the first clause of the
+predicate. If the predicated is undefined it is created as a dynamic
+procedure.</P><P><TT>assertz(Clause)</TT> acts like <TT>asserta/1</TT> except that the clause
+is added at the end of all existing clauses of the concerned predicate.</P><P><B>Converting a term <TT>Clause</TT> to a clause <TT>Clause1</TT>:</B></P><UL CLASS="itemize"><LI CLASS="li-itemize">extract the head and the body of <TT>Clause</TT>: either
+<TT>Clause</TT> = <TT>(Head :- Body)</TT> or <TT>Clause</TT> = <TT>Head</TT>
+and <TT>Body</TT> = <TT>true</TT>.</LI><LI CLASS="li-itemize"><TT>Head</TT> must be a callable term (or else the conversion fails).</LI><LI CLASS="li-itemize">convert <TT>Body</TT> to a body clause (i.e. a goal) <TT>Body1</TT>.</LI><LI CLASS="li-itemize">the converted clause <TT>Clause1</TT> = <TT>(Head :- Body1)</TT>.</LI></UL><P><B>Converting a term <TT>T</TT> to a goal:</B></P><UL CLASS="itemize"><LI CLASS="li-itemize">if <TT>T</TT> is a variable it is replaced by the term
+<TT>call(T)</TT>.</LI><LI CLASS="li-itemize">if <TT>T</TT> is a control construct <TT>(&#X2019;,&#X2019;)/2</TT>, <TT>(;)/2</TT>
+or <TT>(-&gt;)/2</TT> each argument of the control construct is recursively
+converted to a goal.</LI><LI CLASS="li-itemize">if <TT>T</TT> is a callable term it remains unchanged.</LI><LI CLASS="li-itemize">otherwise the conversion fails (<TT>T</TT> is neither a variable nor a
+callable term).</LI></UL><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Head</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Head</TT> is neither a variable nor a callable term</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(callable, Head)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Body</TT> cannot be converted to a goal</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(callable, Body)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+The predicate indicator <TT>Pred</TT> of <TT>Head</TT> is that of a
+static procedure</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(modify, static_procedure, Pred)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>ISO predicates.</P><H4 CLASS="subsubsection"><A NAME="toc72"></A><A NAME="htoc102">8.7.3</A>&#XA0;&#XA0;<TT>retract/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+retract(+clause)</TT></DD></DL><P><B>Description</B></P><P><TT>retract(Clause)</TT> erases the first clause of the database
+that unifies with <TT>Clause</TT>. The concerned predicate must be a
+dynamic procedure
+(section&#XA0;<A HREF="#Introduction:(Dynamic-clause-management)">8.7.1</A>). Removing all clauses
+of a procedure does not erase the procedure definition. To achieve
+this use <TT>abolish/1</TT> (section&#XA0;<A HREF="#abolish/1">8.7.6</A>). <TT>retract/1</TT> is
+re-executable on backtracking.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Head</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Head</TT> is neither a variable nor a callable term</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(callable, Head)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+The predicate indicator <TT>Pred</TT> of <TT>Head</TT> is that of a
+static procedure</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(modify, static_procedure, Pred)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>ISO predicate. In the ISO reference, the operation associated with the
+<TT>permission_error</TT> is <TT>access</TT> while it is <TT>modify</TT> in
+GNU Prolog. This seems to be an error of the ISO reference since for
+<TT>asserta/1</TT> (which is similar in spirit to <TT>retract/1</TT>) the
+operation is also <TT>modify</TT>.</P><H4 CLASS="subsubsection"><A NAME="toc73"></A><A NAME="htoc103">8.7.4</A>&#XA0;&#XA0;<TT>retractall/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+retractall(+head)</TT></DD></DL><P><B>Description</B></P><P><TT>retractall(Head)</TT> erases all clauses whose head unifies with
+<TT>Head</TT>. The concerned predicate must be a dynamic procedure
+(section&#XA0;<A HREF="#Introduction:(Dynamic-clause-management)">8.7.1</A>). The procedure definition
+is not removed so that it is found by <TT>current_predicate/1</TT>
+(section&#XA0;<A HREF="gprolog032.html#current-predicate/1">8.8.1</A>). <TT>abolish/1</TT> should be used to remove the
+procedure (section&#XA0;<A HREF="#abolish/1">8.7.6</A>).</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Head</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Head</TT> is not a callable term</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(callable, Head)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+The predicate indicator <TT>Pred</TT> of <TT>Head</TT> is that of a
+static procedure</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(modify, static_procedure, Pred)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>ISO predicate.</P><H4 CLASS="subsubsection"><A NAME="toc74"></A><A NAME="htoc104">8.7.5</A>&#XA0;&#XA0;<TT>clause/2</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+clause(+head, ?callable_term)</TT></DD></DL><P><B>Description</B></P><P><TT>clause(Head, Body)</TT> succeeds if there exists a clause in the
+database that unifies with <TT>Head :- Body</TT>. The predicate in question
+must be a public procedure (section&#XA0;<A HREF="#Introduction:(Dynamic-clause-management)">8.7.1</A>). Clauses are delivered from the first to the last. This
+predicate is re-executable on backtracking.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Head</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Head</TT> is neither a variable nor a callable term</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(callable, Head)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+The predicate indicator <TT>Pred</TT> of <TT>Head</TT> is that of a
+private procedure</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(access, private_procedure, Pred)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Body</TT> is neither a variable nor a callable term</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(callable, Body)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>ISO predicate.</P><H4 CLASS="subsubsection"><A NAME="toc75"></A><A NAME="htoc105">8.7.6</A>&#XA0;&#XA0;<TT>abolish/1</TT></H4><P>
+<A NAME="abolish/1"></A>
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+abolish(+predicate_indicator)</TT></DD></DL><P><B>Description</B></P><P><TT>abolish(Pred)</TT> removes from the database the procedure whose
+predicate indicator is <TT>Pred</TT>. The concerned predicate must be a
+dynamic procedure (section&#XA0;<A HREF="#Introduction:(Dynamic-clause-management)">8.7.1</A>).</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Pred</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Pred</TT> is a term <TT>Name/Arity</TT> and either
+<TT>Name</TT> or <TT>Arity</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Pred</TT> is neither a variable nor a predicate indicator</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(predicate_indicator, Pred)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Pred</TT> is a term <TT>Name/Arity</TT> and <TT>Arity</TT> is
+neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Arity)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Pred</TT> is a term <TT>Name/Arity</TT> and <TT>Name</TT> is
+neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Name)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Pred</TT> is a term <TT>Name/Arity</TT> and <TT>Arity</TT> is
+an integer &lt; 0</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(not_less_than_zero, Arity)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Pred</TT> is a term <TT>Name/Arity</TT> and <TT>Arity</TT> is
+an integer &gt; <TT>max_arity</TT> flag (section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>representation_error(max_arity)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+The predicate indicator <TT>Pred</TT> is that of a static
+procedure</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(modify, static_procedure, Pred)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>ISO predicate.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog030.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog032.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

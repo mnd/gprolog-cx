@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Program state</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog046.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog048.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc236">8.23</A>&#XA0;&#XA0;Program state</H3><UL>
+<LI><A HREF="gprolog047.html#toc191"><TT>consult/1</TT>,
+<TT>&#X2019;.&#X2019;/2</TT> - program consult</A>
+</LI><LI><A HREF="gprolog047.html#toc192"><TT>load/1</TT></A>
+</LI><LI><A HREF="gprolog047.html#toc193"><TT>listing/1</TT>,
+<TT>listing/0</TT></A>
+</LI></UL>
+<H4 CLASS="subsubsection"><A NAME="toc191"></A><A NAME="htoc237">8.23.1</A>&#XA0;&#XA0;<TT>consult/1</TT>,
+<TT>&#X2019;.&#X2019;/2</TT> - program consult</H4><P>
+<A NAME="consult/1"></A>
+
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+consult(+atom_or_atom_list)<BR>
+&#X2019;.&#X2019;(+atom, +atom_list)</TT></DD></DL><P><B>Description</B></P><P><TT>consult(Files)</TT> compiles and loads into memory each file
+of the list <TT>Files</TT>. Each file is compiled for byte-code using the
+GNU Prolog compiler (section&#XA0;<A HREF="gprolog009.html#The-GNU-Prolog-compiler">4.4</A>) then loaded using
+<TT>load/1</TT> (section&#XA0;<A HREF="#load/1">8.23.2</A>). It is possible to specify <TT>user</TT> as a
+file name to directly enter the program from the terminal. <TT>Files</TT> can
+be also a single file name (i.e. an atom). Refer to the section concerning
+the consult of a Prolog program for more information
+(section&#XA0;<A HREF="gprolog007.html#Consulting-a-Prolog-program">4.2.3</A>).</P><P>The final file name of a file is computed using the predicates
+<TT>prolog_file_name/2</TT> (section&#XA0;<A HREF="gprolog050.html#prolog-file-name/2">8.26.3</A>) and
+<TT>absolute_file_name/2</TT> (section&#XA0;<A HREF="gprolog050.html#absolute-file-name/2">8.26.1</A>).</P><P><TT>[ File | Files ]</TT>, i.e. <TT>&#X2019;.&#X2019;(File, Files)</TT> is
+equivalent to <TT>consult([ File | Files ])</TT>.</P><P>Since version 1.4.0, with the introduction of shebang support,
+<TT>consult/1</TT> ignores the first line of a Prolog source file which
+directly begins with <TT>#</TT>. See
+(section&#XA0;<A HREF="gprolog007.html#Scripting-Prolog">4.2.4</A>) for more information about
+shebang support and PrologScript.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Files</TT> is a partial list or a list with an element
+<TT>E</TT> which is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Files</TT> is neither a partial list nor a list nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Files)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Files</TT> list is neither a
+variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Files</TT> list is an atom but not
+a valid pathname</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(os_path, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Files</TT> list is a valid
+pathname but does not correspond to an existing source</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>existence_error(source_sink, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an error occurs executing a directive</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left>see <TT>call/1</TT> errors (section&#XA0;<A HREF="gprolog023.html#call/1">7.2.3</A>)</TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc192"></A><A NAME="htoc238">8.23.2</A>&#XA0;&#XA0;<TT>load/1</TT></H4><P>
+<A NAME="load/1"></A>
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+load(+atom_or_atom_list)</TT></DD></DL><P><B>Description</B></P><P><TT>load(Files)</TT> loads into memory each file of the list
+<TT>Files</TT>. Each file must have been previously compiled for byte-code
+using the GNU Prolog compiler (section&#XA0;<A HREF="gprolog009.html#The-GNU-Prolog-compiler">4.4</A>).
+<TT>Files</TT> can be also a single file name (i.e. an atom).</P><P>The final file name of a file is computed using the predicates
+<TT>absolute_file_name/2</TT> (section&#XA0;<A HREF="gprolog050.html#absolute-file-name/2">8.26.1</A>). If no
+suffix is given <TT>&#X2019;.wbc&#X2019;</TT> is appended to the file name.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Files</TT> is a partial list or a list with an element
+<TT>E</TT> which is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Files</TT> is neither a partial list nor a list nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Files)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Files</TT> list is neither a
+variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Files</TT> list is an atom but not
+a valid pathname</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(os_path, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Files</TT> list is a valid
+pathname but does not correspond to an existing source</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>existence_error(source_sink, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an error occurs executing a directive</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left>see <TT>call/1</TT> errors (section&#XA0;<A HREF="gprolog023.html#call/1">7.2.3</A>)</TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc193"></A><A NAME="htoc239">8.23.3</A>&#XA0;&#XA0;<TT>listing/1</TT>,
+<TT>listing/0</TT></H4><P>
+<A NAME="listing/1"></A>
+
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+listing(+predicate_indicator)<BR>
+listing(+atom)<BR>
+listing</TT></DD></DL><P><B>Description</B></P><P><TT>listing(Pred)</TT> lists the clauses of the consulted predicate whose
+predicate indicator is <TT>Pred</TT>. <TT>Pred</TT> can also be a single
+atom in which case all predicates whose name is <TT>Pred</TT> are listed (of
+any arity). This predicate uses <TT>portray_clause/2</TT>
+(section&#XA0;<A HREF="gprolog038.html#portray-clause/2">8.14.8</A>) to output the clauses.</P><P><TT>listing</TT> lists all clauses of all consulted predicates.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Pred</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Pred</TT> is neither a variable nor predicate indicator or an
+atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(predicate_indicator, Pred)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog046.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog048.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

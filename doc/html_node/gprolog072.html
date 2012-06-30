@@ -1,0 +1,209 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Calling Prolog from C</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog071.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog066.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog073.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc387">10.6</A>&#XA0;&#XA0;Calling Prolog from C</H3><UL>
+<LI><A HREF="gprolog072.html#toc317">Introduction</A>
+</LI><LI><A HREF="gprolog072.html#toc318">Example: <TT>my_call/1</TT> - a <TT>call/1</TT> clone</A>
+</LI><LI><A HREF="gprolog072.html#toc319">Example: recovering the list of all operators</A>
+</LI></UL>
+<H4 CLASS="subsubsection"><A NAME="toc317"></A><A NAME="htoc388">10.6.1</A>&#XA0;&#XA0;Introduction</H4><P>
+The following functions allows a C function to call a Prolog predicate:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">void   Pl_Query_Begin        (PlBool recoverable)
+int    Pl_Query_Call         (int functor, int arity, PlTerm *arg)
+int    Pl_Query_Next_Solution(void)
+void   Pl_Query_End          (int op)
+PlTerm Pl_Get_Exception      (void)
+void   Pl_Exec_Continuation  (int functor, int arity, PlTerm *arg)
+</PRE></DD></DL><P>The invocation of a Prolog predicate should be done as follows:</P><UL CLASS="itemize"><LI CLASS="li-itemize">open a query using <TT>Pl_Query_Begin()</TT></LI><LI CLASS="li-itemize">compute the first solution using <TT>Pl_Query_Call()</TT></LI><LI CLASS="li-itemize">eventually compute next solutions using
+<TT>Pl_Query_Next_Solution()</TT></LI><LI CLASS="li-itemize">close the query using <TT>Pl_Query_End()</TT></LI></UL><P>The function <TT>Pl_Query_Begin(recoverable)</TT> is used to initialize a query. The argument <TT>recoverable</TT> shall be set to
+<TT>PL_TRUE</TT> if the user wants to recover, at the end of the query, the
+memory space consumed by the query (in that case an additional choice-point
+is created). All terms created in the heap, e.g. using <TT>Pl_Mk_...</TT>
+family functions (section&#XA0;<A HREF="gprolog070.html#Creating-Prolog-terms">10.4.5</A>), after the invocation of
+<TT>Pl_Query_Begin()</TT> can be recovered when calling
+<TT>Pl_Query_End(PL_TRUE)</TT> (see below).</P><P>The function <TT>Pl_Query_Call(functor, arity, arg)</TT> calls a predicate
+passing arguments. It is then used to compute the first solution. The
+arguments <TT>functor</TT>, <TT>arity</TT> and <TT>arg</TT> are similar to
+those of the functions handling complex terms
+(section&#XA0;<A HREF="gprolog070.html#Introduction:(Manipulating-Prolog-terms)">10.4.1</A>). This function returns:</P><UL CLASS="itemize"><LI CLASS="li-itemize"><TT>PL_FAILURE</TT> (a constant equal to <TT>PL_FALSE</TT>, i.e. 0) if
+the query fails.</LI><LI CLASS="li-itemize"><TT>PL_SUCCESS</TT> (a constant equal to <TT>PL_TRUE</TT>, i.e. 1) in
+case of success. In that case the argument array <TT>arg</TT> can be used to
+obtain the unification performed by the query.</LI><LI CLASS="li-itemize"><TT>PL_EXCEPTION</TT> (a constant equal to 2). In that case function
+<TT>Pl_Get_Exception()</TT> can be used to obtained the exceptional term
+raised by <TT>throw/1</TT> (section&#XA0;<A HREF="gprolog023.html#catch/3">7.2.4</A>).</LI></UL><P>The function <TT>Pl_Query_Next_Solution()</TT> is used to compute a new
+solution. It must be only used if the result of the previous solution was
+<TT>PL_SUCCESS</TT>. This functions returns the same kind of values as
+<TT>Pl_Query_Call()</TT> (see above).</P><P>The function <TT>Pl_Query_End(op)</TT> is used to finish a query. This
+function mainly manages the remaining alternatives of the query. However,
+even if the query has no alternatives this function must be used to
+correctly finish the query. The value of <TT>op</TT> is:</P><UL CLASS="itemize"><LI CLASS="li-itemize"><TT>PL_RECOVER</TT>: to recover the memory space consumed by the
+query. After that the state of Prolog stacks is exactly the same as before
+opening the query. To use this option the query must have been initialized
+specifying <TT>PL_TRUE</TT> for <TT>recoverable</TT> (see above).</LI><LI CLASS="li-itemize"><TT>PL_CUT</TT>: to cut remaining alternatives. The effect of this
+option is similar to a cut after the query.</LI><LI CLASS="li-itemize"><TT>PL_KEEP_FOR_PROLOG</TT>: to keep the alternatives for Prolog.
+This is useful when the query was invoked in a foreign C function. In that
+case, when the predicate corresponding to the C foreign function is invoked
+a query is executed and the remaining alternatives are then available as
+alternatives of that predicate.</LI></UL><P>Note that several queries can be nested since a stack of queries is
+maintained. For instance, it is possible to call a query and before
+terminating it to call another query. In that case the first execution of
+<TT>Pl_Query_End()</TT> will finish the second query (i.e. the inner) and
+the next execution of <TT>Pl_Query_End()</TT> will finish the first query.</P><P>Finally, the function <TT>Pl_Exec_Continuation(functor, arity,
+arg)</TT> replaces the current calculus by the execution of the specified
+predicate. The arguments <TT>functor</TT>, <TT>arity</TT> and
+<TT>arg</TT> are similar to those of the functions handling complex
+terms (section&#XA0;<A HREF="gprolog070.html#Introduction:(Manipulating-Prolog-terms)">10.4.1</A>).</P><H4 CLASS="subsubsection"><A NAME="toc318"></A><A NAME="htoc389">10.6.2</A>&#XA0;&#XA0;Example: <TT>my_call/1</TT> - a <TT>call/1</TT> clone</H4><P>We here define a predicate <TT>my_call(Goal)</TT> which acts like
+<TT>call(Goal)</TT> except that we do not handle exceptions (if an exception
+occurs the goal simply fails):</P><P>In the prolog file <TT>examp.pl</TT>:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>:- foreign(my_call(term)).</TT></DD></DL><P>In the C file <TT>examp_c.c</TT>:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">#include &lt;string.h&gt;
+#include &lt;gprolog.h&gt;
+
+PlBool
+my_call(PlTerm goal)
+
+{
+  PlTerm *arg;
+  int functor, arity;
+  int result;
+
+  arg = Pl_Rd_Callable_Check(goal, &amp;functor, &amp;arity);
+  Pl_Query_Begin(PL_FALSE);
+  result = Pl_Query_Call(functor, arity, arg);
+  Pl_Query_End(PL_KEEP_FOR_PROLOG);
+  return (result == PL_SUCCESS);
+}
+</PRE></DD></DL><P>The compilation produces an executable called <TT>examp</TT>:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>% gplc examp.pl examp_c.c</TT></DD></DL><P>Examples of use:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>| ?- my_call(write(hello)).</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>hello</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>| ?- my_call(for(X,1,3)).</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>X = 1 ?</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(here the user presses <TT>;</TT> to compute another solution)</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>X = 2 ?</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(here the user presses <TT>;</TT> to compute another solution)</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>X = 3</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(here the user is not prompted since there is no more alternative)</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>| ?- my_call(1).</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>{exception:&#XA0;error(type_error(callable,1),my_call/1)}</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>| ?- my_call(call(1)).</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>no</TT></TD></TR>
+</TABLE></DD></DL><P>When <TT>my_call(1)</TT> is called an error is raised due to the use of
+<TT>Pl_Rd_Callable_Check()</TT>. However the error raised by
+<TT>my_call(call(1))</TT> is ignored and <TT>PL_FALSE</TT> (i.e. a failure) is
+returned by the foreign function.</P><P>To really simulate the behavior of <TT>call/1</TT> when an exception
+is recovered it should be re-raised to be captured by an earlier
+handler. The idea is then to execute a <TT>throw/1</TT> as the
+continuation. This is what it is done by the following code:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">#include &lt;string.h&gt;
+#include &lt;gprolog.h&gt;
+
+PlBool
+my_call(PlTerm goal)
+{
+  PlTerm *args;
+  int functor, arity;
+  int result;
+
+  args = Pl_Rd_Callable_Check(goal, &amp;functor, &amp;arity);
+  Pl_Query_Begin(PL_FALSE);
+  result = Pl_Query_Call(functor, arity, args);
+  Pl_Query_End(PL_KEEP_FOR_PROLOG);
+  if (result == PL_EXCEPTION)
+    {
+      PlTerm except = Pl_Get_Exception();
+      Pl_Exec_Continuation(Find_Atom("throw"), 1, &amp;except);
+    }
+
+  return result;
+}
+</PRE></DD></DL><P>The following code propagates the error raised by <TT>call/1</TT>.</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>| ?- my_call(call(1)).</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>{exception:&#XA0;error(type_error(callable,1),my_call/1)}</TT></TD></TR>
+</TABLE></DD></DL><P>Finally note that a simpler way to define <TT>my_call/1</TT> is to use
+<TT>Pl_Exec_Continuation()</TT> as follows:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">#include &lt;string.h&gt;
+#include &lt;gprolog.h&gt;
+
+PlBool
+my_call(PlTerm goal)
+{
+  PlTerm *args;
+  int functor, arity;
+
+  args = Pl_Rd_Callable_Check(goal, &amp;functor, &amp;arity);
+  Pl_Exec_Continuation(functor, arity, args);
+  return PL_TRUE;
+}
+</PRE></DD></DL><H4 CLASS="subsubsection"><A NAME="toc319"></A><A NAME="htoc390">10.6.3</A>&#XA0;&#XA0;Example: recovering the list of all operators</H4><P>We here define a predicate <TT>all_op(List)</TT> which unifies
+<TT>List</TT> with the list of all currently defined operators as would be done by: <TT>findall(X,current_op(_,_,X),List)</TT>.</P><P>In the prolog file <TT>examp.pl</TT>:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>:- foreign(all_op(term)).</TT></DD></DL><P>In the C file <TT>examp_c.c</TT>:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">#include &lt;string.h&gt;
+#include &lt;gprolog.h&gt;
+
+PlBool
+all_op(PlTerm list)
+{
+  PlTerm op[1024];
+  PlTerm args[3];
+  int n = 0;
+  int result;
+
+  Pl_Query_Begin(PL_TRUE);
+  args[0] = Pl_Mk_Variable();
+  args[1] = Pl_Mk_Variable();
+  args[2] = Pl_Mk_Variable();
+  result = Pl_Query_Call(Find_Atom("current_op"), 3, args);
+  while (result)
+    {
+      op[n++] = Pl_Mk_Atom(Pl_Rd_Atom(args[2])); /* arg[2]: the name of the op */
+      result = Pl_Query_Next_Solution();
+    }
+  Pl_Query_End(PL_RECOVER);
+
+  return Pl_Un_Proper_List_Check(n, op, list);
+}
+</PRE></DD></DL><P>Note that we know here that there is no source for exception. In that case
+the result of <TT>Pl_Query_Call</TT> and <TT>Pl_Query_Next_Solution</TT>
+can be considered as a boolean.</P><P>The compilation produces an executable called <TT>examp</TT>:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>% gplc examp.pl examp_c.c</TT></DD></DL><P>Example of use:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">| ?- all_op(L).
+
+L = [:-,:-,\=,=:=,#&gt;=,#&lt;#,@&gt;=,--&gt;,mod,#&gt;=#,**,*,+,+,',',...]
+
+| ?- findall(X,current_op(_,_,X),L).
+
+L = [:-,:-,\=,=:=,#&gt;=,#&lt;#,@&gt;=,--&gt;,mod,#&gt;=#,**,*,+,+,',',...]
+</PRE></DD></DL>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog071.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog066.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog073.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

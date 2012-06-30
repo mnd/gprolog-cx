@@ -1,0 +1,428 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Calling C from Prolog</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog068.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog066.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog070.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc353">10.3</A>&#XA0;&#XA0;Calling C from Prolog</H3><UL>
+<LI><A HREF="gprolog069.html#toc286">Introduction</A>
+</LI><LI><A HREF="gprolog069.html#toc287"><TT>foreign/2</TT> directive</A>
+</LI><LI><A HREF="gprolog069.html#toc288">The C function</A>
+</LI><LI><A HREF="gprolog069.html#toc289">Input arguments</A>
+</LI><LI><A HREF="gprolog069.html#toc290">Output arguments</A>
+</LI><LI><A HREF="gprolog069.html#toc291">Input/output arguments</A>
+</LI><LI><A HREF="gprolog069.html#toc292">Writing non-deterministic C code</A>
+</LI><LI><A HREF="gprolog069.html#toc293">Example: input and output arguments</A>
+</LI><LI><A HREF="gprolog069.html#toc294">Example: non-deterministic code</A>
+</LI><LI><A HREF="gprolog069.html#toc295">Example: input/output arguments</A>
+</LI></UL>
+<P>
+<A NAME="Calling-C-from-Prolog"></A></P><H4 CLASS="subsubsection"><A NAME="toc286"></A><A NAME="htoc354">10.3.1</A>&#XA0;&#XA0;Introduction</H4><P>This interface can then be used to write both simple and complex C routines.
+A simple routine uses either input or output arguments which type is simple.
+In that case the user does not need any knowledge of Prolog data structures
+since all Prolog &#X2194; C data conversions are implicitly
+achieved. To manipulate complex terms (lists, structures) a set of functions
+is provided. Finally it is also possible to write non-deterministic C code.</P><H4 CLASS="subsubsection"><A NAME="toc287"></A><A NAME="htoc355">10.3.2</A>&#XA0;&#XA0;<TT>foreign/2</TT> directive</H4><P>
+<A NAME="foreign/2-directive"></A>
+
+</P><P><TT>foreign/2</TT> directive (section&#XA0;<A HREF="gprolog022.html#foreign/2">7.1.15</A>) declares a C function interface.
+The general form is <TT>foreign(Template, Options)</TT> which defines an
+interface predicate whose prototype is <TT>Template</TT> according to the
+options given by <TT>Options</TT>. <TT>Template</TT> is a callable term
+specifying the type/mode of each argument of the associated Prolog predicate.</P><P><B>Foreign options</B>: <TT>Options</TT> is a list of foreign options. If
+this list contains contradictory options, the rightmost option is the one
+which applies. Possible options are:</P><UL CLASS="itemize"><LI CLASS="li-itemize"><TT>fct_name(F)</TT>: <TT>F</TT> is an atom representing
+the name of the C function to call. By default the name of the C function is
+the same as the principal functor of <TT>Template</TT>. In any case, the atom
+associated with the name of the function must conforms to the syntax of C
+identifiers.</LI><LI CLASS="li-itemize"><TT>return(boolean</TT>/<TT>none</TT>/<TT>jump)</TT>:
+specifies the value returned by the C function:<UL CLASS="itemize"><LI CLASS="li-itemize"><TT>boolean</TT>: the type of the function is <TT>PlBool</TT> (returns
+<TT>PL_TRUE</TT> on success, <TT>PL_FALSE</TT> otherwise).</LI><LI CLASS="li-itemize"><TT>none</TT>: the type of the function is <TT>void</TT> (no returned
+value).</LI><LI CLASS="li-itemize"><TT>jump</TT>: the type of the function is <TT>void(*)()</TT> (returns
+the address of a Prolog code to execute).</LI></UL><P>The default value is <TT>boolean</TT>.</P></LI><LI CLASS="li-itemize"><TT>bip_name(Name, Arity)</TT>: initializes the error
+context with <TT>Name</TT> and <TT>Arity</TT>. If an error occurs this
+information is used to indicate from which predicate the error occurred
+(section&#XA0;<A HREF="gprolog020.html#General-format-and-error-context">6.3.1</A>). It is also possible to prevent the
+initialization of the error context using <TT>bip_name(none)</TT>. By
+default <TT>Name</TT> and <TT>Arity</TT> are set to the functor and arity of
+<TT>Template</TT>.</LI><LI CLASS="li-itemize"><TT>choice_size(N)</TT>: this option specifies that the
+function implements a non-deterministic code. <TT>N</TT> is an integer
+specifying the size needed by the non-deterministic C function. This facility
+is explained later (section&#XA0;<A HREF="#Writing-non-deterministic-C-code">10.3.7</A>). By default a
+foreign function is deterministic.</LI></UL><P><TT>foreign(Template)</TT> is equivalent to
+<TT>foreign(Template, [])</TT>.</P><P><B>Foreign modes and types</B>: each argument of <TT>Template</TT>
+specifies the foreign mode and type of the corresponding argument. This
+information is used to check the type of effective arguments at run-time and
+to perform Prolog &#X2194; C data conversions. Each argument of
+<TT>Template</TT> is formed with a mode symbol followed by a type name.
+Possible foreign modes are:</P><UL CLASS="itemize"><LI CLASS="li-itemize"><TT>+</TT>: input argument.</LI><LI CLASS="li-itemize"><TT>-</TT>: output argument.</LI><LI CLASS="li-itemize"><TT>?</TT>: input/output argument.</LI></UL><P>Possible foreign types are:</P><TABLE BORDER=1 CELLSPACING=0 CELLPADDING=1><TR><TD ALIGN=left NOWRAP>
+Foreign type</TD><TD ALIGN=left NOWRAP>Prolog type</TD><TD ALIGN=left NOWRAP>C type</TD><TD ALIGN=left NOWRAP>Description of the C type</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>integer</TT></TD><TD ALIGN=left NOWRAP>integer</TD><TD ALIGN=left NOWRAP><TT>PlLong</TT></TD><TD ALIGN=left NOWRAP>value of the integer</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>positive</TT></TD><TD ALIGN=left NOWRAP>positive integer</TD><TD ALIGN=left NOWRAP><TT>PlLong</TT></TD><TD ALIGN=left NOWRAP>value of the integer</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>float</TT></TD><TD ALIGN=left NOWRAP>floating point number</TD><TD ALIGN=left NOWRAP><TT>double</TT></TD><TD ALIGN=left NOWRAP>value of the
+floating point number</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>number</TT></TD><TD ALIGN=left NOWRAP>number</TD><TD ALIGN=left NOWRAP><TT>double</TT></TD><TD ALIGN=left NOWRAP>value of the number</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>atom</TT></TD><TD ALIGN=left NOWRAP>atom</TD><TD ALIGN=left NOWRAP><TT>PlLong</TT></TD><TD ALIGN=left NOWRAP>internal key of the atom</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>boolean</TT></TD><TD ALIGN=left NOWRAP>boolean</TD><TD ALIGN=left NOWRAP><TT>PlLong</TT></TD><TD ALIGN=left NOWRAP>value of the boolean
+(0=<TT>false</TT>, 1=<TT>true</TT>)</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>char</TT></TD><TD ALIGN=left NOWRAP>character</TD><TD ALIGN=left NOWRAP><TT>PlLong</TT></TD><TD ALIGN=left NOWRAP>value of (the code of) the
+character</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>code</TT></TD><TD ALIGN=left NOWRAP>character code</TD><TD ALIGN=left NOWRAP><TT>PlLong</TT></TD><TD ALIGN=left NOWRAP>value of the character-code</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>byte</TT></TD><TD ALIGN=left NOWRAP>byte</TD><TD ALIGN=left NOWRAP><TT>PlLong</TT></TD><TD ALIGN=left NOWRAP>value of the byte</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>in_char</TT></TD><TD ALIGN=left NOWRAP>in-character</TD><TD ALIGN=left NOWRAP><TT>PlLong</TT></TD><TD ALIGN=left NOWRAP>value of the character or
+<TT>-1</TT> for end-of-file</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>in_code</TT></TD><TD ALIGN=left NOWRAP>in-character code</TD><TD ALIGN=left NOWRAP><TT>PlLong</TT></TD><TD ALIGN=left NOWRAP>value of the
+character-code or <TT>-1</TT> for end-of-file</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>in_byte</TT></TD><TD ALIGN=left NOWRAP>in-byte</TD><TD ALIGN=left NOWRAP><TT>PlLong</TT></TD><TD ALIGN=left NOWRAP>value of the byte or
+<TT>-1</TT> for the end-of-file</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>string</TT></TD><TD ALIGN=left NOWRAP>atom</TD><TD ALIGN=left NOWRAP><TT>char *</TT></TD><TD ALIGN=left NOWRAP>C string containing the name of
+the atom</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>chars</TT></TD><TD ALIGN=left NOWRAP>character list</TD><TD ALIGN=left NOWRAP><TT>char *</TT></TD><TD ALIGN=left NOWRAP>C string containing the
+characters of the list</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>codes</TT></TD><TD ALIGN=left NOWRAP>character-code list</TD><TD ALIGN=left NOWRAP><TT>char *</TT></TD><TD ALIGN=left NOWRAP>C string containing
+the characters of the list</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>term</TT></TD><TD ALIGN=left NOWRAP>Prolog term</TD><TD ALIGN=left NOWRAP><TT>PlTerm</TT></TD><TD ALIGN=left NOWRAP>generic Prolog term</TD></TR>
+</TABLE><P><B>Simple foreign type</B>: a simple type is any foreign type listed in
+the above tabled except <TT>term</TT>. A simple foreign type is an atomic
+term (character and character-code lists are in fact lists of constants).
+Each simple foreign type is converted to/from a C type to simplify the
+writing of the C function.</P><P><B>Complex foreign type</B>: type foreign type <TT>term</TT> refers to any
+Prolog term (e.g. lists, structures&#X2026;). When such an type is
+specified the argument is passed to the C function as a <TT>PlTerm</TT>
+(GNU Prolog C type equivalent to a <TT>PlLong</TT>). Several functions are
+provided to manipulate <TT>PlTerm</TT> variables (section&#XA0;<A HREF="gprolog070.html#Manipulating-Prolog-terms">10.4</A>). 
+Since the original term is passed to the function it is
+possible to read its value or to unify it. So the meaning of the mode symbol
+is less significant. For this reason it is possible to omit the mode symbol.
+In that case <TT>term</TT> is equivalent to <TT>+term</TT>.</P><H4 CLASS="subsubsection"><A NAME="toc288"></A><A NAME="htoc356">10.3.3</A>&#XA0;&#XA0;The C function</H4><P>The type returned by the C function depends on the value of the
+<TT>return</TT> foreign option (section&#XA0;<A HREF="#foreign/2-directive">10.3.2</A>). If it is
+<TT>boolean</TT> then the C function is of type <TT>PlBool</TT> and shall
+return <TT>PL_TRUE</TT> in case of success and <TT>PL_FALSE</TT>
+otherwise. If the <TT>return</TT> option is <TT>none</TT> the C function is of
+type <TT>void</TT>. Finally if it is <TT>jump</TT>, the function shall return
+the address of a Prolog predicate and, at the exit of the function, the
+control is given to that predicate.</P><P>The type of the arguments of the C function depends on the mode and type
+declaration specified in <TT>Template</TT> for the corresponding argument as
+explained in the following sections.</P><H4 CLASS="subsubsection"><A NAME="toc289"></A><A NAME="htoc357">10.3.4</A>&#XA0;&#XA0;Input arguments</H4><P>
+<A NAME="Input-arguments"></A>
+An input argument is tested at run-time to check if its type conforms to the
+foreign type and then it is passed to the C function. The type of the
+associated C argument is given by the above table (section&#XA0;<A HREF="#foreign/2-directive">10.3.2</A>). For instance, the effective argument <TT>Arg</TT> associated with
+<TT>+positive</TT> foreign declaration is submitted to the following
+process:</P><UL CLASS="itemize"><LI CLASS="li-itemize">if <TT>Arg</TT> is a variable an <TT>instantiation_error</TT> is
+raised.</LI><LI CLASS="li-itemize">if <TT>Arg</TT> is neither a variable nor an integer a
+<TT>type_error(integer, Arg)</TT> is raised.</LI><LI CLASS="li-itemize">if <TT>Arg</TT> is an integer &lt; 0 a
+<TT>domain_error(not_less_than_zero, Arg)</TT> is raised.</LI><LI CLASS="li-itemize">otherwise the value of <TT>Arg</TT> is passed to the C is passed to
+the C function as an integer (<TT>PlLong</TT>).</LI></UL><P>When <TT>+string</TT> is specified the string passed to the function is the
+internal string of the corresponding atom and should not be modified.</P><P>When <TT>+term</TT> is specified the term passed to the function is the
+original Prolog term. It can be read and/or unified. It is also the case
+when <TT>term</TT> is specified without any mode symbol.</P><H4 CLASS="subsubsection"><A NAME="toc290"></A><A NAME="htoc358">10.3.5</A>&#XA0;&#XA0;Output arguments</H4><P>
+<A NAME="Output-arguments"></A>
+An output argument is tested at run-time to check if its type conforms to
+the foreign type and it is unified with the value set by the C function. The
+type of the associated C argument is a pointer to the type given by the
+above table (section&#XA0;<A HREF="#foreign/2-directive">10.3.2</A>). For instance, the effective
+argument <TT>Arg</TT> associated with <TT>-positive</TT> foreign declaration
+is handled as follows:</P><UL CLASS="itemize"><LI CLASS="li-itemize">if <TT>Arg</TT> is neither a variable nor an integer a
+<TT>type_error(integer, Arg)</TT> is raised.</LI><LI CLASS="li-itemize">if <TT>Arg</TT> is an integer &lt; 0 a
+<TT>domain_error(not_less_than_zero, Arg)</TT> is raised.</LI><LI CLASS="li-itemize">otherwise a pointer to an integer (<TT>PlLong</TT> <TT>*</TT>) is passed
+to the C function. If the function returns <TT>PL_TRUE</TT> the integer stored
+at this location is unified with <TT>Arg</TT>.</LI></UL><P>When <TT>-term</TT> is specified, the function must construct a term into
+the its corresponding argument (which is of type <TT>PlTerm *</TT>). At the
+exit of the function this term will be unified with the actual predicate
+argument.</P><H4 CLASS="subsubsection"><A NAME="toc291"></A><A NAME="htoc359">10.3.6</A>&#XA0;&#XA0;Input/output arguments</H4><P>
+<A NAME="Input/output-arguments"></A>
+Basically an input/output argument is treated as in input argument if it is
+not a variable, as an output argument otherwise. The type of the associated
+C argument is a pointer to a <TT>PlFIOArg</TT> (GNU Prolog C type) defined as
+follows:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">typedef struct
+    {
+     PlBool is_var;
+     PlBool unify;
+     union
+        {
+         PlLong l;
+         char  *s;
+         double d;
+        }value;
+    }PlFIOArg;
+</PRE></DD></DL><P>The field <TT>is_var</TT> is set to <TT>PL_TRUE</TT> if the argument is a
+variable and <TT>PL_FALSE</TT> otherwise. This value can be tested by the C
+function to determine which treatment to perform. The field <TT>unify</TT>
+controls whether the effective argument must be unified at the exit of the C
+function. Initially <TT>unify</TT> is set to the same value as
+<TT>is_var</TT> (i.e. a variable argument will be unified while a
+non-variable argument will not) but it can be modified by the C function.
+The field <TT>value</TT> stores the value of the argument. It is declared as
+a C <TT>union</TT> since there are several kinds of value types. The field
+<TT>s</TT> is used for C strings, <TT>d</TT> for C doubles and <TT>l</TT>
+otherwise (<TT>int</TT>, <TT>PlLong</TT>, <TT>PlTerm</TT>). if <TT>is_var</TT>
+is <TT>PL_FALSE</TT> then <TT>value</TT> contains the input value of the
+argument with the same conventions as for input arguments
+(section&#XA0;<A HREF="#Input-arguments">10.3.4</A>). At the exit of the function, if unify is
+<TT>PL_TRUE</TT> <TT>value</TT> must contain the value to unify with the same
+conventions as for output arguments
+(section&#XA0;<A HREF="#Output-arguments">10.3.5</A>).</P><P>For instance, the effective argument <TT>Arg</TT> associated with
+<TT>?positive</TT> foreign declaration is handled as follows:</P><UL CLASS="itemize"><LI CLASS="li-itemize">if <TT>Arg</TT> is a variable <TT>is_var</TT> and <TT>unify</TT> are
+set to <TT>PL_TRUE</TT> else to <TT>PL_FALSE</TT> and its value is copied in
+<TT>value.l</TT>.</LI><LI CLASS="li-itemize">if <TT>Arg</TT> is neither a variable nor an integer a
+<TT>type_error(integer, Arg)</TT> is raised.</LI><LI CLASS="li-itemize">if <TT>Arg</TT> is an integer &lt; 0 a
+<TT>domain_error(not_less_than_zero, Arg)</TT> is raised.</LI><LI CLASS="li-itemize">otherwise a pointer to the <TT>PlFIOArg</TT> (<TT>PlFIOArg</TT>
+<TT>*</TT>) is passed to the C function. If the function returns
+<TT>PL_TRUE</TT> and if <TT>unify</TT> is <TT>PL_TRUE</TT> the value stored in
+<TT>value.l</TT> is unified with <TT>Arg</TT>.</LI></UL><H4 CLASS="subsubsection"><A NAME="toc292"></A><A NAME="htoc360">10.3.7</A>&#XA0;&#XA0;Writing non-deterministic C code</H4><P>
+<A NAME="Writing-non-deterministic-C-code"></A>
+The interface allows the user to write non-deterministic C code. When a C
+function is non-deterministic, a choice-point is created for this function.
+When a failure occurs, if all more recent non-deterministic code are
+finished, the function is re-invoked. It is then important to inform Prolog
+when there is no more solution (i.e. no more choice) for a non-deterministic
+code. So, when no more choices remains the function must remove the
+choice-point. The interface increments a counter each time the function is
+re-invoked. At the first call this counter is equal to 0. This information
+allows the function to detect its first call. When writing non-deterministic
+code, it is often useful to record data between consecutive re-invocations of
+the function. The interface maintains a buffer to record such an
+information. The size of this buffer is given by
+<TT>choice_size(N)</TT> when using <TT>foreign/2</TT>
+(section&#XA0;<A HREF="#foreign/2-directive">10.3.2</A>). This size is the number of (consecutive)
+<TT>PlLong</TT><EM>s</EM> needed by the C function. Inside the function it is
+possible to call the following functions/macros:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">int  Pl_Get_Choice_Counter(void)
+TYPE Pl_Get_Choice_Buffer (TYPE)
+void Pl_No_More_Choice    (void)
+</PRE></DD></DL><P>The macro <TT>Pl_Get_Choice_Counter()</TT> returns the value of the
+invocation counter (0 at the first call).</P><P>The macro <TT>Pl_Get_Choice_Buffer(<I>TYPE</I>)</TT> returns a
+pointer to the buffer (casted to <I><TT>TYPE</TT></I>).</P><P>The function <TT>Pl_No_More_Choice()</TT> deletes the choice point
+associated with the function.</P><H4 CLASS="subsubsection"><A NAME="toc293"></A><A NAME="htoc361">10.3.8</A>&#XA0;&#XA0;Example: input and output arguments</H4><P>
+All examples presented here can be found in the <TT>ExamplesC</TT>
+sub-directory of the distribution, in the files <TT>examp.pl</TT> (Prolog
+part) and <TT>examp_c.c</TT> (C part).</P><P>Let us define a predicate <TT>first_occurrence(A, C, P)</TT> which unifies
+<TT>P</TT> with the position (from 0) of the first occurrence of the
+character <TT>C</TT> in the atom <TT>A</TT>. The predicate must fail if
+<TT>C</TT> does not appear in <TT>A</TT>.</P><P>In the prolog file <TT>examp.pl</TT>:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>:- foreign(first_occurrence(+string, +char, -positive)).</TT></DD></DL><P>In the C file <TT>examp_c.c</TT>:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">#include &lt;string.h&gt;
+#include &lt;gprolog.h&gt;
+
+PlBool
+first_occurrence(char *str, PlLong c, PlLong *pos)
+{
+  char *p;
+
+  p = strchr(str, c);
+  if (p == NULL)                    /* C does not appear in A */
+    return PL_FALSE;                /* fail */
+
+  *pos = p - str;                   /* set the output argument */
+  return PL_TRUE;                   /* succeed */
+}
+</PRE></DD></DL><P>The compilation produces an executable called <TT>examp</TT>:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>% gplc examp.pl examp_c.c</TT></DD></DL><P>Examples of use:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">| ?- first_occurrence(prolog, p, X).
+
+X = 0
+
+| ?- first_occurrence(prolog, k, X).
+
+no
+
+| ?- first_occurrence(prolog, A, X).
+{exception: error(instantiation_error,first_occurrence/3)}
+
+| ?- first_occurrence(prolog, 1 ,X).
+{exception: error(type_error(character,1),first_occurrence/3)}
+</PRE></DD></DL><H4 CLASS="subsubsection"><A NAME="toc294"></A><A NAME="htoc362">10.3.9</A>&#XA0;&#XA0;Example: non-deterministic code</H4><P>
+We here define a predicate <TT>occurrence(A, C, P)</TT> which unifies
+<TT>P</TT> with the position (from 0) of one occurrence of the character
+<TT>C</TT> in the atom <TT>A</TT>. The predicate will fail if <TT>C</TT>
+does not appear in <TT>A</TT>. The predicate is re-executable on
+backtracking. The information that must be recorded between two invocations
+of the function is the next starting position in <TT>A</TT> to search for
+<TT>C</TT>.</P><P>In the prolog file <TT>examp.pl</TT>:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>:- foreign(occurrence(+string, +char, -positive),
+[choice_size(1)]).</TT></DD></DL><P>In the C file <TT>examp_c.c</TT>:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">#include &lt;string.h&gt;
+#include &lt;gprolog.h&gt;
+
+PlBool
+occurrence(char *str, PlLong c, PlLong *pos)
+{
+  char **info_pos;
+  char *p;
+
+  info_pos = Pl_Get_Choice_Buffer(char **); /* recover the buffer */
+
+  if (Pl_Get_Choice_Counter() == 0) /* first invocation ? */
+    *info_pos = str;
+
+  p = strchr(*info_pos, c);
+  if (p == NULL)                    /* c does not appear */
+    {
+      Pl_No_More_Choice();          /* remove choice-point */
+      return PL_FALSE;              /* fail */
+    }
+
+  *pos = p - str;                   /* set the output argument */
+  *info_pos = p + 1;                /* update next starting pos */
+  return PL_TRUE;                   /* succeed */
+}
+</PRE></DD></DL><P>The compilation produces an executable called <TT>examp</TT>:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>% gplc examp.pl examp_c.c</TT></DD></DL><P>Examples of use:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>| ?- occurrence(prolog, o, X).</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>X = 2 ?</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(here the user presses <TT>;</TT> to compute another solution)</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>X = 4 ?</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(here the user presses <TT>;</TT> to compute another solution)</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>no</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(no more solution)</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>| ?- occurrence(prolog, k, X).</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>no</TT></TD></TR>
+</TABLE></DD></DL><P>In the first example when the second (the last) occurrence is found
+(<TT>X=4</TT>) the choice-point remains and the failure is detected only when
+another solution is requested (by pressing <TT>;</TT>). It is possible to
+improve this behavior by deleting the choice-point when there is no more
+occurrence. To do this it is necessary to do one search ahead. The
+information stored is the position of the next occurrence. Let us define such
+a behavior for the predicate <TT>occurrence2/3</TT>.</P><P>In the prolog file <TT>examp.pl</TT>:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>:- foreign(occurrence2(+string, +char, -positive),
+[choice_size(1)]).</TT></DD></DL><P>In the C file <TT>examp_c.c</TT>:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">#include &lt;string.h&gt;
+#include &lt;gprolog.h&gt;
+
+PlBool
+occurrence2(char *str, PlLong c, PlLong *pos)
+{
+  char **info_pos;
+  char *p;
+
+  info_pos = Pl_Get_Choice_Buffer(char **); /* recover the buffer */
+
+  if (Pl_Get_Choice_Counter() == 0) /* first invocation ? */
+    {
+      p = strchr(str, c);
+      if (p == NULL)                /* C does not appear at all */
+        {
+          Pl_No_More_Choice();      /* remove choice-point */
+          return PL_FALSE;          /* fail */
+        }
+
+      *info_pos = p;
+    }
+                                    /* info_pos = an occurrence */
+  *pos = *info_pos - str;           /* set the output argument */
+
+  p = strchr(*info_pos + 1, c);
+  if (p == NULL)                    /* no more occurrence */
+    Pl_No_More_Choice();            /* remove choice-point */
+  else
+    *info_pos = p;                  /* else update next solution */
+
+  return PL_TRUE;                   /* succeed */
+}
+</PRE></DD></DL><P>Examples of use:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>| ?- occurrence2(prolog, l, X).</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>X = 3</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(here the user is not prompted since there is no more alternative)</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>| ?- occurrence2(prolog, o, X).</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>X = 2 ?</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(here the user presses <TT>;</TT> to compute another solution)</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>X = 4</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(here the user is not prompted since there is no more alternative)</TD></TR>
+</TABLE></DD></DL><H4 CLASS="subsubsection"><A NAME="toc295"></A><A NAME="htoc363">10.3.10</A>&#XA0;&#XA0;Example: input/output arguments</H4><P>
+We here define a predicate <TT>char_ascii(Char, Code</TT>) which converts
+in both directions the character <TT>Char</TT> and its character-code
+<TT>Code</TT>. This predicate is then similar to <TT>char_code/2</TT>
+(section&#XA0;<A HREF="gprolog043.html#char-code/2">8.19.4</A>).</P><P>In the prolog file <TT>examp.pl</TT>:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>:- foreign(char_ascii(?char, ?code)).</TT></DD></DL><P>In the C file <TT>examp_c.c</TT>:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">#include &lt;gprolog.h&gt;
+
+PlBool
+char_ascii(PlFIOArg *c, PlFIOArg *ascii)
+{
+  if (!c-&gt;is_var)                  /* Char is not a variable */
+    {
+      ascii-&gt;unify = PL_TRUE;      /* enforce unif. of Code */
+      ascii-&gt;value.l = c-&gt;value.l; /* set Code */
+      return PL_TRUE;              /* succeed */
+    }
+
+  if (ascii-&gt;is_var)               /* Code is also a variable */
+    Pl_Err_Instantiation();        /* emit instantiation_error */
+
+  c-&gt;value.l = ascii-&gt;value.l;     /* set Char */
+  return PL_TRUE;                  /* succeed */
+}
+</PRE></DD></DL><P>If <TT>Char</TT> is instantiated it is necessary to enforce the unification
+of <TT>Code</TT> since it could be instantiated. Recall that by default if
+an input/output argument is instantiated it will not be unified at the exit
+of the function (section&#XA0;<A HREF="#Input/output-arguments">10.3.6</A>). If both <TT>Char</TT> and
+<TT>Code</TT> are variables the function raises an
+<TT>instantiation_error</TT>. The way to raise Prolog errors is described
+later (section&#XA0;<A HREF="gprolog071.html#Raising-Prolog-errors">10.5</A>).</P><P>The compilation produces an executable called <TT>examp</TT>:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>% gplc examp.pl examp_c.c</TT></DD></DL><P>Examples of use:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">| ?- char_ascii(a, X).
+
+X = 97
+
+| ?- char_ascii(X, 65).
+
+X = 'A'
+
+| ?- char_ascii(a, 12).
+
+no
+
+| ?- char_ascii(X, X).
+{exception: error(instantiation_error,char_ascii/2)}
+
+| ?- char_ascii(1, 12).
+{exception: error(type_error(character,1),char_ascii/2)}
+</PRE></DD></DL>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog068.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog066.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog070.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

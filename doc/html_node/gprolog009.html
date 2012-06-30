@@ -1,0 +1,490 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>The GNU Prolog compiler</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog008.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog005.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc14">4.4</A>&#XA0;&#XA0;The GNU Prolog compiler</H3><UL>
+<LI><A HREF="gprolog009.html#toc7">Different kinds of codes</A>
+</LI><LI><A HREF="gprolog009.html#toc8">Compilation scheme</A>
+</LI><LI><A HREF="gprolog009.html#toc9">Using the compiler</A>
+</LI><LI><A HREF="gprolog009.html#toc10">Running an executable</A>
+</LI><LI><A HREF="gprolog009.html#toc11">Generating a new interactive interpreter</A>
+</LI><LI><A HREF="gprolog009.html#toc12">The name mangling scheme</A>
+</LI></UL>
+<P>
+<A NAME="The-GNU-Prolog-compiler"></A></P><H4 CLASS="subsubsection"><A NAME="toc7"></A><A NAME="htoc15">4.4.1</A>&#XA0;&#XA0;Different kinds of codes</H4><P>
+<A NAME="Different-kinds-of-codes"></A>
+One of the main advantages of GNU Prolog is its ability to produce stand
+alone executables. A Prolog program can be compiled to native code to give
+rise to a machine-dependent executable using the GNU Prolog compiler. However
+native-code predicates cannot be listed nor fully debugged. So there is an
+alternative to native-code compilation: byte-code compilation. By default the
+GNU Prolog compiler produces native-code but via a command-line option it can
+produce a file ready for byte-code loading. This is exactly what
+<TT>consult/1</TT> does as was explained above (section&#XA0;<A HREF="gprolog007.html#Consulting-a-Prolog-program">4.2.3</A>). GNU Prolog also manages interpreted code using a Prolog interpreter
+written in Prolog. Obviously interpreted code is slower than byte-code but
+does not require the invocation of the GNU Prolog compiler. This interpreter is
+used each time a meta-call is needed as by <TT>call/1</TT> (section&#XA0;<A HREF="gprolog023.html#call/1">7.2.3</A>).
+This also the case of dynamically asserted clauses. The following table
+summarizes these three kinds of codes:</P><TABLE BORDER=1 CELLSPACING=0 CELLPADDING=1><TR><TD ALIGN=left NOWRAP>
+Type</TD><TD ALIGN=left NOWRAP>Speed</TD><TD ALIGN=center NOWRAP>Debug ?</TD><TD ALIGN=left NOWRAP>For what</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+interpreted-code</TD><TD ALIGN=left NOWRAP>slow</TD><TD ALIGN=center NOWRAP>yes</TD><TD ALIGN=left NOWRAP>meta-call and dynamically asserted clauses</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+byte-code</TD><TD ALIGN=left NOWRAP>medium</TD><TD ALIGN=center NOWRAP>yes</TD><TD ALIGN=left NOWRAP>consulted predicates</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+native-code</TD><TD ALIGN=left NOWRAP>fast</TD><TD ALIGN=center NOWRAP>no</TD><TD ALIGN=left NOWRAP>compiled predicates</TD></TR>
+</TABLE><H4 CLASS="subsubsection"><A NAME="toc8"></A><A NAME="htoc16">4.4.2</A>&#XA0;&#XA0;Compilation scheme</H4><P>
+<A NAME="Compilation-scheme"></A>
+<B>Native-code compilation</B>: a Prolog source is compiled in several
+stages to produce an object file that is linked to the GNU Prolog libraries
+to produce an executable. The Prolog source is first compiled to obtain a
+WAM [<A HREF="gprolog074.html#Warren83">9</A>] file. For a detailed study of the WAM the
+interested reader can refer to
+<A HREF="http://www.isg.sfu.ca/~hak/documents/wam.html">&#X201C;Warren&#X2019;s Abstract
+Machine: A Tutorial Reconstruction&#X201D;</A> [<A HREF="gprolog074.html#Ait-Kaci91">1</A>]. The WAM file is
+translated to a machine-independent language specifically designed for GNU
+Prolog. This language is close to a (universal) assembly language and is
+based on a very reduced instruction set. For this reason this language is
+called mini-assembly (MA). The mini-assembly file is then
+mapped to the assembly language of the target machine. This assembly file is
+assembled to give rise to an object file which is then linked with the GNU
+Prolog libraries to provide an executable. The compiler also takes into
+account Finite Domain constraint definition files. It translates them to C
+and invoke the C compiler to obtain object files. The following figure
+presents this compilation scheme:</P><DIV CLASS="center"><IMG SRC="compil-scheme.gif"></DIV><P>Obviously all intermediate stages are hidden to the user who simply invokes
+the compiler on his Prolog file(s) (plus other files: C,&#X2026;) and
+obtains an executable. However, it is also possible to stop the compiler at
+any given stage. This can be useful, for instance, to see the WAM code
+produced (perhaps when learning the WAM). Finally it is possible to give any
+kind of file to the compiler which will insert it in the compilation chain
+at the stage corresponding to its type. The type of a file is determined
+using the suffix of its file name. The following table presents all
+recognized types/suffixes:</P><TABLE BORDER=1 CELLSPACING=0 CELLPADDING=1><TR><TD ALIGN=left NOWRAP>
+Suffix of the file</TD><TD ALIGN=left NOWRAP>Type of the file</TD><TD ALIGN=left NOWRAP>Handled by:</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>.pl</TT>, <TT>.pro</TT></TD><TD ALIGN=left NOWRAP>Prolog source file</TD><TD ALIGN=left NOWRAP><TT>pl2wam</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>.wam</TT></TD><TD ALIGN=left NOWRAP>WAM source file</TD><TD ALIGN=left NOWRAP><TT>wam2ma</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>.ma</TT></TD><TD ALIGN=left NOWRAP>Mini-assembly source file</TD><TD ALIGN=left NOWRAP><TT>ma2asm</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>.s</TT></TD><TD ALIGN=left NOWRAP>Assembly source file</TD><TD ALIGN=left NOWRAP>the assembler</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>.c</TT>, <TT>.C</TT>, <TT>.CC</TT>, <TT>.cc</TT>, <TT>.cxx</TT>,
+<TT>.c++</TT>, <TT>.cpp</TT></TD><TD ALIGN=left NOWRAP>C or C++ source file</TD><TD ALIGN=left NOWRAP>the C compiler</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>.fd</TT></TD><TD ALIGN=left NOWRAP>Finite Domain constraint source file</TD><TD ALIGN=left NOWRAP><TT>fd2c</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+any other suffix (<TT>.o</TT>, <TT>.a</TT>,&#X2026;)</TD><TD ALIGN=left NOWRAP>any other type
+(object, library,&#X2026;)</TD><TD ALIGN=left NOWRAP>the linker (C linker)</TD></TR>
+</TABLE><P><B>Byte-code compilation</B>: the same compiler can be used to compile a
+source Prolog file for byte-code. In that case the Prolog to WAM compiler is
+invoked using a specific option and produces a WAM for byte-code source file
+(suffixed <TT>.wbc</TT>) that can be later loaded using <TT>load/1</TT>
+(section&#XA0;<A HREF="gprolog047.html#load/1">8.23.2</A>). Note that this is exactly what <TT>consult/1</TT>
+(section&#XA0;<A HREF="gprolog047.html#consult/1">8.23.1</A>) does as explained above (section&#XA0;<A HREF="gprolog007.html#Consulting-a-Prolog-program">4.2.3</A>).</P><H4 CLASS="subsubsection"><A NAME="toc9"></A><A NAME="htoc17">4.4.3</A>&#XA0;&#XA0;Using the compiler</H4><P>
+<A NAME="Using-the-compiler"></A>
+The GNU Prolog compiler is a command-line compiler similar in spirit to a Unix
+C compiler like <TT>gcc</TT>. To invoke the compiler use the <TT>gplc</TT>
+command as follows:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP><TT>% gplc </TT>[<I><TT>OPTION</TT></I>]&#X2026;<TT>&#XA0;<I>FILE</I></TT>&#X2026;</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(the <TT>%</TT> symbol is the operating system shell prompt)</TD></TR>
+</TABLE></DD></DL><P>The arguments of <TT>gplc</TT> are file names that are dispatched in the
+compilation scheme depending on the type determined from their suffix as was
+explained previously (section&#XA0;<A HREF="#Compilation-scheme">4.4.2</A>). All object files are then
+linked to produce an executable. Note however that GNU Prolog has no module
+facility (since there is not yet an ISO reference for Prolog modules) thus a
+predicate defined in a Prolog file is visible from any other predicate
+defined in any other file. GNU Prolog allows the user to split a big Prolog
+source into several files but does not offer any way to hide a predicate
+from others.</P><P>The simplest way to obtain an executable from a Prolog source file
+<TT>prog.pl</TT> is to use:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>% gplc prog.pl</TT></DD></DL><P>This will produce an native executable called <TT>prog</TT> which can be
+executed as follows:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>% prog</TT></DD></DL><P>However, there are several options that can be used to control the
+compilation:</P><P><B>General options</B>:</P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD VALIGN=top ALIGN=left><TT>-o</TT> <I><TT>FILE</TT></I>, <TT>--output</TT> <I><TT>FILE</TT></I></TD><TD VALIGN=top ALIGN=left NOWRAP>use
+<I><TT>FILE</TT></I> as the name of the output file</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>-W</TT>, <TT>--wam-for-native</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>stop after producing WAM files(s)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>-w</TT>, <TT>--wam-for-byte-code</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>stop after producing WAM for
+byte-code file(s) (force <TT>--no-call-c</TT>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>-M</TT>, <TT>--mini-assembly</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>stop after producing mini-assembly
+files(s)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>-S</TT>, <TT>--assembly</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>stop after producing assembly files (s)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>-F</TT>, <TT>--fd-to-c</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>stop after producing C files(s) from FD
+constraint definition file(s)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>-c</TT>, <TT>--object</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>stop after producing object files(s)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--temp-dir</TT> <I><TT>PATH</TT></I></TD><TD VALIGN=top ALIGN=left NOWRAP>use <I><TT>PATH</TT></I> as directory
+for temporary files</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--no-del-temp</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>do not delete temporary files</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--no-demangling</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>do not decode predicate names (name demangling)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>-v</TT>, <TT>--verbose</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>print executed commands</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>-h</TT>, <TT>--help</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>print a help and exit</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--version</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>print version number and exit</TD></TR>
+</TABLE><P><B>Prolog to WAM compiler options</B>:</P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD VALIGN=top ALIGN=left><TT>--pl-state</TT> <I><TT>FILE</TT></I></TD><TD VALIGN=top ALIGN=left NOWRAP>read <I><TT>FILE</TT></I> to set the initial Prolog state</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--wam-comment</TT> <I><TT>COMMENT</TT></I></TD><TD VALIGN=top ALIGN=left NOWRAP>emit <I><TT>COMMENT</TT></I> as a comment in the WAM file</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--no-susp-warn</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>do not show warnings for suspicious predicates</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--no-singl-warn</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>do not show warnings for named singleton
+variables</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--no-redef-error</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>do not show errors for built-in predicate
+redefinitions</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--foreign-only</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>only compile <TT>foreign/1-2</TT> directives</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--no-call-c</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>do not allow the use of <TT>fd_tell</TT>,
+<TT>&#X2019;$call_c</TT>&#X2019;,&#X2026;</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--no-inline</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>do not inline predicates</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--no-reorder</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>do not reorder predicate arguments</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--no-reg-opt</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>do not optimize registers</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--min-reg-opt</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>minimally optimize registers</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--no-opt-last-subterm</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>do not optimize last subterm
+compilation</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--fast-math</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>use fast mathematical mode (assume integer
+arithmetics)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--keep-void-inst</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>keep void WAM instructions in the output file</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--compile-msg</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>print a compile message</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--statistics</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>print statistics information</TD></TR>
+</TABLE><P><B>WAM to mini-assembly translator options</B>:</P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD VALIGN=top ALIGN=left><TT>--comment</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>include comments in the output file</TD></TR>
+</TABLE><P><B>Mini-assembly to assembly translator options</B>:</P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD VALIGN=top ALIGN=left><TT>--comment</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>include comments in the output file</TD></TR>
+</TABLE><P><B>C compiler options</B>:</P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD VALIGN=top ALIGN=left><TT>--c-compiler</TT> <I><TT>FILE</TT></I></TD><TD VALIGN=top ALIGN=left NOWRAP>use <I><TT>FILE</TT></I> as C compiler/linker</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>-C</TT> <I><TT>OPTION</TT></I></TD><TD VALIGN=top ALIGN=left NOWRAP>pass <I><TT>OPTION</TT></I> to the C compiler</TD></TR>
+</TABLE><P><B>Assembler options</B>:</P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD VALIGN=top ALIGN=left><TT>-A</TT> <I><TT>OPTION</TT></I></TD><TD VALIGN=top ALIGN=left NOWRAP>pass <I><TT>OPTION</TT></I> to the assembler</TD></TR>
+</TABLE><P><B>Linker options</B>:</P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD VALIGN=top ALIGN=left><TT>--linker</TT> <I><TT>FILE</TT></I></TD><TD VALIGN=top ALIGN=left NOWRAP>use <I><TT>FILE</TT></I> as linker</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--local-size</TT> <I><TT>N</TT></I></TD><TD VALIGN=top ALIGN=left NOWRAP>set default local stack size to
+<I><TT>N</TT></I> Kb</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--global-size</TT> <I><TT>N</TT></I></TD><TD VALIGN=top ALIGN=left NOWRAP>set default global stack size to
+<I><TT>N</TT></I> Kb</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--trail-size</TT> <I><TT>N</TT></I></TD><TD VALIGN=top ALIGN=left NOWRAP>set default trail stack size to
+<I><TT>N</TT></I> Kb</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--cstr-size</TT> <I><TT>N</TT></I></TD><TD VALIGN=top ALIGN=left NOWRAP>set default constraint stack size to
+<I><TT>N</TT></I> Kb</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--fixed-sizes</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>do not consult environment variables at run-time
+(use default sizes)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--gui-console</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>link with the GUI console (windows only)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--no-top-level</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>do not link the top-level (force
+<TT>--no-debugger</TT>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--no-debugger</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>do not link the Prolog/WAM debugger</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--min-pl-bips</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>link only used Prolog built-in predicates</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--min-fd-bips</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>link only used FD solver built-in predicates</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--min-bips</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>shorthand for: <TT>--no-top-level</TT>
+<TT>--min-pl-bips</TT> <TT>--min-fd-bips</TT></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--min-size</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>shorthand for: <TT>--min-bips</TT> <TT>--strip</TT></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--no-fd-lib</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>do not look for the FD library (maintenance only)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>-s</TT>, <TT>--strip</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>strip the executable</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>-L</TT> <I><TT>OPTION</TT></I></TD><TD VALIGN=top ALIGN=left NOWRAP>Pass <I><TT>OPTION</TT></I> to the linker</TD></TR>
+</TABLE><P>It is possible to only give the prefix of an option if there is no ambiguity.</P><P>The name of the output file is controlled via the <TT>-o</TT>
+<I><TT>FILE</TT></I> option. If present the output file produced will be
+named <I><TT>FILE</TT></I>. If not specified, the output file name depends on the
+last stage reached by the compiler. If the link is not done the output file
+name(s) is the input file name(s) with the suffix associated with the last
+stage. If the link is done, the name of the executable is the name (without
+suffix) of the first file name encountered in the command-line. Note that if
+the link is not done <TT>-o</TT> has no sense in the presence of multiple
+input file names. For this reason, several meta characters are available for substitution in <I><TT>FILE</TT></I>:</P><UL CLASS="itemize"><LI CLASS="li-itemize">
+<TT>%f</TT> is substitued by the whole input file name.
+</LI><LI CLASS="li-itemize"><TT>%F</TT> is similar to <TT>%f</TT> but the directory part is omitted.
+</LI><LI CLASS="li-itemize"><TT>%p</TT> is substitued by the whole prefix file name (omitting the suffix).
+</LI><LI CLASS="li-itemize"><TT>%P</TT> is similar to <TT>%p</TT> but the directory part is omitted.
+</LI><LI CLASS="li-itemize"><TT>%s</TT> is substitued by the file suffix (including the dot).
+</LI><LI CLASS="li-itemize"><TT>%d</TT> is substitued by the directory part (empty if no directory is specified).
+</LI><LI CLASS="li-itemize"><TT>%c</TT> is substitued by the value of an internal counter starting from 1 and auto-incremented.
+</LI></UL><P>By default the compiler runs in the native-code compilation scheme. To
+generate a WAM file for byte-code use the <TT>--wam-for-byte-code</TT>
+option. The resulting file can then be loaded using <TT>load/1</TT>
+(section&#XA0;<A HREF="gprolog047.html#load/1">8.23.2</A>).</P><P>To execute the Prolog to WAM compiler in a given <EM>read environment</EM>
+(operator definitions, character conversion table,&#X2026;) use
+<TT>--pl-state</TT> <I><TT>FILE</TT></I>. The state file should be
+produced by <TT>write_pl_state_file/1</TT>
+(section&#XA0;<A HREF="gprolog046.html#write-pl-state-file/1">8.22.5</A>).</P><P>By default the Prolog to WAM compiler inlines calls to some deterministic
+built-in predicates (e.g. <TT>arg/3</TT> and <TT>functor/3</TT>). Namely a
+call to such a predicate will not yield a classical predicate call but a
+simple C function call (which is obviously faster). It is possible to avoid
+this using <TT>--no-inline</TT>.</P><P>Another optimization performed by the Prolog to WAM compiler is unification
+reordering. The arguments of a predicate are reordered to optimize
+unification. This can be deactivated using <TT>--no-reorder</TT>. The
+compiler also optimizes the unification/loading of nested compound terms.
+More precisely, the compiler emits optimized instructions when the last
+subterm of a compound term is itself a compound term (e.g. lists). This can
+be deactivated using <TT>--no-opt-last-subterm</TT>.</P><P>By default the Prolog to WAM compiler fully optimizes the allocation of
+registers to decrease both the number of instruction produced and the number
+of used registers. A good allocation will generate many <EM>void
+instructions</EM> that are removed from the produced file except if
+<TT>--keep-void-inst</TT> is specified. To prevent any optimization use
+<TT>--no-reg-opt</TT> while <TT>--min-reg-opt</TT> forces the compiler to
+only perform simple register optimizations.</P><P>The Prolog to WAM compiler emits an error when a control construct or a
+built-in predicate is redefined. This can be avoided using
+<TT>--no-redef-error</TT>. The compiler also emits warnings for suspicious
+predicate definitions like <TT>-/2</TT> since this often corresponds to an
+earlier syntax error (e.g. <TT>-</TT> instead of <TT>_</TT>. This can be
+deactivated by specifying <TT>--no-susp-warn</TT>. Finally, the compiler
+warns when a singleton variable has a name (i.e. not the generic anonymous
+name <TT>_</TT>). This can be deactivated specifying
+<TT>--no-singl-warn</TT>.</P><P>Internally, predicate names are encoded to fit the syntax of (assembly)
+identifiers. For this GNU Prolog uses it own name mangling scheme. This
+is explained in more detail later (section&#XA0;<A HREF="#Name-mangling-scheme">4.4.6</A>). By default
+the error messages from the linker (e.g. multiple definitions for a given
+predicate, reference to an undefined predicate,&#X2026;) are filtered to
+replace an internal name representation by the real predicate name
+(demangling). Specifying the <TT>--no-demangling</TT> prevents
+<TT>gplc</TT> from filtering linker output messages (internal identifiers are
+then shown).</P><P>When producing an executable it is possible to specify default stack sizes
+(using <TT>--<I>STACK_NAME</I>-size</TT>) and to prevent it from consulting
+environment variables (using <TT>--fixed-sizes</TT>) as was explained above
+(section&#XA0;<A HREF="gprolog008.html#Adjusting-the-size-of-Prolog-stacks">4.3</A>). By default the produced
+executable will include the top-level, the Prolog/WAM debugger
+and all Prolog and FD built-in predicates. It is possible to avoid linking
+the top-level (section&#XA0;<A HREF="gprolog007.html#The-GNU-Prolog-interactive-interpreter">4.2</A>) by specifying
+<TT>--no-top-level</TT>. In this case, at least one
+<TT>initialization/1</TT> directive (section&#XA0;<A HREF="gprolog022.html#initialization/1">7.1.14</A>) should be
+defined. The option <TT>--no-debugger</TT> does not link the debugger. To
+include only used built-in predicates that are actually used the options
+<TT>--no-pl-bips</TT> and/or <TT>--no-fd-bips</TT> can be specified. For the
+smallest executable all these options should be specified. This can be
+abbreviated by using the shorthand option <TT>--min-bips</TT>. By default,
+executables are not <EM>stripped</EM>, i.e. their symbol table is not
+removed. This table is only useful for the C debugger (e.g. when interfacing
+Prolog and C). To remove the symbol table (and then to reduce the size of
+the final executable) use <TT>--strip</TT>. Finally <TT>--min-size</TT> is a
+shortcut for <TT>--min-bips</TT> and <TT>--strip</TT>, i.e. the produced
+executable is as small as possible.</P><P>Example: compile and link two Prolog sources <TT>prog1.pl</TT> and
+<TT>prog2.pl</TT>. The resulting executable will be named <TT>prog1</TT>
+(since <TT>-o</TT> is not specified):</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>% gplc prog1.pl prog2.pl</TT></DD></DL><P>Example: compile the Prolog file <TT>prog.pl</TT> to study basic WAM code.
+The resulting file will be named <TT>prog.wam</TT>:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>% gplc -W --no-inline --no-reorder --keep-void-inst prog.pl</TT></DD></DL><P>Example: compile the Prolog file <TT>prog.pl</TT> and its C interface file
+<TT>utils.c</TT> to provide an autonomous executable called
+<TT>mycommand</TT>. The executable is not stripped to allow the use of the C
+debugger:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>% gplc -o mycommand prog.pl utils.c</TT></DD></DL><P>Example: detail all steps to compile the Prolog file <TT>prog.pl</TT> (the
+resulting executable is stripped). All intermediate files are produced
+(<TT>prog.wam</TT>, <TT>prog.ma</TT>, <TT>prog.s</TT>, <TT>prog.o</TT> and
+the executable <TT>prog</TT>):</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">% gplc -W prog.pl
+% gplc -M --comment prog.wam
+% gplc -S --comment prog.ma
+% gplc -c prog.s
+% gplc -o prog -s prog.o
+</PRE></DD></DL><H4 CLASS="subsubsection"><A NAME="toc10"></A><A NAME="htoc18">4.4.4</A>&#XA0;&#XA0;Running an executable</H4><P>
+<A NAME="Running-an-executable"></A>
+In this section we explain what happens when running an executable produced
+by the GNU Prolog native-code compiler. The default main function first starts
+the Prolog engine. This function collects all linked objects (issued from the
+compilation of Prolog files) and initializes them. The initialization of a
+Prolog object file consists in adding to appropriate tables new atoms, new
+predicates and executing its system directives. A system directive is
+generated by the Prolog to WAM compiler to reflect a (user) directive
+executed at compile-time such as <TT>op/3</TT> (section&#XA0;<A HREF="gprolog022.html#op/3">7.1.11</A>). Indeed, when the
+compiler encounters such a directive it immediately executes it and also
+generates a system directive to execute it at the start of the executable.
+When all system directives have been executed the Prolog engine executes all
+initialization directives defined with <TT>initialization/1</TT>
+(section&#XA0;<A HREF="gprolog022.html#initialization/1">7.1.14</A>). If several initialization directives appear in the
+same file they are executed in the order of appearance. If several
+initialization directives appear in different files the order in which they
+are executed is machine-dependant. However, on most machines the order will
+be the reverse order in which the associated files have been linked (this is
+not true under native win32). When all initialization directives have been
+executed the default main function looks for the GNU Prolog
+top-level. If present (i.e. it has been linked) it is called otherwise
+the program simply ends. Note that if the top-level is not linked and if
+there is no initialization directive the program is useless since it simply
+ends without doing any work. The default main function detects such a
+behavior and emits a warning message.</P><P>Example: compile an empty file <TT>prog.pl</TT> without linking the
+top-level and execute it:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">% gplc --no-top-level prog.pl
+% prog
+Warning: no initial goal executed
+   use a directive :- initialization(Goal)
+   or remove the link option --no-top-level (or --min-bips or --min-size)
+</PRE></DD></DL><H4 CLASS="subsubsection"><A NAME="toc11"></A><A NAME="htoc19">4.4.5</A>&#XA0;&#XA0;Generating a new interactive interpreter</H4><P>
+<A NAME="Generating-a-new-interactive-interpreter"></A>
+In this section we show how to define a new top-level extending the
+GNU Prolog interactive interpreter with new predicate definitions. The
+obtained top-level can then be considered as an enriched version of the basic
+GNU Prolog top-level (section&#XA0;<A HREF="gprolog007.html#The-GNU-Prolog-interactive-interpreter">4.2</A>). Indeed, each
+added predicate can be viewed as a predefined predicate just like any other
+built-in predicate. This can be achieved by compiling these predicates and
+including the top-level at link-time.</P><P>The real question is: why would we include some predicates in a new
+top-level instead of simply consulting them under the GNU Prolog top-level ?
+There are two reasons for this:</P><UL CLASS="itemize"><LI CLASS="li-itemize">the predicate cannot be consulted. This is the case of a predicate
+calling foreign code, like a predicate interfacing with C (section&#XA0;<A HREF="gprolog066.html#Interfacing-Prolog-and-C">10</A>) or a predicate defining a new FD constraint.</LI><LI CLASS="li-itemize">the performance of the predicate is crucial. Since it is compiled to
+native-code such a predicate will be executed very quickly. Consulting will
+load it as byte-code. The gain is much more noticeable if the program is run
+under the debugger. The included version will not be affected by the
+debugger while the consulted version will be several times slower.
+Obviously, a predicate should be included in a new top-level only when it is
+itself debugged since it is difficult to debug native-code.</LI></UL><P>To define a new top-level simply compile the set of desired predicates and
+linking them with the GNU Prolog top-level (this is the default) using
+<TT>gplc</TT> (section&#XA0;<A HREF="#Using-the-compiler">4.4.3</A>).</P><P>Example: let us define a new top-level called <TT>my_top_level</TT>
+including all predicates defined in <TT>prog.pl</TT>:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>% gplc -o my_top_level prog.pl</TT></DD></DL><P>By the way, note that if <TT>prog.pl</TT> is an empty Prolog file the
+previous command will simply create a new interactive interpreter similar to
+the GNU Prolog top-level.</P><P>Example: as before where some predicates of <TT>prog.pl</TT> call C functions
+defined in <TT>utils.c</TT>:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>% gplc -o my_top_level prog.pl utils.c</TT></DD></DL><P>In conclusion, defining a particular top-level is nothing else but a
+particular case of the native-code compilation. It is simple to do and very
+useful in practice.</P><H4 CLASS="subsubsection"><A NAME="toc12"></A><A NAME="htoc20">4.4.6</A>&#XA0;&#XA0;The name mangling scheme</H4><P>
+<A NAME="Name-mangling-scheme"></A></P><P>When the GNU Prolog compiler compiles a Prolog source to an object file it
+has to associate a symbol to each predicate name. However, the syntax of
+symbols is restricted to identifiers: string containing only letters, digits
+or underscore characters. On the other hand, predicate names (i.e. atoms) can
+contain any character with quotes if necessary (e.g. <TT>&#X2019;x+y=z&#X2019;</TT> is a
+valid predicate name). The compiler may thus have to encode predicate names
+respecting the syntax of identifiers. In addition, Prolog allows the user to
+define several predicates with the same name and different arities, for this
+GNU Prolog encodes predicate indicators (predicate name followed by the
+arity). Finally, to support modules in the future, the module name is also
+encoded.</P><P>Since version 1.4.0, GNU Prolog adopts the following name mangling
+scheme. A predicate indicator of the form
+[<TT><I>MODULE</I>:</TT>]<TT><I>PRED</I>/<I>N</I></TT> (where
+the <I><TT>MODULE</TT></I> can be omitted) will give rise to an identifier of the
+following form:
+<TT>X<I>K</I>_</TT>[<I>E(<TT>MODULE</TT>)</I><TT>__</TT>]<I>E(<TT>PRED</TT>)</I><TT>__a<I>N</I></TT>
+where:</P><DL CLASS="description"><DT CLASS="dt-description"></DT><DD CLASS="dd-description"><I><TT>K</TT></I> is a digit in <TT>0</TT>..<TT>5</TT> storing coding information about <I><TT>MODULE</TT></I> and <I><TT>PRED</TT></I>. Possible values are:<UL CLASS="itemize"><LI CLASS="li-itemize"><TT>0</TT>: no module present, <I><TT>PRED</TT></I> is not encoded
+</LI><LI CLASS="li-itemize"><TT>1</TT>: no module present, <I><TT>PRED</TT></I> is encoded
+</LI><LI CLASS="li-itemize"><TT>2</TT>: <I><TT>MODULE</TT></I> is not encoded, <I><TT>PRED</TT></I> is not encoded
+</LI><LI CLASS="li-itemize"><TT>3</TT>: <I><TT>MODULE</TT></I> is not encoded, <I><TT>PRED</TT></I> is encoded
+</LI><LI CLASS="li-itemize"><TT>4</TT>: <I><TT>MODULE</TT></I> is encoded, <I><TT>PRED</TT></I> is not encoded
+</LI><LI CLASS="li-itemize"><TT>5</TT>: <I><TT>MODULE</TT></I> is encoded, <I><TT>PRED</TT></I> is encoded</LI></UL></DD><DT CLASS="dt-description"></DT><DD CLASS="dd-description"><I>E(<TT>STR</TT>)</I> is a function to encode a string <I><TT>STR</TT></I> which returns:<UL CLASS="itemize"><LI CLASS="li-itemize"><I><TT>STR</TT></I> itself (not encoded) if <I><TT>STR</TT></I> only contains letters, digits or <TT>_</TT> but does not contain the substring <TT>__</TT> and does not begin nor end with <TT>_</TT> (i.e. regexp: <TT>[a-zA-Z0-9]([-]?[a-zA-Z0-9])*</TT>).</LI><LI CLASS="li-itemize">an hexadecimal representation of each character of the string otherwise. For example: <I>E(</I><TT>x+y=z</TT><I>)</I> returns <TT>782B793D7A</TT> since
+<TT>78</TT> is the hexadecimal representation of the ASCII code of <TT>x</TT>,
+<TT>2B</TT> of the code of <TT>+</TT>, etc.</LI></UL></DD></DL><P>Examples: </P><DIV CLASS="center">
+<TABLE BORDER=1 CELLSPACING=0 CELLPADDING=1><TR><TD ALIGN=left NOWRAP>
+Predicate indicator</TD><TD ALIGN=left NOWRAP>internal identifier</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>father/2</TT></TD><TD ALIGN=left NOWRAP><TT>X0_father__a2</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>&#X2019;x+y=z&#X2019;/3</TT></TD><TD ALIGN=left NOWRAP><TT>X1_782B793D7A__a3</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>util:same/2</TT></TD><TD ALIGN=left NOWRAP><TT>X2_util__same__a2</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>util:same__1/3</TT></TD><TD ALIGN=left NOWRAP><TT>X3_util__73616D655F5F31__a3</TT></TD></TR>
+</TABLE>
+</DIV><P>&#XA0;</P><P>So, from the mini-assembly stage, each predicate indicator is handled
+via its name mangling identifier. The knowledge of this scheme is normally
+not of interest for the user, i.e. the Prolog programmer. For this reason the
+GNU Prolog compiler hides this mangling. When an error occurs on a predicate
+(undefined predicate, predicate with multiple definitions,&#X2026;) the
+compiler has to decode the symbol associated with the predicate indicator
+(name demangling). For this <TT>gplc</TT> filters each message emitted
+by the linker to locate and decode eventual predicate indicators. This
+filtering can be deactivated specifying <TT>--no-demangling</TT> when
+invoking <TT>gplc</TT> (section&#XA0;<A HREF="#Using-the-compiler">4.4.3</A>).</P><P>This filter is provided as an utility that can be invoked using the
+<TT>hexgplc</TT> command as follows:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP><TT>% hexgplc </TT>[<I><TT>OPTION</TT></I>]&#X2026;<TT>&#XA0;<I>FILE</I></TT>&#X2026;</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(the <TT>%</TT> symbol is the operating system shell prompt)</TD></TR>
+</TABLE></DD></DL><P><B>Options</B>:</P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD VALIGN=top ALIGN=left><TT>--decode</TT> or <TT>--demangling</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>decoding mode (this is the default mode)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--encode</TT> or <TT>--mangling</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>encoding mode</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--relax</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>decode also predicate names (not only predicate
+indicators)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--printf</TT> <I><TT>FORMAT</TT></I></TD><TD VALIGN=top ALIGN=left NOWRAP>pass encoded/decoded string to C
+<TT>printf(3)</TT> with <I><TT>FORMAT</TT></I></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--aux-father</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>decode an auxiliary predicate as its father</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--aux-father2</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>decode an auxiliary predicate as its father +
+auxiliary number</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--cmd-line</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>encode/decode each argument of the command-line</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>-E</TT> or <TT>-M</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>same as: <TT>--cmd-line --encode --relax</TT></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>-P</TT> or <TT>-D</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>same as: <TT>--cmd-line --decode --relax --quote</TT></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--help</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>print a help and exit</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--version</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>print version number and exit</TD></TR>
+</TABLE><P>It is possible to give a prefix of an option if there is no ambiguity.</P><P>Without arguments <TT>hexgplc</TT> runs in decoding mode reading its
+standard input and decoding (demangling) each symbol corresponding to a predicate
+indicator. To use <TT>hexgplc</TT> in the encoding (mangling) mode the
+<TT>--encode</TT> option must be specified. By default <TT>hexgplc</TT> only
+decodes predicate indicators, this can be relaxed using <TT>--relax</TT> to
+also take into account simple predicate names (the arity can be omitted). It
+is possible to format the output of an encoded/decoded string using
+<TT>--printf <I>FORMAT</I></TT> in that case each string
+<I><TT>S</TT></I> is passed to the C <TT>printf(3)</TT> function as
+<TT>printf(<I>FORMAT</I>,<I>S</I>)</TT>.</P><P>Auxiliary predicates are generated by the Prolog to WAM compiler when
+simplifying some control constructs like <TT>&#X2019;;&#X2019;/2</TT> present in the body
+of a clause. They are of the form
+<TT>&#X2019;$<I>NAME</I>/<I>ARITY</I>_$aux<I>N</I>&#X2019;</TT> where
+<TT><I>NAME</I>/<I>ARITY</I></TT> is the predicate indicator of the
+simplified (i.e. father) predicate and <I><TT>N</TT></I> is a sequential
+number (a predicate can give rise to several auxiliary predicates). It is
+possible to force <TT>hexgplc</TT> to decode an auxiliary predicate as its
+father predicate indicator using <TT>--aux-father</TT> or as its father
+predicate indicator followed by the sequential number using
+<TT>--aux-father2</TT>.</P><P>If no file is specified, <TT>hexgplc</TT> processes its standard input
+otherwise each file is treated sequentially. Specifying the
+<TT>--cmd-line</TT> option informs <TT>hexgplc</TT> that each argument is not
+a file name but a string that must be encoded (or decoded). This is useful to
+encode/decode a particular string. For this reason the option <TT>-E</TT>
+(encode) and <TT>-D</TT> (decode) are provided as
+shorthand. Then, to obtain the mangling representation of a predicate
+<I><TT>PRED</TT></I> use:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>% hexgplc -E <I>PRED</I></TT></DD></DL><P>NB: if <I><TT>PRED</TT></I> is a complex atom it is necessary to quote it 
+(the quotes must be passed to <TT>hexgplc</TT>). Here is an example under bash:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">% hexgplc -E \'x+y=z\'/3
+X1_782B793D7A__a3
+</PRE></DD></DL><P>Or even more safely (using bash quotes to prevent bash from interpreting special characters):</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list">
+<PRE CLASS="verbatim">% hexgplc -E \''x+y=z'\'/3
+X1_782B793D7A__a3
+</PRE></DD></DL>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog008.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog005.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+</BODY>
+</HTML>

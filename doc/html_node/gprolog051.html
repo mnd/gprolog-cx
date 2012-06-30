@@ -1,0 +1,774 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Operating system interface</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog050.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog052.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc252">8.27</A>&#XA0;&#XA0;Operating system interface</H3><UL>
+<LI><A HREF="gprolog051.html#toc203"><TT>argument_counter/1</TT></A>
+</LI><LI><A HREF="gprolog051.html#toc204"><TT>argument_value/2</TT></A>
+</LI><LI><A HREF="gprolog051.html#toc205"><TT>argument_list/1</TT></A>
+</LI><LI><A HREF="gprolog051.html#toc206"><TT>environ/2</TT></A>
+</LI><LI><A HREF="gprolog051.html#toc207"><TT>make_directory/1</TT>,
+<TT>delete_directory/1</TT>,
+<TT>change_directory/1</TT></A>
+</LI><LI><A HREF="gprolog051.html#toc208"><TT>working_directory/1</TT></A>
+</LI><LI><A HREF="gprolog051.html#toc209"><TT>directory_files/2</TT></A>
+</LI><LI><A HREF="gprolog051.html#toc210"><TT>rename_file/2</TT></A>
+</LI><LI><A HREF="gprolog051.html#toc211"><TT>delete_file/1</TT>,
+<TT>unlink/1</TT></A>
+</LI><LI><A HREF="gprolog051.html#toc212"><TT>file_permission/2</TT>,
+<TT>file_exists/1</TT></A>
+</LI><LI><A HREF="gprolog051.html#toc213"><TT>file_property/2</TT></A>
+</LI><LI><A HREF="gprolog051.html#toc214"><TT>temporary_name/2</TT></A>
+</LI><LI><A HREF="gprolog051.html#toc215"><TT>temporary_file/3</TT></A>
+</LI><LI><A HREF="gprolog051.html#toc216"><TT>date_time/1</TT></A>
+</LI><LI><A HREF="gprolog051.html#toc217"><TT>host_name/1</TT></A>
+</LI><LI><A HREF="gprolog051.html#toc218"><TT>os_version/1</TT></A>
+</LI><LI><A HREF="gprolog051.html#toc219"><TT>architecture/1</TT></A>
+</LI><LI><A HREF="gprolog051.html#toc220"><TT>shell/2</TT>,
+<TT>shell/1</TT>,
+<TT>shell/0</TT></A>
+</LI><LI><A HREF="gprolog051.html#toc221"><TT>system/2</TT>,
+<TT>system/1</TT></A>
+</LI><LI><A HREF="gprolog051.html#toc222"><TT>spawn/3</TT>,
+<TT>spawn/2</TT></A>
+</LI><LI><A HREF="gprolog051.html#toc223"><TT>popen/3</TT></A>
+</LI><LI><A HREF="gprolog051.html#toc224"><TT>exec/5</TT>,
+<TT>exec/4</TT></A>
+</LI><LI><A HREF="gprolog051.html#toc225"><TT>fork_prolog/1</TT></A>
+</LI><LI><A HREF="gprolog051.html#toc226"><TT>create_pipe/2</TT></A>
+</LI><LI><A HREF="gprolog051.html#toc227"><TT>wait/2</TT></A>
+</LI><LI><A HREF="gprolog051.html#toc228"><TT>prolog_pid/1</TT></A>
+</LI><LI><A HREF="gprolog051.html#toc229"><TT>send_signal/2</TT></A>
+</LI><LI><A HREF="gprolog051.html#toc230"><TT>sleep/1</TT></A>
+</LI><LI><A HREF="gprolog051.html#toc231"><TT>select/5</TT></A>
+</LI></UL>
+<H4 CLASS="subsubsection"><A NAME="toc203"></A><A NAME="htoc253">8.27.1</A>&#XA0;&#XA0;<TT>argument_counter/1</TT></H4><P>
+<A NAME="argument-counter/1"></A>
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+argument_counter(?integer)</TT></DD></DL><P><B>Description</B></P><P><TT>argument_counter(Counter)</TT> succeeds if <TT>Counter</TT> is the
+number of arguments of the command-line. Since the first argument is always
+the name of the running program, <TT>Counter</TT> is always &#X2265; 1. See
+(section&#XA0;<A HREF="gprolog007.html#The-GNU-Prolog-interactive-interpreter">4.2</A>) for more information about
+command-line arguments retrieved under the top_level.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Counter</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Counter)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc204"></A><A NAME="htoc254">8.27.2</A>&#XA0;&#XA0;<TT>argument_value/2</TT></H4><P>
+<A NAME="argument-value/2"></A>
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+argument_value(+integer, ?atom)</TT></DD></DL><P><B>Description</B></P><P><TT>argument_value(N, Arg)</TT> succeeds if the <TT>N</TT><EM>th</EM>
+argument on the command-line unifies with <TT>Arg</TT>. The first argument
+is always the name of the running program and its number is 0. The number of
+arguments on the command-line can be obtained using
+<TT>argument_counter/1</TT> (section&#XA0;<A HREF="#argument-counter/1">8.27.1</A>).</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>N</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>N</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, N)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>N</TT> is an integer &lt; 0</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(not_less_than_zero, N)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Arg</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Arg)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc205"></A><A NAME="htoc255">8.27.3</A>&#XA0;&#XA0;<TT>argument_list/1</TT></H4><P>
+<A NAME="argument-list/1"></A>
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+argument_list(?list)</TT></DD></DL><P><B>Description</B></P><P><TT>argument_list(Args)</TT> succeeds if <TT>Args</TT> unifies with the
+list of atoms associated with each argument on the command-line other than the
+first argument (the name of the running program).</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Args</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Args)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc206"></A><A NAME="htoc256">8.27.4</A>&#XA0;&#XA0;<TT>environ/2</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+environ(?atom, ?atom)</TT></DD></DL><P><B>Description</B></P><P><TT>environ(Name, Value)</TT> succeeds if <TT>Name</TT> is the name of an
+environment variable whose value is <TT>Value</TT>. This predicate is
+re-executable on backtracking.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Name</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Name)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Value</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Value)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc207"></A><A NAME="htoc257">8.27.5</A>&#XA0;&#XA0;<TT>make_directory/1</TT>,
+<TT>delete_directory/1</TT>,
+<TT>change_directory/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+make_directory(+atom)<BR>
+delete_directory(+atom)<BR>
+change_directory(+atom)</TT></DD></DL><P><B>Description</B></P><P><TT>make_directory(PathName)</TT> creates the directory whose pathname is
+<TT>PathName</TT>.</P><P><TT>delete_directory(PathName)</TT> removes the directory whose pathname is
+<TT>PathName</TT>.</P><P><TT>change_directory(PathName)</TT> sets the current directory to the
+directory whose pathname is <TT>PathName</TT>.</P><P>See <TT>absolute_file_name/2</TT> for information about the syntax of
+<TT>PathName</TT> (section&#XA0;<A HREF="gprolog050.html#absolute-file-name/2">8.26.1</A>).</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>PathName</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>PathName</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, PathName)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>PathName</TT> is an atom but not a valid pathname</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(os_path, PathName)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an operating system error occurs and the value of the
+<TT>os_error</TT> Prolog flag is <TT>error</TT>
+(section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>system_error(<I>atom explaining the error</I>)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc208"></A><A NAME="htoc258">8.27.6</A>&#XA0;&#XA0;<TT>working_directory/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+working_directory(?atom)</TT></DD></DL><P><B>Description</B></P><P><TT>working_directory(PathName)</TT> succeeds if <TT>PathName</TT> is the
+pathname of the current directory.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>PathName</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, PathName)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc209"></A><A NAME="htoc259">8.27.7</A>&#XA0;&#XA0;<TT>directory_files/2</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+directory_files(+atom, ?list)</TT></DD></DL><P><B>Description</B></P><P><TT>directory_files(PathName, Files)</TT> succeeds if <TT>Files</TT> is the
+list of all entries (files, sub-directories,&#X2026;) in the directory whose
+pathname is <TT>PathName</TT>. See <TT>absolute_file_name/2</TT> for
+information about the syntax of <TT>PathName</TT>
+(section&#XA0;<A HREF="gprolog050.html#absolute-file-name/2">8.26.1</A>).</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>PathName</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>PathName</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, PathName)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>PathName</TT> is an atom but not a valid pathname</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(os_path, PathName)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Files</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Files)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an operating system error occurs and the value of the
+<TT>os_error</TT> Prolog flag is <TT>error</TT>
+(section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>system_error(<I>atom explaining the error</I>)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc210"></A><A NAME="htoc260">8.27.8</A>&#XA0;&#XA0;<TT>rename_file/2</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+rename_file(+atom, +atom)</TT></DD></DL><P><B>Description</B></P><P><TT>rename_file(PathName1, PathName2)</TT> renames the file or directory
+whose pathname is <TT>PathName1</TT> to <TT>PathName2</TT>. See
+<TT>absolute_file_name/2</TT> for information about the syntax of
+<TT>PathName1</TT> and <TT>PathName2</TT> (section&#XA0;<A HREF="gprolog050.html#absolute-file-name/2">8.26.1</A>).</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>PathName1</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>PathName1</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, PathName1)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>PathName1</TT> is an atom but not a valid pathname</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(os_path, PathName1)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>PathName2</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>PathName2</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, PathName2)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>PathName2</TT> is an atom but not a valid pathname</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(os_path, PathName2)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an operating system error occurs and value of the
+<TT>os_error</TT> Prolog flag is <TT>error</TT>
+(section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>system_error(<I>atom explaining the error</I>)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc211"></A><A NAME="htoc261">8.27.9</A>&#XA0;&#XA0;<TT>delete_file/1</TT>,
+<TT>unlink/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+delete_file(PathName)<BR>
+unlink(PathName)</TT></DD></DL><P><B>Description</B></P><P><TT>delete_file(PathName)</TT> removes the existing file whose pathname is
+<TT>PathName</TT>.</P><P><TT>unlink/1</TT> is similar to <TT>delete_file/1</TT> except that it never
+causes a <TT>system_error</TT> (e.g. if <TT>PathName</TT> does not refer to
+an existing file).</P><P>See <TT>absolute_file_name/2</TT> for information about the syntax of
+<TT>PathName</TT> (section&#XA0;<A HREF="gprolog050.html#absolute-file-name/2">8.26.1</A>).</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>PathName</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>PathName</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, PathName)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>PathName</TT> is an atom but not a valid pathname</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(os_path, PathName)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an operating system error occurs and the value of the
+<TT>os_error</TT> Prolog flag is <TT>error</TT>
+(section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>system_error(<I>atom explaining the error</I>)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc212"></A><A NAME="htoc262">8.27.10</A>&#XA0;&#XA0;<TT>file_permission/2</TT>,
+<TT>file_exists/1</TT></H4><P>
+<A NAME="file-permission/2"></A>
+
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+file_permission(+atom, +atom)<BR>
+file_permission(+atom, +atom_list)<BR>
+file_exists(+atom)</TT></DD></DL><P><B>Description</B></P><P><TT>file_permission(PathName, Permission)</TT> succeeds if
+<TT>PathName</TT> is the pathname of an existing file (or directory) whose
+permissions include <TT>Permission</TT>.</P><P><B>File permissions</B>: <TT>Permission</TT> can be a single permission or
+a list of permissions. A permission is an atom among:</P><UL CLASS="itemize"><LI CLASS="li-itemize"><TT>read</TT>: the file or directory can be read.</LI><LI CLASS="li-itemize"><TT>write</TT>: the file or directory can be written.</LI><LI CLASS="li-itemize"><TT>execute</TT>: the file can be executed.</LI><LI CLASS="li-itemize"><TT>search</TT>: the directory can be searched.</LI></UL><P>If <TT>PathName</TT> does not exists or if its permissions do not include
+<TT>Permission</TT> this predicate fails.</P><P><TT>file_exists(PathName)</TT> is equivalent to
+<TT>file_permission(PathName, [])</TT>, i.e. it succeeds if
+<TT>PathName</TT> is the pathname of an existing file (or directory).</P><P>See <TT>absolute_file_name/2</TT> for information about the syntax of
+<TT>PathName</TT> (section&#XA0;<A HREF="gprolog050.html#absolute-file-name/2">8.26.1</A>).</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>PathName</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>PathName</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, PathName)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>PathName</TT> is an atom but not a valid pathname</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(os_path, PathName)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Permission</TT> is a partial list or a list with an element
+which is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Permission</TT> is neither an atom nor partial list or a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Permission)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Permission</TT> list is neither a
+variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Permission</TT> is an atom but not
+a valid permission</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(os_file_permission, Permission)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an operating system error occurs and the value of the
+<TT>os_error</TT> Prolog flag is <TT>error</TT>
+(section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>system_error(<I>atom explaining the error</I>)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc213"></A><A NAME="htoc263">8.27.11</A>&#XA0;&#XA0;<TT>file_property/2</TT></H4><P>
+<A NAME="file-property/2"></A>
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+file_property(+atom, ?os_file_property)</TT></DD></DL><P><B>Description</B></P><P><TT>file_property(PathName, Property)</TT> succeeds if <TT>PathName</TT> is
+the pathname of an existing file (or directory) and if <TT>Property</TT>
+unifies with one of the properties of the file. This predicate is
+re-executable on backtracking.</P><P><B>File properties</B>:</P><UL CLASS="itemize"><LI CLASS="li-itemize"><TT>absolute_file_name(File)</TT>:
+<TT>File</TT> is the absolute file name of <TT>PathName</TT>
+(section&#XA0;<A HREF="gprolog050.html#absolute-file-name/2">8.26.1</A>).</LI><LI CLASS="li-itemize"><TT>real_file_name(File)</TT>: <TT>File</TT> is
+the real file name of <TT>PathName</TT> (follows symbolic links).</LI><LI CLASS="li-itemize"><TT>type(Type)</TT>: <TT>Type</TT> is the type of
+<TT>PathName</TT>. Possible values are: <TT>regular</TT>,
+<TT>directory</TT>, <TT>fifo</TT>, <TT>socket</TT>,
+<TT>character_device</TT>, <TT>block_device</TT> or <TT>unknown</TT>.</LI><LI CLASS="li-itemize"><TT>size(Size)</TT>: <TT>Size</TT> is the size (in bytes) of
+<TT>PathName</TT>.</LI><LI CLASS="li-itemize"><TT>permission(Permission)</TT>: <TT>Permission</TT> is a
+permission of <TT>PathName</TT> (section&#XA0;<A HREF="#file-permission/2">8.27.10</A>).</LI><LI CLASS="li-itemize"><TT>last_modification(DT)</TT>: <TT>DT</TT> is
+the last modification date and time (section&#XA0;<A HREF="#date-time/1">8.27.14</A>).</LI></UL><P>See <TT>absolute_file_name/2</TT> for information about the syntax of
+<TT>PathName</TT> (section&#XA0;<A HREF="gprolog050.html#absolute-file-name/2">8.26.1</A>).</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>PathName</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>PathName</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, PathName)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>PathName</TT> is an atom but not a valid pathname</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(os_path, PathName)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Property</TT> is neither a variable nor a file property term</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(os_file_property, Property)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Property</TT> = <TT>absolute_file_name(E)</TT>,
+<TT>real_file_name(E)</TT>, <TT>type(E)</TT> or <TT>permission(E)</TT> and
+<TT>E</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Property</TT> = <TT>last_modification(DateTime)</TT> and
+<TT>DateTime</TT> is neither a variable nor a compound term</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(compound, DateTime)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Property</TT> = <TT>last_modification(DateTime)</TT> and
+<TT>DateTime</TT> is a compound term but not a structure <TT>dt/6</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(date_time, DateTime)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Property</TT> = <TT>size(E)</TT> or
+<TT>last_modification(DateTime)</TT> and <TT>DateTime</TT> is a structure
+<TT>dt/6</TT> but an element <TT>E</TT> is neither a variable nor an
+integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an operating system error occurs and the value of the
+<TT>os_error</TT> Prolog flag is <TT>error</TT>
+(section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>system_error(<I>atom explaining the error</I>)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc214"></A><A NAME="htoc264">8.27.12</A>&#XA0;&#XA0;<TT>temporary_name/2</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+temporary_name(+atom, ?atom)</TT></DD></DL><P><B>Description</B></P><P><TT>temporary_name(Template, PathName)</TT> creates a unique file name
+<TT>PathName</TT> whose pathname begins by <TT>Template</TT>.
+<TT>Template</TT> should contain a pathname with six trailing
+<TT>X</TT><EM>s</EM>. <TT>PathName</TT> is <TT>Template</TT> with the six
+<TT>X</TT><EM>s</EM> replaced with a letter and the process identifier. This
+predicate is an interface to the C Unix function <TT>mktemp(3)</TT>.</P><P>See <TT>absolute_file_name/2</TT> for information about the syntax of
+<TT>Template</TT> (section&#XA0;<A HREF="gprolog050.html#absolute-file-name/2">8.26.1</A>).</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Template</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Template</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Template)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Template</TT> is an atom but not a valid pathname</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(os_path, Template)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>PathName</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, PathName)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an operating system error occurs and the value of the
+<TT>os_error</TT> Prolog flag is <TT>error</TT>
+(section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>system_error(<I>atom explaining the error</I>)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc215"></A><A NAME="htoc265">8.27.13</A>&#XA0;&#XA0;<TT>temporary_file/3</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+temporary_file(+atom, +atom, ?atom)</TT></DD></DL><P><B>Description</B></P><P><TT>temporary_file(Directory, Prefix, PathName)</TT> creates a unique file
+name <TT>PathName</TT> whose pathname begins by <TT>Directory/Prefix</TT>.
+If <TT>Directory</TT> is the empty atom <TT>&#X2019;&#X2019;</TT> a standard temporary
+directory will be used (e.g. <TT>/tmp</TT>). <TT>Prefix</TT> can be the
+empty atom <TT>&#X2019;&#X2019;</TT>. This predicate is an interface to the C Unix
+function <TT>tempnam(3)</TT>.</P><P>See <TT>absolute_file_name/2</TT> for information about the syntax of
+<TT>Directory</TT> (section&#XA0;<A HREF="gprolog050.html#absolute-file-name/2">8.26.1</A>).</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Directory</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Directory</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Directory)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Directory</TT> is an atom but not a valid pathname</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(os_path, Directory)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Prefix</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Prefix</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Prefix)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>PathName</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, PathName)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an operating system error occurs and the value of the
+<TT>os_error</TT> Prolog flag is <TT>error</TT>
+(section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>system_error(<I>atom explaining the error</I>)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc216"></A><A NAME="htoc266">8.27.14</A>&#XA0;&#XA0;<TT>date_time/1</TT></H4><P>
+<A NAME="date-time/1"></A>
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+date_time(?compound)</TT></DD></DL><P><B>Description</B></P><P><TT>date_time(DateTime)</TT> unifies <TT>DateTime</TT> with a compound term
+containing the current date and time. <TT>DateTime</TT> is a structure
+<TT>dt(Year, Month, Day, Hour, Minute, Second)</TT>. Each sub-argument of
+the term <TT>dt/6</TT> is an integer.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>DateTime</TT> is neither a variable nor a compound term</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(compound, DateTime)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>DateTime</TT> is a compound term but not a structure
+<TT>dt/6</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(date_time, DateTime)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>DateTime</TT> is a structure <TT>dt/6</TT> and an element
+<TT>E</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc217"></A><A NAME="htoc267">8.27.15</A>&#XA0;&#XA0;<TT>host_name/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+host_name(?atom)</TT></DD></DL><P><B>Description</B></P><P><TT>host_name(HostName)</TT> unifies <TT>HostName</TT> with the name of the
+host machine executing the current GNU Prolog process. If the sockets are
+available (section&#XA0;<A HREF="gprolog052.html#Introduction:(Sockets-input/output)">8.28.1</A>), the name returned
+will be fully qualified. In that case, <TT>host_name/1</TT> will also
+succeed if <TT>HostName</TT> is instantiated to the unqualified name (or an
+alias) of the machine.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>HostName</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, HostName)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an operating system error occurs and the value of the
+<TT>os_error</TT> Prolog flag is <TT>error</TT>
+(section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>system_error(<I>atom explaining the error</I>)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc218"></A><A NAME="htoc268">8.27.16</A>&#XA0;&#XA0;<TT>os_version/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+os_version(?atom)</TT></DD></DL><P><B>Description</B></P><P><TT>os_version(OSVersion)</TT> unifies <TT>OSVersion</TT> with the
+operating system version of the machine executing the current GNU Prolog
+process.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>OSVersion</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, OSVersion)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an operating system error occurs and the value of the
+<TT>os_error</TT> Prolog flag is <TT>error</TT>
+(section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>system_error(<I>atom explaining the error</I>)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc219"></A><A NAME="htoc269">8.27.17</A>&#XA0;&#XA0;<TT>architecture/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+architecture(?atom)</TT></DD></DL><P><B>Description</B></P><P><TT>architecture(Architecture)</TT> unifies <TT>Architecture</TT> with the
+name of the machine executing the current GNU Prolog process.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Architecture</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Architecture)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an operating system error occurs and the value of the
+<TT>os_error</TT> Prolog flag is <TT>error</TT>
+(section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>system_error(<I>atom explaining the error</I>)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc220"></A><A NAME="htoc270">8.27.18</A>&#XA0;&#XA0;<TT>shell/2</TT>,
+<TT>shell/1</TT>,
+<TT>shell/0</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+shell(+atom, ?integer)<BR>
+shell(+atom)<BR>
+shell</TT></DD></DL><P><B>Description</B></P><P><TT>shell(Command, Status)</TT> invokes a new shell (named by the
+<TT>SHELL</TT> environment variable) passing <TT>Command</TT> for execution
+and unifies <TT>Status</TT> with the result of the execution. If
+<TT>Command</TT> is the empty atom <TT>&#X2019;&#X2019;</TT> a new interactive shell is
+executed. The control is returned to Prolog upon termination of the called
+process.</P><P><TT>shell(Command)</TT> is equivalent to <TT>shell(Command, 0)</TT>.</P><P><TT>shell</TT> is equivalent to <TT>shell(&#X2019;&#X2019;, 0)</TT>.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Command</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Command</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Command)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Status</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Status)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc221"></A><A NAME="htoc271">8.27.19</A>&#XA0;&#XA0;<TT>system/2</TT>,
+<TT>system/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+system(+atom, ?integer)<BR>
+system(+atom)</TT></DD></DL><P><B>Description</B></P><P><TT>system(Command, Status)</TT> invokes a new default shell passing
+<TT>Command</TT> for execution and unifies <TT>Status</TT> with the result
+of the execution. The control is returned to Prolog upon termination of the
+shell process. This predicate is an interface to the C Unix function
+<TT>system(3)</TT>.</P><P><TT>system(Command)</TT> is equivalent to <TT>system(Command, 0)</TT>.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Command</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Command</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Command)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Status</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Status)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc222"></A><A NAME="htoc272">8.27.20</A>&#XA0;&#XA0;<TT>spawn/3</TT>,
+<TT>spawn/2</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+spawn(+atom, +atom_list, ?integer)<BR>
+spawn(+atom, +atom_list)</TT></DD></DL><P><B>Description</B></P><P><TT>spawn(Command, Arguments, Status)</TT> executes <TT>Command</TT> passing
+as arguments of the command-line each element of the list <TT>Arguments</TT>
+and unifies <TT>Status</TT> with the result of the execution. The control is
+returned to Prolog upon termination of the command.</P><P><TT>spawn(Command, Arguments)</TT> is equivalent to <TT>spawn(Command,
+Arguments, 0)</TT>.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Command</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Command</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Command)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Arguments</TT> is a partial list or a list with an element
+which is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Arguments</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Arguments)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Arguments</TT> list is neither a
+variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Status</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Status)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an operating system error occurs and the value of the
+<TT>os_error</TT> Prolog flag is <TT>error</TT>
+(section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>system_error(<I>atom explaining the error</I>)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc223"></A><A NAME="htoc273">8.27.21</A>&#XA0;&#XA0;<TT>popen/3</TT></H4><P>
+<A NAME="popen/3"></A>
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+popen(+atom, +io_mode, -stream)</TT></DD></DL><P><B>Description</B></P><P><TT>popen(Command, Mode, Stream)</TT> invokes a new default shell (by
+creating a pipe) passing <TT>Command</TT> for execution and associates a
+stream either to the standard input or the standard output of the created
+process. if <TT>Mode</TT> is <TT>read</TT> (resp. <TT>write</TT>) an input
+(resp. output) stream is created and <TT>Stream</TT> is unified with the
+stream-term associated. Writing to the stream writes to the standard input
+of the command while reading from the stream reads the command&#X2019;s standard
+output. The stream must be closed using <TT>close/2</TT> (section&#XA0;<A HREF="gprolog034.html#close/2">8.10.7</A>).
+This predicate is an interface to the C Unix function <TT>popen(3)</TT>.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Command</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Command</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Command)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Mode</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Mode</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Mode)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Mode</TT> is an atom but neither <TT>read</TT> nor
+<TT>write</TT>.</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(io_mode, Mode)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Stream</TT> is not a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(variable, Stream)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an operating system error occurs and the value of the
+<TT>os_error</TT> Prolog flag is <TT>error</TT>
+(section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>system_error(<I>atom explaining the error</I>)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc224"></A><A NAME="htoc274">8.27.22</A>&#XA0;&#XA0;<TT>exec/5</TT>,
+<TT>exec/4</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+exec(+atom, -stream, -stream, -stream, -integer)<BR>
+exec(+atom, -stream, -stream, -stream)</TT></DD></DL><P><B>Description</B></P><P><TT>exec(Command, StreamIn, StreamOut, StreamErr, Pid)</TT> invokes a new
+default shell passing <TT>Command</TT> for execution and associates streams
+to standard streams of the created process. <TT>StreamIn</TT> is unified
+with the stream-term associated with the standard input stream of
+<TT>Command</TT> (it is an output stream). <TT>StreamOut</TT> is unified
+with the stream-term associated with the standard output stream of
+<TT>Command</TT> (it is an input stream). <TT>StreamErr</TT> is unified with
+the stream-term associated with the standard error stream of <TT>Command</TT>
+(it is an input stream). <TT>Pid</TT> is unified with the process identifier
+of the new process. This information is only useful if it is necessary to
+obtain the status of the execution using <TT>wait/2</TT> (section&#XA0;<A HREF="#wait/2">8.27.25</A>).
+Until a call to <TT>wait/2</TT> is done the process remains in the system
+processes table (as a zombie process if terminated). For this reason, if the
+status is not needed it is preferable to use <TT>exec/4</TT>.</P><P><TT>exec/4</TT> is similar to <TT>exec/5</TT> but the process is removed
+from system processes as soon as it is terminated.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Command</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Command</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Command)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>StreamIn</TT> is not a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>uninstantiation_error(StreamIn)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>StreamOut</TT> is not a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>uninstantiation_error(StreamOut)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>StreamErr</TT> is not a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>uninstantiation_error(StreamErr)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Pid</TT> is not a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>uninstantiation_error(Pid)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an operating system error occurs and the value of the
+<TT>os_error</TT> Prolog flag is <TT>error</TT>
+(section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>system_error(<I>atom explaining the error</I>)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc225"></A><A NAME="htoc275">8.27.23</A>&#XA0;&#XA0;<TT>fork_prolog/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+fork_prolog(-integer)</TT></DD></DL><P><B>Description</B></P><P><TT>fork_prolog(Pid)</TT> creates a child process that differs from the parent
+process only in its PID. In the parent process <TT>Pid</TT> is unified with
+the PID of the child while in the child process <TT>Pid</TT> is unified with
+0. In the parent process, the status of the child process can be obtained
+using <TT>wait/2</TT> (section&#XA0;<A HREF="#wait/2">8.27.25</A>). Until a call to <TT>wait/2</TT> is done
+the child process remains in the system processes table (as a zombie process
+if terminated). This predicate is an interface to the C Unix function
+<TT>fork(2)</TT>.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Pid</TT> is not a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>uninstantiation_error(Pid)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an operating system error occurs and the value of the
+<TT>os_error</TT> Prolog flag is <TT>error</TT>
+(section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>system_error(<I>atom explaining the error</I>)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc226"></A><A NAME="htoc276">8.27.24</A>&#XA0;&#XA0;<TT>create_pipe/2</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+create_pipe(-stream, -stream)</TT></DD></DL><P><B>Description</B></P><P><TT>create_pipe(StreamIn, StreamOut)</TT> creates a pair of streams
+pointing to a pipe inode. <TT>StreamIn</TT> is unified with the stream-term
+associated with the input side of the pipe and <TT>StreamOut</TT> is unified
+with the stream-term associated with output side. This predicate is an
+interface to the C Unix function <TT>pipe(2)</TT>.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>StreamIn</TT> is not a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>uninstantiation_error(StreamIn)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>StreamOut</TT> is not a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>uninstantiation_error(StreamOut)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an operating system error occurs and the value of the
+<TT>os_error</TT> Prolog flag is <TT>error</TT>
+(section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>system_error(<I>atom explaining the error</I>)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc227"></A><A NAME="htoc277">8.27.25</A>&#XA0;&#XA0;<TT>wait/2</TT></H4><P>
+<A NAME="wait/2"></A>
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+wait(+integer, ?integer)</TT></DD></DL><P><B>Description</B></P><P><TT>wait(Pid, Status)</TT> waits for the child process whose identifier is
+<TT>Pid</TT> to terminate. <TT>Status</TT> is then unified with the exit
+status. This predicate is an interface to the C Unix function
+<TT>waitpid(2)</TT>.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Pid</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Pid</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Pid)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Status</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Status)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an operating system error occurs and the value of the
+<TT>os_error</TT> Prolog flag is <TT>error</TT>
+(section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>system_error(<I>atom explaining the error</I>)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc228"></A><A NAME="htoc278">8.27.26</A>&#XA0;&#XA0;<TT>prolog_pid/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+prolog_pid(?integer)</TT></DD></DL><P><B>Description</B></P><P><TT>prolog_pid(Pid)</TT> unifies <TT>Pid</TT> with the process identifier
+of the current GNU Prolog process.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Pid</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Pid)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc229"></A><A NAME="htoc279">8.27.27</A>&#XA0;&#XA0;<TT>send_signal/2</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+send_signal(+integer, +integer)<BR>
+send_signal(+integer, +atom)</TT></DD></DL><P><B>Description</B></P><P><TT>send_signal(Pid, Signal)</TT> sends <TT>Signal</TT> to the process whose
+identifier is <TT>Pid.</TT> <TT>Signal</TT> can be specified directly as an
+integer or symbolically as an atom. Allowed atoms depend on the machine (e.g.
+<TT>&#X2019;SIGINT&#X2019;</TT>, <TT>&#X2019;SIGQUIT&#X2019;</TT>, <TT>&#X2019;SIGKILL&#X2019;</TT>,
+<TT>&#X2019;SIGUSR1&#X2019;</TT>, <TT>&#X2019;SIGUSR2&#X2019;</TT>, <TT>&#X2019;SIGALRM&#X2019;</TT>,&#X2026;). This
+predicate is an interface to the C Unix function <TT>kill(2)</TT>.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Pid</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Pid</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Pid)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Signal</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Signal</TT> is neither a variable nor an integer or an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Signal)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an operating system error occurs and the value of the
+<TT>os_error</TT> Prolog flag is <TT>error</TT>
+(section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>system_error(<I>atom explaining the error</I>)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc230"></A><A NAME="htoc280">8.27.28</A>&#XA0;&#XA0;<TT>sleep/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+sleep(+number)</TT></DD></DL><P><B>Description</B></P><P><TT>sleep(Seconds)</TT> puts the GNU Prolog process to sleep for
+<TT>Second</TT>s seconds. <TT>Seconds</TT> can be an integer or a floating
+point number (in which case it can be &lt; 1). This predicate is an interface
+to the C Unix function <TT>usleep(3)</TT>.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Seconds</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Seconds</TT> is neither a variable nor a number</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(number, Seconds)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Seconds</TT> is a number &lt; 0</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(not_less_than_zero, Seconds)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc231"></A><A NAME="htoc281">8.27.29</A>&#XA0;&#XA0;<TT>select/5</TT></H4><P>
+<A NAME="select/5"></A>
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+select(+list, ?list, +list, ?list, +number)</TT></DD></DL><P><B>Description</B></P><P><TT>select(Reads, ReadyReads, Writes, ReadyWrites, TimeOut)</TT> waits for a
+number of streams (or file descriptors) to change status.
+<TT>ReadyReads</TT> is unified with the list of elements listed in
+<TT>Reads</TT> that have characters available for reading. Similarly
+<TT>ReadyWrites</TT> is unified with the list of elements of <TT>Writes</TT>
+that are ok for immediate writing. The elements of <TT>Reads</TT> and
+<TT>Writes</TT> are either stream-terms or aliases or integers considered as
+file descriptors, e.g. for sockets (section&#XA0;<A HREF="gprolog052.html#Sockets-input/output">8.28</A>). Streams
+that must be tested with <TT>select/5</TT> should not be buffered. This can
+be done at the opening using <TT>open/4</TT> (section&#XA0;<A HREF="gprolog034.html#open/4">8.10.6</A>) or later using
+<TT>set_stream_buffering/2</TT> (section&#XA0;<A HREF="gprolog034.html#set-stream-buffering/2">8.10.27</A>).
+<TT>TimeOut</TT> is an upper bound on the amount of time (in milliseconds)
+elapsed before <TT>select/5</TT> returns. If <TT>TimeOut</TT> &#X2264; 0 (no
+timeout) <TT>select/5</TT> waits until something is available (either or
+reading or for writing) and thus can block indefinitely. This predicate is
+an interface to the C Unix function <TT>select(2)</TT>.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Reads</TT> (or <TT>Writes</TT>) is a partial list or a list
+with an element <TT>E</TT> which is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Reads</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Reads)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Writes</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Writes)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>ReadyReads</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, ReadyReads)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>ReadyWrites</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, ReadyWrites)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Reads</TT> (or <TT>Writes</TT>)
+list is neither a stream-term or alias nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(stream_or_alias, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Reads</TT> (or <TT>Writes</TT>)
+list is not a selectable item</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(selectable_item, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Reads</TT> (or <TT>Writes</TT>)
+list is an integer &lt; 0</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(not_less_than_zero, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Reads</TT> (or <TT>Writes</TT>)
+list is a stream-tern or alias not associated with an open stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>existence_error(stream, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Reads</TT> list is associated with
+an output stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(input, stream, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Writes</TT> list is associated with
+an input stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(output, stream, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>TimeOut</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>TimeOut</TT> is neither a variable nor a number</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(number, TimeOut)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an operating system error occurs and the value of the
+<TT>os_error</TT> Prolog flag is <TT>error</TT>
+(section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>system_error(<I>atom explaining the error</I>)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog050.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog052.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

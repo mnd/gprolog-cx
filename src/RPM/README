@@ -1,0 +1,106 @@
+			Building GNU-Prolog RPM(s)
+			--------------------------
+
+
+Refer to http://www.rpm.org/ for more information about the Red Hat Package
+Manager. A version 4.0 or higher is required.
+
+
+
+1) Building a RPM classically
+-----------------------------
+
+To build RPM for GNU-Prolog:
+
+   make rpm
+
+The stages executed are:
+
+   1- build a distribution file (gprolog-VERSION.tar.gz) if needed using 
+      'make dist' in the src (parent) directory.
+
+   2- copy it under the RPM SOURCES directory (done by build_spec_file)
+
+   3- uncompressing it (%setup in the %prep target of the spec file)
+
+   4- configure (./configure in the %build target)
+
+   5- compile locally (make in the %build target)
+
+   6- install it in the build root directory (%install target)
+
+   7- build the .rpm file
+
+The RPM spec file created is called: gprolog.spec (it is also copied in the
+SPECS directory of the RPM tree).
+
+The RPM file is created in the RPMS directory of the RPM tree (rpm displays
+this information).
+
+
+
+2) Building a RPM fastly 
+------------------------
+
+If you have locally compiled GNU-Prolog (using './configure' followed by
+'make' in the src (parent) directory) you can avoid stages 1, 2, 3, and 5
+described above using:
+
+   make rpm-link
+
+This will only create a symlink in the RPM BUILD directory refering the
+current tree.
+
+The RPM spec file created is called: gprolog-link.spec (it is also copied in
+the SPECS directory of the RPM tree).
+
+NB: ./configure and make must have been done previously
+
+
+
+3) Using a local RPM tree
+-------------------------
+
+You do not need to be root to build a RPM but you must be able to write in
+the RPM tree structure (/usr/src/RPM/... /usr/src/redhat or similar). You can
+use symlinks or build your own structure in a place you can write using the
+make_rpm_tree script passing the prefix of the wanted tree as argument). For
+instance to build a tree under your HOME directory use:
+
+   ./make_rpm_tree $HOME
+
+This will update your $HOME/.rpmmacros to inform rpm to use your own local
+RPM tree.
+
+
+
+4) Testing your RPM
+-------------------
+
+To test a RPM you can install it as usual using 'rpm -U RPM_FILE' (this file
+is created in the RPMS directory of the RPM tree) and remove it when finished
+using 'rpm -e gprolog'.
+
+However, 1) you need to be root, 2) you uselessly modify the RPM database
+(since at the end the RPM is removed). Point 1) can be overcome using the
+--prefix option of rpm since the RPM is relocatable. Point 2) can be overcome
+using the --dbpath option to specifying a dummy RPM data base path. This is
+exaclty what does the try_rpm script. To use:
+
+   try_rpm RPM_FILE
+
+This installs the RPM in a temporary directory (under /tmp/try_rpm/prefix)
+that can be safely removed using rm -rf /tmp/try_rpm since the installation
+does not affect the RPM database.
+
+
+
+5) Building a source RPM
+------------------------
+
+To build a source RPM for GNU-Prolog:
+
+   make srpm
+
+The SRPM file is created in the SRPMS directory of the RPM tree (rpm displays
+this information).

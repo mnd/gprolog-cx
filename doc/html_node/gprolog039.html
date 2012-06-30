@@ -1,0 +1,229 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Input/output from/to constant terms</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog038.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog040.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc172">8.15</A>&#XA0;&#XA0;Input/output from/to constant terms</H3><UL>
+<LI><A HREF="gprolog039.html#toc135"><TT>read_term_from_atom/3</TT>,
+<TT>read_from_atom/2</TT>,
+<TT>read_token_from_atom/2</TT></A>
+</LI><LI><A HREF="gprolog039.html#toc136"><TT>read_term_from_chars/3</TT>,
+<TT>read_from_chars/2</TT>,
+<TT>read_token_from_chars/2</TT></A>
+</LI><LI><A HREF="gprolog039.html#toc137"><TT>read_term_from_codes/3</TT>,
+<TT>read_from_codes/2</TT>,
+<TT>read_token_from_codes/2</TT></A>
+</LI><LI><A HREF="gprolog039.html#toc138"><TT>write_term_to_atom/3</TT>,
+<TT>write_to_atom/2</TT>,
+<TT>writeq_to_atom/2</TT>,<BR>
+ <TT>write_canonical_to_atom/2</TT>,
+<TT>display_to_atom/2</TT>,
+<TT>print_to_atom/2</TT>,<BR>
+ <TT>format_to_atom/3</TT></A>
+</LI><LI><A HREF="gprolog039.html#toc139"><TT>write_term_to_chars/3</TT>,
+<TT>write_to_chars/2</TT>,
+<TT>writeq_to_chars/2</TT>,<BR>
+ <TT>write_canonical_to_chars/2</TT>,
+<TT>display_to_chars/2</TT>,
+<TT>print_to_chars/2</TT>,<BR>
+ <TT>format_to_chars/3</TT></A>
+</LI><LI><A HREF="gprolog039.html#toc140"><TT>write_term_to_codes/3</TT>,
+<TT>write_to_codes/2</TT>,
+<TT>writeq_to_codes/2</TT>,<BR>
+ <TT>write_canonical_to_codes/2</TT>,
+<TT>display_to_codes/2</TT>,
+<TT>print_to_codes/2</TT>,<BR>
+ <TT>format_to_codes/3</TT></A>
+</LI></UL>
+<P>
+<A NAME="Input/output-from/to-constant-terms"></A>
+These built-in predicates enable a Prolog term to be input from or output to
+a Prolog constant term (atom, character list or character code list). All
+these predicates can be defined using constant term streams
+(section&#XA0;<A HREF="gprolog035.html#Constant-term-streams">8.11</A>). They are however simpler to use.</P><H4 CLASS="subsubsection"><A NAME="toc135"></A><A NAME="htoc173">8.15.1</A>&#XA0;&#XA0;<TT>read_term_from_atom/3</TT>,
+<TT>read_from_atom/2</TT>,
+<TT>read_token_from_atom/2</TT></H4><P>
+<A NAME="read-term-from-atom/3"></A>
+
+
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+read_term_from_atom(+atom ?term, +read_option_list)<BR>
+read_from_atom(+atom, ?term)<BR>
+read_token_from_atom(+atom, ?nonvar)</TT></DD></DL><P><B>Description</B></P><P>Like <TT>read_term/3</TT>, <TT>read/2</TT> (section&#XA0;<A HREF="gprolog038.html#read-term/3">8.14.1</A>) and
+<TT>read_token/2</TT> (section&#XA0;<A HREF="gprolog038.html#read-token/2">8.14.3</A>) except that characters are not
+read from a text-stream but from <TT>Atom</TT>; the atom given as first
+argument.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Atom</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Atom</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Atom)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+see associated predicate errors</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left>(section&#XA0;<A HREF="gprolog038.html#read-term/3">8.14.1</A>) and (section&#XA0;<A HREF="gprolog038.html#read-token/2">8.14.3</A>)</TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc136"></A><A NAME="htoc174">8.15.2</A>&#XA0;&#XA0;<TT>read_term_from_chars/3</TT>,
+<TT>read_from_chars/2</TT>,
+<TT>read_token_from_chars/2</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+read_term_from_chars(+character_list ?term,
++read_option_list)<BR>
+read_from_chars(+character_list, ?term)<BR>
+read_token_from_chars(+character_list, ?nonvar)</TT></DD></DL><P><B>Description</B></P><P>Like <TT>read_term/3</TT>, <TT>read/2</TT> (section&#XA0;<A HREF="gprolog038.html#read-term/3">8.14.1</A>) and
+<TT>read_token/2</TT> (section&#XA0;<A HREF="gprolog038.html#read-token/2">8.14.3</A>) except that characters are not
+read from a text-stream but from <TT>Chars</TT>; the character list given as
+first argument.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Chars</TT> is a partial list or a list with an element
+<TT>E</TT> which is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Chars</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Chars)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Chars</TT> list is neither a
+variable nor a character</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(character, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+see associated predicate errors</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left>(section&#XA0;<A HREF="gprolog038.html#read-term/3">8.14.1</A>) and (section&#XA0;<A HREF="gprolog038.html#read-token/2">8.14.3</A>)</TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc137"></A><A NAME="htoc175">8.15.3</A>&#XA0;&#XA0;<TT>read_term_from_codes/3</TT>,
+<TT>read_from_codes/2</TT>,
+<TT>read_token_from_codes/2</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+read_term_from_codes(+character_code_list ?term,
++read_option_list)<BR>
+read_from_codes(+character_code_list, ?term)<BR>
+read_token_from_codes(+character_code_list, ?nonvar)</TT></DD></DL><P><B>Description</B></P><P>Like <TT>read_term/3</TT>, <TT>read/2</TT> (section&#XA0;<A HREF="gprolog038.html#read-term/3">8.14.1</A>) and
+<TT>read_token/2</TT> (section&#XA0;<A HREF="gprolog038.html#read-token/2">8.14.3</A>) except that characters are not
+read from a text-stream but from <TT>Codes</TT>; the character code list
+given as first argument.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Codes</TT> is a partial list or a list with an element
+<TT>E</TT> which is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Codes</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Codes)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Codes</TT> list is neither a
+variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Codes</TT> list is an integer but
+not a character code</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>representation_error(character_code, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+see associated predicate errors</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left>(section&#XA0;<A HREF="gprolog038.html#read-term/3">8.14.1</A>) and (section&#XA0;<A HREF="gprolog038.html#read-token/2">8.14.3</A>)</TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc138"></A><A NAME="htoc176">8.15.4</A>&#XA0;&#XA0;<TT>write_term_to_atom/3</TT>,
+<TT>write_to_atom/2</TT>,
+<TT>writeq_to_atom/2</TT>,<BR>
+ <TT>write_canonical_to_atom/2</TT>,
+<TT>display_to_atom/2</TT>,
+<TT>print_to_atom/2</TT>,<BR>
+ <TT>format_to_atom/3</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+write_term_to_atom(?atom, ?term, +write_option_list)<BR>
+write_to_atom(?atom, ?term)<BR>
+writeq_to_atom(?atom, ?term)<BR>
+write_canonical_to_atom(?atom, ?term)<BR>
+display_to_atom(?atom, ?term)<BR>
+print_to_atom(?atom, ?term)<BR>
+format_to_atom(?atom, +character_code_list_or_atom, +list)</TT></DD></DL><P><B>Description</B></P><P>Similar to <TT>write_term/3</TT>, <TT>write/2</TT>, <TT>writeq/2</TT>,
+<TT>write_canonical/2</TT>, <TT>display/2</TT>, <TT>print/2</TT>
+(section&#XA0;<A HREF="gprolog038.html#write-term/3">8.14.6</A>) and <TT>format/3</TT> (section&#XA0;<A HREF="gprolog038.html#format/3">8.14.7</A>) except that
+characters are not written onto a text-stream but are collected as an atom
+which is then unified with the first argument <TT>Atom</TT>.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Atom</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Atom)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+see associated predicate errors</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left>(section&#XA0;<A HREF="gprolog038.html#write-term/3">8.14.6</A>) and (section&#XA0;<A HREF="gprolog038.html#format/3">8.14.7</A>)</TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc139"></A><A NAME="htoc177">8.15.5</A>&#XA0;&#XA0;<TT>write_term_to_chars/3</TT>,
+<TT>write_to_chars/2</TT>,
+<TT>writeq_to_chars/2</TT>,<BR>
+ <TT>write_canonical_to_chars/2</TT>,
+<TT>display_to_chars/2</TT>,
+<TT>print_to_chars/2</TT>,<BR>
+ <TT>format_to_chars/3</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+write_term_to_chars(?character_list, ?term, +write_option_list)<BR>
+write_to_chars(?character_list, ?term)<BR>
+writeq_to_chars(?character_list, ?term)<BR>
+write_canonical_to_chars(?character_list, ?term)<BR>
+display_to_chars(?character_list, ?term)<BR>
+print_to_chars(?character_list, ?term)<BR>
+format_to_chars(?character_list, +character_code_list_or_atom, +list)</TT></DD></DL><P><B>Description</B></P><P>Similar to <TT>write_term/3</TT>, <TT>write/2</TT>, <TT>writeq/2</TT>,
+<TT>write_canonical/2</TT>, <TT>display/2</TT>, <TT>print/2</TT>
+(section&#XA0;<A HREF="gprolog038.html#write-term/3">8.14.6</A>) and <TT>format/3</TT> (section&#XA0;<A HREF="gprolog038.html#format/3">8.14.7</A>) except that
+characters are not written onto a text-stream but are collected as a
+character list which is then unified with the first argument <TT>Chars</TT>.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Chars</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Chars)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+An element <TT>E</TT> of the list <TT>Chars</TT> is neither a
+variable nor a one-char atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(character, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+see associated predicate errors</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left>(section&#XA0;<A HREF="gprolog038.html#write-term/3">8.14.6</A>) and (section&#XA0;<A HREF="gprolog038.html#format/3">8.14.7</A>)</TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc140"></A><A NAME="htoc178">8.15.6</A>&#XA0;&#XA0;<TT>write_term_to_codes/3</TT>,
+<TT>write_to_codes/2</TT>,
+<TT>writeq_to_codes/2</TT>,<BR>
+ <TT>write_canonical_to_codes/2</TT>,
+<TT>display_to_codes/2</TT>,
+<TT>print_to_codes/2</TT>,<BR>
+ <TT>format_to_codes/3</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+write_term_to_codes(?character_code_list, ?term, +write_option_list)<BR>
+write_to_codes(?character_code_list, ?term)<BR>
+writeq_to_codes(?character_code_list, ?term)<BR>
+write_canonical_to_codes(?character_code_list, ?term)<BR>
+display_to_codes(?character_code_list, ?term)<BR>
+print_to_codes(?character_code_list, ?term)<BR>
+format_to_codes(?character_code_list, +character_code_list_or_atom,
++list)</TT></DD></DL><P><B>Description</B></P><P>Similar to <TT>write_term/3</TT>, <TT>write/2</TT>, <TT>writeq/2</TT>,
+<TT>write_canonical/2</TT>, <TT>display/2</TT>, <TT>print/2</TT>
+(section&#XA0;<A HREF="gprolog038.html#write-term/3">8.14.6</A>) and <TT>format/3</TT> (section&#XA0;<A HREF="gprolog038.html#format/3">8.14.7</A>) except that
+characters are not written onto a text-stream but are collected as a
+character code list which is then unified with the first argument
+<TT>Codes</TT>.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Codes</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Codes)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+An element <TT>E</TT> of the list <TT>Codes</TT> is neither a
+variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+An element <TT>E</TT> of the list <TT>Codes</TT> is an integer but
+not a character code</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>representation_error(character_code)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+see associated predicate errors</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left>(section&#XA0;<A HREF="gprolog038.html#write-term/3">8.14.6</A>) and (section&#XA0;<A HREF="gprolog038.html#format/3">8.14.7</A>)</TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog038.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog040.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

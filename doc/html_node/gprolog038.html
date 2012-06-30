@@ -1,0 +1,832 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Term input/output</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog037.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog039.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc158">8.14</A>&#XA0;&#XA0;Term input/output</H3><UL>
+<LI><A HREF="gprolog038.html#toc122"><TT>read_term/3</TT>,
+<TT>read_term/2</TT>,
+<TT>read/2</TT>,
+<TT>read/1</TT></A>
+</LI><LI><A HREF="gprolog038.html#toc123"><TT>read_atom/2</TT>,
+<TT>read_atom/1</TT>,
+<TT>read_integer/2</TT>,
+<TT>read_integer/1</TT>,<BR>
+ <TT>read_number/2</TT>,
+<TT>read_number/1</TT></A>
+</LI><LI><A HREF="gprolog038.html#toc124"><TT>read_token/2</TT>,
+<TT>read_token/1</TT></A>
+</LI><LI><A HREF="gprolog038.html#toc125"><TT>syntax_error_info/4</TT></A>
+</LI><LI><A HREF="gprolog038.html#toc126"><TT>last_read_start_line_column/2</TT></A>
+</LI><LI><A HREF="gprolog038.html#toc127">
+<TT>write_term/3</TT>,
+<TT>write_term/2</TT>,
+<TT>write/2</TT>,
+<TT>write/1</TT>,
+<TT>writeq/2</TT>,
+<TT>writeq/1</TT>,<BR>
+ <TT>write_canonical/2</TT>,
+<TT>write_canonical/1</TT>,
+<TT>display/2</TT>,
+<TT>display/1</TT>,
+<TT>print/2</TT>,<BR>
+ <TT>print/1</TT></A>
+</LI><LI><A HREF="gprolog038.html#toc128"><TT>format/3</TT>,
+<TT>format/2</TT></A>
+</LI><LI><A HREF="gprolog038.html#toc129"><TT>portray_clause/2</TT>,
+<TT>portray_clause/1</TT></A>
+</LI><LI><A HREF="gprolog038.html#toc130"><TT>get_print_stream/1</TT></A>
+</LI><LI><A HREF="gprolog038.html#toc131"><TT>op/3</TT></A>
+</LI><LI><A HREF="gprolog038.html#toc132"><TT>current_op/3</TT></A>
+</LI><LI><A HREF="gprolog038.html#toc133"><TT>char_conversion/2</TT></A>
+</LI><LI><A HREF="gprolog038.html#toc134"><TT>current_char_conversion/2</TT></A>
+</LI></UL>
+<P>
+<A NAME="Term-input/output"></A>
+These built-in predicates enable a Prolog term to be input from or output to
+a text stream. The atom <TT>end_of_file</TT> is returned as term to
+indicate the end-of-file. The syntax of such terms can also be altered by
+changing the operators (section&#XA0;<A HREF="#op/3:(Term-input/output)">8.14.10</A>), and making some
+characters equivalent to others (section&#XA0;<A HREF="#char-conversion/2">8.14.12</A>) if the
+<TT>char_conversion</TT> Prolog flag is <TT>on</TT>
+(section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>). Double quoted tokens will be returned as an atom
+or a character list or a character code list depending on the value of the
+<TT>double_quotes</TT> Prolog flag (section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>). Similarly, back quoted tokens are returned depending on the value of the
+<TT>back_quotes</TT> Prolog flag.</P><H4 CLASS="subsubsection"><A NAME="toc122"></A><A NAME="htoc159">8.14.1</A>&#XA0;&#XA0;<TT>read_term/3</TT>,
+<TT>read_term/2</TT>,
+<TT>read/2</TT>,
+<TT>read/1</TT></H4><P>
+<A NAME="read-term/3"></A>
+
+
+
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+read_term(+stream_or_alias, ?term, +read_option_list)<BR>
+read_term(?term, +read_option_list)<BR>
+read(+stream_or_alias, ?term)<BR>
+read(?term)</TT></DD></DL><P><B>Description</B></P><P><TT>read_term(SorA, Term, Options)</TT> is true if
+<TT>Term</TT> unifies with the next term read from the stream associated
+with the stream-term or alias <TT>SorA</TT> according to the options given by
+<TT>Options</TT>.</P><P><B>Read options</B>: <TT>Options</TT> is a list of read options. If this
+list contains contradictory options, the rightmost option is the one which
+applies. Possible options are:</P><UL CLASS="itemize"><LI CLASS="li-itemize"><TT>variables(VL)</TT>: <TT>VL</TT> is unified with the
+list of all variables of the input term, in left-to-right traversal
+order. Anonymous variables are included in the list <TT>VL</TT>.</LI><LI CLASS="li-itemize"><TT>variable_names(VNL)</TT>: <TT>VNL</TT> is
+unified with the list of pairs <TT>Name = Var</TT> where <TT>Var</TT> is a
+named variable of the term and <TT>Name</TT> is the atom associated with the
+name of <TT>Var</TT>. Anonymous variables are not included in the list
+<TT>VNL</TT>.</LI><LI CLASS="li-itemize"><TT>singletons(SL)</TT>: <TT>SL</TT> is unified with the
+list of pairs <TT>Name = Var</TT> where <TT>Var</TT> is a named variable
+which occurs only once in the term and <TT>Name</TT> is the atom associated
+to the name of <TT>Var</TT>. Anonymous variables are not included in the list
+<TT>SL</TT>.</LI><LI CLASS="li-itemize"><TT>syntax_error(error</TT>/<TT>warning</TT>/<TT>fail)</TT>:
+specifies the effect of a syntax error:<UL CLASS="itemize"><LI CLASS="li-itemize"><TT>error</TT>: a <TT>syntax_error</TT> is raised.</LI><LI CLASS="li-itemize"><TT>warning</TT>: a warning message is displayed and the predicate
+fails.</LI><LI CLASS="li-itemize"><TT>fail</TT>: the predicate quietly fails.</LI></UL><P>The default value is the value of the <TT>syntax_error</TT>
+Prolog flag (section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>).</P></LI><LI CLASS="li-itemize"><TT>end_of_term(dot</TT>/<TT>eof)</TT>: specifies the
+end-of-term delimiter: <TT>dot</TT> is the classical full-stop delimiter (a
+dot followed with a layout character), <TT>eof</TT> is the end-of-file
+delimiter. This option is useful for predicates like
+<TT>read_term_from_atom/3</TT> (section&#XA0;<A HREF="gprolog039.html#read-term-from-atom/3">8.15.1</A>) to avoid to add a
+terminal dot at the end of the atom. The default value is <TT>dot</TT>.</LI></UL><P><TT>read(SorA, Term)</TT> is equivalent to
+<TT>read_term(SorA, Term, [])</TT>.</P><P><TT>read_term/2</TT> and <TT>read/1</TT> apply to the current input stream.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Options</TT> is a partial list or a list with an element
+<TT>E</TT> which is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is neither a variable nor a stream-term or alias</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(stream_or_alias, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Options</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Options)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Options</TT> list is neither a
+variable nor a valid read option</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(read_option, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is not associated with an open stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>existence_error(stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is an output stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(input, stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is associated with a binary stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(input, binary_stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> has stream properties <TT>end_of_stream(past)</TT>
+and <TT>eof_action(error)</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(input, past_end_of_stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+a syntax error occurs and the value of the <TT>syntax_error</TT>
+Prolog flag is <TT>error</TT> (section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>syntax_error(<I>atom explaining the error</I>)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>ISO predicates. The ISO reference raises a
+<TT>representation_error(Flag)</TT> where <TT>Flag</TT> is
+<TT>max_arity</TT>,<TT> max_integer</TT>, or<TT> min_integer</TT> when
+the read term breaches an implementation defined limit specified by
+<TT>Flag</TT>. GNU Prolog detects neither <TT>min_integer</TT> nor
+<TT>max_integer</TT> violation and treats a <TT>max_arity</TT> violation
+as a syntax error. The read options <TT>syntax_error</TT> and
+<TT>end_of_term</TT> are GNU Prolog extensions.</P><H4 CLASS="subsubsection"><A NAME="toc123"></A><A NAME="htoc160">8.14.2</A>&#XA0;&#XA0;<TT>read_atom/2</TT>,
+<TT>read_atom/1</TT>,
+<TT>read_integer/2</TT>,
+<TT>read_integer/1</TT>,<BR>
+ <TT>read_number/2</TT>,
+<TT>read_number/1</TT></H4><P>
+<A NAME="read-atom/2"></A>
+
+
+
+
+
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+read_atom(+stream_or_alias, ?atom)<BR>
+read_atom(?atom)<BR>
+read_integer(+stream_or_alias, ?integer)<BR>
+read_integer(?integer)<BR>
+read_number(+stream_or_alias, ?number)<BR>
+read_number(?number)</TT></DD></DL><P><B>Description</B></P><P><TT>read_atom(SorA, Atom)</TT> succeeds if <TT>Atom</TT>
+unifies with the next atom read from the stream associated with the
+stream-term or alias <TT>SorA</TT>.</P><P><TT>read_integer(SorA, Integer)</TT> succeeds if
+<TT>Integer</TT> unifies with the next integer read from the stream
+associated with the stream-term or alias <TT>SorA</TT>.</P><P><TT>read_number(SorA, Number)</TT> succeeds if
+<TT>Number</TT> unifies with the next number (integer or floating point
+number) read from the stream associated with the stream-term or alias
+<TT>SorA</TT>.</P><P><TT>read_atom/1</TT>, <TT>read_integer/1</TT> and <TT>read_number/1</TT>
+apply to the current input stream.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Atom</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Atom)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Integer</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Integer)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Number</TT> is neither a variable nor a number</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(number, Number)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is neither a variable nor a stream-term or alias</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(stream_or_alias, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is not associated with an open stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>existence_error(stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is an output stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(input, stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is associated with a binary stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(input, binary_stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> has stream properties <TT>end_of_stream(past)</TT>
+and <TT>eof_action(error)</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(input, past_end_of_stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+a syntax error occurs and the value of the <TT>syntax_error</TT>
+Prolog flag is <TT>error</TT> (section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>syntax_error(<I>atom explaining the error</I>)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc124"></A><A NAME="htoc161">8.14.3</A>&#XA0;&#XA0;<TT>read_token/2</TT>,
+<TT>read_token/1</TT></H4><P>
+<A NAME="read-token/2"></A>
+
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+read_token(+stream_or_alias, ?nonvar)<BR>
+read_token(?nonvar)</TT></DD></DL><P><B>Description</B></P><P><TT>read_token(SorA, Token)</TT> succeeds if <TT>Token</TT> unifies with
+the encoding of the next Prolog token read from the stream associated with
+stream-term or alias <TT>SorA</TT>.</P><P><B>Token encoding</B>:</P><UL CLASS="itemize"><LI CLASS="li-itemize"><TT>var(A)</TT>: a variable is read whose name is the atom
+<TT>A</TT>.</LI><LI CLASS="li-itemize">an atom <TT>A</TT>: an atom <TT>A</TT> is read.</LI><LI CLASS="li-itemize">integer <TT>N</TT>: an integer <TT>N</TT> is read.</LI><LI CLASS="li-itemize">floating point number <TT>N</TT>: a floating point number <TT>N</TT>
+is read.</LI><LI CLASS="li-itemize"><TT>string(A)</TT>: a string (double quoted item) is read whose
+characters forms the atom <TT>A</TT>.</LI><LI CLASS="li-itemize"><TT>punct(P)</TT>: a punctuation character <TT>P</TT> is read
+(<TT>P</TT> is a one-character atom in <TT>()[]{|}</TT>, the atom
+<TT>full_stop</TT> or the atom <TT>end_of_file</TT>).</LI><LI CLASS="li-itemize"><TT>back_quotes(A)</TT>: a back quoted item is read
+whose characters forms the atom <TT>A</TT>.</LI><LI CLASS="li-itemize"><TT>extended(A)</TT>: an extended character <TT>A</TT> (an
+atom) is read.</LI></UL><P>As for <TT>read_term/3</TT>, the behavior of <TT>read_token/2</TT> can be
+affected by some Prolog flags (section&#XA0;<A HREF="#Term-input/output">8.14</A>).</P><P><TT>read_token/1</TT> applies to the current input stream.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is neither a variable nor a stream-term or alias</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(stream_or_alias, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is not associated with an open stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>existence_error(stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is an output stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(input, stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is associated with a binary stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(input, binary_stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> has stream properties <TT>end_of_stream(past)</TT>
+and <TT>eof_action(error)</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(input, past_end_of_stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+a syntax error occurs and the value of the <TT>syntax_error</TT>
+Prolog flag is <TT>error</TT> (section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>syntax_error(<I>atom explaining the error</I>)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc125"></A><A NAME="htoc162">8.14.4</A>&#XA0;&#XA0;<TT>syntax_error_info/4</TT></H4><P>
+<A NAME="syntax-error-info/4"></A>
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+syntax_error_info(?atom, ?integer, ?integer, ?atom)</TT></DD></DL><P><B>Description</B></P><P><TT>syntax_error_info(FileName, Line, Column, Error)</TT> returns the
+information associated with the last syntax error. <TT>Line</TT> is the line
+number of the error, <TT>Column</TT> is the column number of the error and
+<TT>Error</TT> is an atom explaining the error.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>FileName</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, FileName)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Line</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Line)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Column</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Column)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Error</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Error)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc126"></A><A NAME="htoc163">8.14.5</A>&#XA0;&#XA0;<TT>last_read_start_line_column/2</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+last_read_start_line_column(?integer, ?integer)</TT></DD></DL><P><B>Description</B></P><P><TT>last_read_start_line_column(Line, Column)</TT> unifies <TT>Line</TT>
+and <TT>Column</TT> with the line number and the column number associated with
+the start of the last read predicate. This predicate can be used after
+calling one of the following predicates: <TT>read_term/3</TT>,
+<TT>read_term/2</TT>, <TT>read/2</TT>, <TT>read/1</TT>
+(section&#XA0;<A HREF="#read-term/3">8.14.1</A>), <TT>read_atom/2</TT>, <TT>read_atom/1</TT>,
+<TT>read_integer/2</TT>, <TT>read_integer/1</TT>, <TT>read_number/2</TT>,
+<TT>read_number/1</TT> (section&#XA0;<A HREF="#read-atom/2">8.14.2</A>) or <TT>read_token/2</TT>,
+<TT>read_token/1</TT> (section&#XA0;<A HREF="#read-token/2">8.14.3</A>).</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Line</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Line)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Column</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Column)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc127"></A><A NAME="htoc164">8.14.6</A>&#XA0;&#XA0;
+<TT>write_term/3</TT>,
+<TT>write_term/2</TT>,
+<TT>write/2</TT>,
+<TT>write/1</TT>,
+<TT>writeq/2</TT>,
+<TT>writeq/1</TT>,<BR>
+ <TT>write_canonical/2</TT>,
+<TT>write_canonical/1</TT>,
+<TT>display/2</TT>,
+<TT>display/1</TT>,
+<TT>print/2</TT>,<BR>
+ <TT>print/1</TT></H4><P>
+<A NAME="write-term/3"></A>
+
+
+
+
+
+
+
+
+
+
+
+
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+write_term(+stream_or_alias, ?term, +write_option_list)<BR>
+write_term(?term, +write_option_list)<BR>
+write(+stream_or_alias, ?term)<BR>
+write(?term)<BR>
+writeq(+stream_or_alias, ?term)<BR>
+writeq(?term)<BR>
+write_canonical(+stream_or_alias, ?term)<BR>
+write_canonical(?term)<BR>
+display(+stream_or_alias, ?term)<BR>
+display(?term)<BR>
+print(+stream_or_alias, ?term)<BR>
+print(?term)</TT></DD></DL><P><B>Description</B></P><P><TT>write_term(SorA, Term, Options)</TT> writes
+<TT>Term</TT> to the stream associated with the stream-term or alias
+<TT>SorA</TT> according to the options given by <TT>Options</TT>.</P><P><B>Write options</B>: <TT>Options</TT> is a list of write options. If this
+list contains contradictory options, the rightmost option is the one which
+applies. Possible options are:</P><UL CLASS="itemize"><LI CLASS="li-itemize"><TT>quoted(true</TT>/<TT>false)</TT>: if <TT>true</TT> each
+atom and functor is quoted if this would be necessary for the term to be
+input by <TT>read_term/3</TT>. If <TT>false</TT> no extra quotes are
+written. The default value is <TT>false</TT>.</LI><LI CLASS="li-itemize"><TT>ignore_ops(true</TT>/<TT>false)</TT>: if
+<TT>true</TT> each compound term is output in functional notation (neither
+operator notation nor list notation is used). If <TT>false</TT> operator and
+list notations are used. The default value is <TT>false</TT>.</LI><LI CLASS="li-itemize"><TT>numbervars(true</TT>/<TT>false)</TT>: if
+<TT>true</TT> a term of the form <TT>&#X2019;$VAR&#X2019;(N)</TT>, where <TT>N</TT> is an
+integer, is output as a variable name (see below). If <TT>false</TT>
+such a term is output normally (according to the other options). The
+default value is <TT>false</TT>.</LI><LI CLASS="li-itemize"><TT>namevars(true</TT>/<TT>false)</TT>: if <TT>true</TT> a
+term of the form <TT>&#X2019;$VARNAME&#X2019;(Name)</TT>, where <TT>Name</TT> is an atom 
+respecting the syntax of variable names, is output as a variable name (see
+below). If <TT>false</TT> such a term is output normally (according to the
+other options). The default value is <TT>false</TT>.</LI><LI CLASS="li-itemize"><TT>variable_names(VNL)</TT>: <TT>VNL</TT> is
+a list of pairs <TT>Name = Var</TT> where <TT>Var</TT> is a
+variable and <TT>Name</TT> is the atom associated with the
+name of <TT>Var</TT>. Each variable <TT>Var</TT> is written as atom
+<TT>Name</TT> (with <TT>quoted(false)</TT>) iff a term 
+<TT>Name = Var</TT> is an element of the list <TT>VNL</TT>. If <TT>Name</TT>
+is not atom or does not respect the syntax of variable names the pair is
+ignored. If several pairs exist for the same variable name the first one applies.</LI><LI CLASS="li-itemize"><TT>space_args(true</TT>/<TT>false)</TT>: if
+<TT>true</TT> an extra space character is emitted after each comma
+separating the arguments of a compound term in functional notation or of a
+list. If <TT>false</TT> no extra space is emitted. The default value is
+<TT>false</TT>.</LI><LI CLASS="li-itemize"><TT>portrayed(true</TT>/<TT>false)</TT>: if <TT>true</TT>
+and if there exists a predicate <TT>portray/1</TT>, <TT>write_term/3</TT>
+acts as follows: if <TT>Term</TT> is a variable it is simply written. If
+<TT>Term</TT> is non-variable then it is passed to <TT>portray/1</TT>. If
+this succeeds then it is assumed that <TT>Term</TT> has been output.
+Otherwise <TT>write_term/3</TT> outputs the principal functor of
+<TT>Term</TT> (<TT>Term</TT> itself if it is atomic) according to other
+options and recursively calls <TT>portray/1</TT> on the components of
+<TT>Term</TT> (if it is a compound term). With <TT>ignore_ops(false)</TT> a
+list is first passed to <TT>portray/1</TT> and only if this call fails each
+element of the list is passed to <TT>portray/1</TT> (thus every sub-list is
+not passed). The default value is <TT>false</TT>.</LI><LI CLASS="li-itemize"><TT>max_depth(N)</TT>: controls the depth of output for
+compound terms. <TT>N</TT> is an integer specifying the depth. The output of
+a term whose depth is greater than <TT>N</TT> gives rise to the output of
+<TT>...</TT> (3 dots). By default there is no depth limit.</LI><LI CLASS="li-itemize"><TT>priority(N)</TT>: specifies the starting priority
+to output the term. This option controls if <TT>Term</TT> should be enclosed
+in brackets. <TT>N</TT> is a positive integer &#X2264; 1200. By default
+<TT>N</TT> = 1200.</LI></UL><P><B>Variable numbering</B>: when the <TT>numbervars(true)</TT> option is
+passed to <TT>write_term/3</TT> any term of the form <TT>&#X2019;$VAR&#X2019;(N)</TT>
+where <TT>N</TT> is an integer is output as a variable name consisting of a
+capital letter possibly followed by an integer. The capital letter is the
+<TT>(I+1)</TT><EM>th</EM> letter of the alphabet and the integer is
+<TT>J</TT>, where <TT>I = N mod 26</TT> and <TT>J = N // 26</TT>. The
+integer <TT>J</TT> is omitted if it is zero. For example:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP><TT>&#X2019;$VAR&#X2019;(0)</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>is written as <TT>A</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>&#X2019;$VAR&#X2019;(1)</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>is written as <TT>B</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>...</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>&#X2019;$VAR&#X2019;(25)</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>is written as <TT>Z</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>&#X2019;$VAR&#X2019;(26)</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>is written as <TT>A1</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>&#X2019;$VAR&#X2019;(27)</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>is written as <TT>B1</TT></TD></TR>
+</TABLE></DD></DL><P><B>Variable naming</B>: when the <TT>namevars(true)</TT> option is passed
+to <TT>write_term/3</TT> any term of the form <TT>&#X2019;$VARNAME&#X2019;(Name)</TT>
+where <TT>Name</TT> is an atom is output as a variable name consisting of
+the characters <TT>Name</TT>. For example: <TT>&#X2019;$VARNAME&#X2019;(&#X2019;A&#X2019;)</TT> is
+written as <TT>A</TT> (even in the presence of the <TT>quoted(true)</TT>
+option).</P><P><TT>write(SorA, Term)</TT> is equivalent to
+<TT>write_term(SorA, Term, [numbervars(true),<BR>
+namevars(true)])</TT>.</P><P><TT>writeq(SorA, Term)</TT> is equivalent to
+<TT>write_term(SorA, Term, [quoted(true),<BR>
+numbervars(true), namevars(true)])</TT>.</P><P><TT>write_canonical(SorA, Term)</TT> is equivalent to
+<TT>write_term(SorA, Term, [quoted(true),<BR>
+ignore_ops(true), numbervars(false), namevars(false)])</TT>.</P><P><TT>display(SorA, Term)</TT> is equivalent to
+<TT>write_term(SorA, Term, [ignore_ops(true),<BR>
+ numbervars(false), namevars(false)])</TT>.</P><P><TT>print(SorA, Term)</TT> is equivalent to
+<TT>write_term(SorA, Term, [numbervars(false),<BR>
+portrayed(true)])</TT>.</P><P><TT>write_term/2</TT>, <TT>write/1</TT>, <TT>writeq/1</TT>,
+<TT>write_canonical/1</TT>, <TT>display/1</TT> and <TT>print/1</TT> apply
+to the current output stream.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Options</TT> is a partial list or a list with an element
+<TT>E</TT> which is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Options</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Options)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is neither a variable nor a stream-term or alias</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(stream_or_alias, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Options</TT> list is neither a
+variable nor a valid write-option</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(write_option, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is not associated with an open stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>existence_error(stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is an input stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(output, stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is associated with a binary stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(output, binary_stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>ISO predicates except <TT>display/1-2</TT> and <TT>print/1-2</TT> that
+are GNU Prolog predicates. <TT>namevars</TT>, <TT>variable_names</TT> <TT>space_args</TT>,
+<TT>portrayed</TT>, <TT>max_depth</TT> and <TT>priority</TT>
+options are GNU Prolog extensions.</P><H4 CLASS="subsubsection"><A NAME="toc128"></A><A NAME="htoc165">8.14.7</A>&#XA0;&#XA0;<TT>format/3</TT>,
+<TT>format/2</TT></H4><P>
+<A NAME="format/3"></A>
+
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+format(+stream_or_alias, +character_code_list_or_atom,
++list)<BR>
+format(+character_code_list_or_atom, +list)</TT></DD></DL><P><B>Description</B></P><P><TT>format(SorA, Format, Arguments)</TT> writes the <TT>Format</TT> string
+replacing each format control sequence <TT>F</TT> by the corresponding
+element of <TT>Arguments</TT> (formatted according to <TT>F</TT>) to the
+stream associated with the stream-term or alias <TT>SorA</TT>.</P><P><B>Format control sequences</B>: the general format of a control sequence
+is <TT>&#X2019;~NC&#X2019;</TT>. The character <TT>C</TT> determines the type of
+the control sequence. <TT>N</TT> is an optional numeric argument. An
+alternative form of <TT>N</TT> is <TT>&#X2019;*&#X2019;</TT>. <TT>&#X2019;*&#X2019;</TT> implies
+that the next argument <TT>Arg</TT> in <TT>Arguments</TT> should be
+used as a numeric argument in the control sequence. The use of C
+<TT>printf()</TT> formatting sequence (beginning by the character
+<TT>%</TT>) is also allowed. The following control sequences are
+available:</P><TABLE BORDER=1 CELLSPACING=0 CELLPADDING=1><TR><TD VALIGN=top ALIGN=left><DIV CLASS="center">
+Format sequence</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">type of the argument</DIV></TD><TD VALIGN=top ALIGN=left>Description</TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="center">
+<TT>~Na</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">atom</DIV></TD><TD VALIGN=top ALIGN=left>print the atom without quoting. <TT>N</TT> is minimal number of characters to print using spaces on the right if needed (default: the length of the atom)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="center">
+<TT>~Nc</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">character code</DIV></TD><TD VALIGN=top ALIGN=left>print the character associated with the
+code. <TT>N</TT> is the number of times to print the character (default: 1)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="center">
+<TT> ~Nf</TT>
+<BR>
+<TT>~Ne ~NE ~Ng ~NG</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">float expression</DIV></TD><TD VALIGN=top ALIGN=left>pass the argument <TT>Arg</TT> and
+<TT>N</TT> to the C <TT>printf()</TT>
+function as:
+<BR>
+if <TT>N</TT> is not specified
+<TT>printf("%f",Arg)</TT> else
+<TT>printf("%.Nf",Arg)</TT>.
+<BR>
+Similarly for <TT>~Ne</TT>, <TT>~NE</TT>, <TT>~Ng</TT> and <TT>~NG</TT></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="center">
+<TT>~Nd</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">integer expression</DIV></TD><TD VALIGN=top ALIGN=left>print the argument. <TT>N</TT> is the
+number of digits after the decimal point. If <TT>N</TT> is 0 no
+decimal point is printed (default: 0)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="center">
+<TT>~ND</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">integer expression</DIV></TD><TD VALIGN=top ALIGN=left>identical to <TT>~Nd</TT> except
+that <TT>&#X2019;,&#X2019;</TT> separates groups of three digits to the left of the
+decimal point</TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="center">
+<TT>~Nr</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">integer expression</DIV></TD><TD VALIGN=top ALIGN=left>print the argument according to the
+radix <TT>N</TT>. 2 &#X2264; <TT>N</TT> &#X2264; 36 (default: 8). The letters
+<TT>a-z</TT> denote digits &gt; 9</TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="center">
+<TT>~NR</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">integer expression</DIV></TD><TD VALIGN=top ALIGN=left>identical to <TT>~Nr</TT> except
+that the letters <TT>A-Z</TT> denote digits &gt; 9</TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="center">
+<TT>~Ns</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">character code list</DIV></TD><TD VALIGN=top ALIGN=left>print exactly <TT>N</TT> characters
+(default: the length of the list)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="center">
+<TT>~NS</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">character list</DIV></TD><TD VALIGN=top ALIGN=left>print exactly <TT>N</TT> characters
+(default: the length of the list)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="center">
+<TT>~i</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">term</DIV></TD><TD VALIGN=top ALIGN=left>ignore the current argument</TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="center">
+<TT>~k</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">term</DIV></TD><TD VALIGN=top ALIGN=left>pass the argument to
+<TT>write_canonical/1</TT> (section&#XA0;<A HREF="#write-term/3">8.14.6</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="center">
+<TT>~p</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">term</DIV></TD><TD VALIGN=top ALIGN=left>pass the argument to <TT>print/1</TT>
+(section&#XA0;<A HREF="#write-term/3">8.14.6</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="center">
+<TT>~q</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">term</DIV></TD><TD VALIGN=top ALIGN=left>pass the argument to <TT>writeq/1</TT>
+(section&#XA0;<A HREF="#write-term/3">8.14.6</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="center">
+<TT>~w</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">term</DIV></TD><TD VALIGN=top ALIGN=left>pass the argument to <TT>write/1</TT>
+(section&#XA0;<A HREF="#write-term/3">8.14.6</A>)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="center">
+<TT>~~</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">none</DIV></TD><TD VALIGN=top ALIGN=left>print the character <TT>&#X2019;~&#X2019;</TT></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="center">
+<TT>~Nn</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">none</DIV></TD><TD VALIGN=top ALIGN=left>print <TT>N</TT> new-line characters (default: 1)</TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="center">
+<TT>~N</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">none</DIV></TD><TD VALIGN=top ALIGN=left>print a new-line character if not at the beginning
+of a line</TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="center">
+<TT>~?</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">atom</DIV></TD><TD VALIGN=top ALIGN=left>use the argument as a nested format string</TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="center">
+<TT>%F</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">atom, integer or float expression</DIV></TD><TD VALIGN=top ALIGN=left>interface to the C
+function <TT>printf(3)</TT> for outputting atoms (C string), integers and
+floating point numbers. <TT>*</TT> are also allowed.</TD></TR>
+</TABLE><P><TT>format/2</TT> applies to the current output stream.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Format</TT> is a partial list or a list with an element
+<TT>E</TT> which is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Arguments</TT> is a partial list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Format</TT> is neither a partial list nor a list or an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Format)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Arguments</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Arguments)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Format</TT> list is neither a
+variable nor a character code</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>representation_error(character_code, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is neither a variable nor a stream-term or alias</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(stream_or_alias, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of Format is not a valid format control
+sequence</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(format_control_sequence, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+the <TT>Arguments</TT> list does not contain sufficient elements</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(non_empty_list, [])</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Arguments</TT> list is a variable
+while a non-variable term was expected</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Arguments</TT> list is neither
+variable nor an atom while an atom was expected</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Arguments</TT> cannot be evaluated
+as an arithmetic expression while an integer or a floating point number was
+expected</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left>an arithmetic error (section&#XA0;<A HREF="gprolog030.html#Evaluation-of-an-arithmetic-expression">8.6.1</A>)</TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Arguments</TT> list is neither
+variable nor character code while a character code was expected</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>representation_error(character_code, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is not associated with an open stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>existence_error(stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is an input stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(output, stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is associated with a binary stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(output, binary_stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc129"></A><A NAME="htoc166">8.14.8</A>&#XA0;&#XA0;<TT>portray_clause/2</TT>,
+<TT>portray_clause/1</TT></H4><P>
+<A NAME="portray-clause/2"></A>
+
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+portray_clause(+stream_or_alias, +clause)<BR>
+portray_clause(+clause)</TT></DD></DL><P><B>Description</B></P><P><TT>portray_clause(SorA, Clause)</TT> pretty prints
+<TT>Clause</TT> to the stream associated with the stream-term or alias
+<TT>SorA</TT>.
+<TT>portray_clause/2</TT> uses the variable binding predicates
+<TT>name_singleton_vars/1</TT> (section&#XA0;<A HREF="gprolog029.html#name-singleton-vars/1">8.5.1</A>) and
+<TT>numbervars/1</TT> (section&#XA0;<A HREF="gprolog029.html#bind-variables/2">8.5.3</A>). This predicate is
+used by <TT>listing/1</TT> (section&#XA0;<A HREF="gprolog047.html#listing/1">8.23.3</A>).</P><P><TT>portray_clause/1</TT> applies to the current output stream.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Clause</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Clause</TT> is neither a variable nor a callable term</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(callable, Clause)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is neither a variable nor a stream-term or alias</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(stream_or_alias, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is not associated with an open stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>existence_error(stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is an input stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(output, stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is associated with a binary stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(output, binary_stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc130"></A><A NAME="htoc167">8.14.9</A>&#XA0;&#XA0;<TT>get_print_stream/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+get_print_stream(?stream)</TT></DD></DL><P><B>Description</B></P><P><TT>get_print_stream(Stream)</TT> unifies <TT>Stream</TT> with the
+stream-term associated with the output stream used by <TT>print/2</TT>
+(section&#XA0;<A HREF="#write-term/3">8.14.6</A>). The purpose of this predicate is to allow a
+user-defined <TT>portray/1</TT> predicate to identify the output stream in
+use.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Stream</TT> is neither a variable nor a stream-term</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(stream, Stream)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc131"></A><A NAME="htoc168">8.14.10</A>&#XA0;&#XA0;<TT>op/3</TT></H4><P>
+<A NAME="op/3:(Term-input/output)"></A>
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+op(+integer, +operator_specifier, +atom_or_atom_list)</TT></DD></DL><P><B>Description</B></P><P><TT>op(Priority, OpSpecifier, Operator)</TT> alters the operator table.
+<TT>Operator</TT> is declared as an operator with properties defined by
+specifier <TT>OpSpecifier</TT> and <TT>Priority</TT>. <TT>Priority</TT> must
+be an integer &#X2265; 0 and &#X2264; 1200. If <TT>Priority</TT> is 0 then the
+operator properties of <TT>Operator</TT> (if any) are canceled.
+<TT>Operator</TT> may also be a list of atoms in which case all of them are
+declared to be operators. In general, operators can be removed from
+the operator table and their priority or specifier can be changed. However,
+it is an error to attempt to change the <TT>&#X2019;,&#X2019;</TT> operator from its
+initial status. An atom can have multiple operator definitions (e.g.
+prefix and infix like <TT>+</TT>) however an atom cannot have both an
+infix and a postfix operator definitions.</P><P><B>Operator specifiers</B>: the following specifiers are available:</P><TABLE BORDER=1 CELLSPACING=0 CELLPADDING=1><TR><TD ALIGN=center NOWRAP>
+Specifier</TD><TD ALIGN=center NOWRAP>Type</TD><TD ALIGN=center NOWRAP>Associativity</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>fx</TT></TD><TD ALIGN=center NOWRAP>prefix</TD><TD ALIGN=center NOWRAP>no</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>fy</TT></TD><TD ALIGN=center NOWRAP>prefix</TD><TD ALIGN=center NOWRAP>yes</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>xf</TT></TD><TD ALIGN=center NOWRAP>postfix</TD><TD ALIGN=center NOWRAP>no</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>yf</TT></TD><TD ALIGN=center NOWRAP>postfix</TD><TD ALIGN=center NOWRAP>yes</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>xfx</TT></TD><TD ALIGN=center NOWRAP>infix</TD><TD ALIGN=center NOWRAP>no</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>yfx</TT></TD><TD ALIGN=center NOWRAP>infix</TD><TD ALIGN=center NOWRAP>left</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>xfy</TT></TD><TD ALIGN=center NOWRAP>infix</TD><TD ALIGN=center NOWRAP>right</TD></TR>
+</TABLE><P><B>Prolog predefined operators</B>:</P><TABLE BORDER=1 CELLSPACING=0 CELLPADDING=1><TR><TD VALIGN=top ALIGN=right NOWRAP>
+Priority</TD><TD VALIGN=top ALIGN=center NOWRAP>Specifier</TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">Operators</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=right NOWRAP>
+<TT>1200</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>xfx</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><TT>:- &#XA0;--&gt;</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=right NOWRAP>
+<TT>1200</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>fx</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><TT>:-</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=right NOWRAP>
+<TT>1105</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>xfy</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><TT>|</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=right NOWRAP>
+<TT>1100</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>xfy</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><TT>;</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=right NOWRAP>
+<TT>1050</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>xfy</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><TT>-&gt; *-&gt;</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=right NOWRAP>
+<TT>1000</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>xfy</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><TT>,</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=right NOWRAP>
+<TT>900</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>fy</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><TT>\+</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=right NOWRAP>
+<TT>700</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>xfx</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><TT>= &#XA0;\= &#XA0;=.. &#XA0;== &#XA0;\== &#XA0;@&lt;
+&#XA0;@=&lt; &#XA0;@&gt; &#XA0;@&gt;= &#XA0;is &#XA0;=:= &#XA0;=\= &#XA0;&lt; &#XA0;=&lt; &#XA0;&gt; &#XA0;&gt;=</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=right NOWRAP>
+<TT>600</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>xfy</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><TT>:</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=right NOWRAP>
+<TT>500</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>yfx</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><TT>+ &#XA0;- &#XA0;/\ &#XA0;\/</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=right NOWRAP>
+<TT>400</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>yfx</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><TT>* &#XA0;/ &#XA0;// &#XA0;rem &#XA0;mod &#XA0;div &#XA0;&lt;&lt;
+&#XA0;&gt;&gt;</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=right NOWRAP>
+<TT>200</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>xfx</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><TT>** &#XA0;^</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=right NOWRAP>
+<TT>200</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>fy</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><TT>+ &#XA0;- &#XA0;\</TT></DIV></TD></TR>
+</TABLE><P><B>FD predefined operators</B>:</P><TABLE BORDER=1 CELLSPACING=0 CELLPADDING=1><TR><TD VALIGN=top ALIGN=right NOWRAP>
+Priority</TD><TD VALIGN=top ALIGN=center NOWRAP>Specifier</TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">Operators</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=right NOWRAP>
+<TT>750</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>xfy</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><TT>#&lt;=&gt; &#XA0;#\&lt;=&gt;</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=right NOWRAP>
+<TT>740</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>xfy</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><TT>#==&gt; &#XA0;#\==&gt;</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=right NOWRAP>
+<TT>730</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>xfy</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><TT>## &#XA0;#\/ &#XA0;#\\/</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=right NOWRAP>
+<TT>720</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>yfx</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><TT>#/\ &#XA0;#\/\</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=right NOWRAP>
+<TT>710</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>fy</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><TT>#\</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=right NOWRAP>
+<TT>700</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>xfx</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><TT>#= &#XA0;#\= &#XA0;#&lt; &#XA0;#=&lt;
+&#XA0;#&gt; &#XA0;#&gt;= &#XA0;#=# &#XA0;#\=# &#XA0;#&lt;# &#XA0;#=&lt;# &#XA0;#&gt;#
+&#XA0;#&gt;=#</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=right NOWRAP>
+<TT>500</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>yfx</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><TT>+ &#XA0;-</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=right NOWRAP>
+<TT>400</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>yfx</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><TT>* &#XA0;/ &#XA0;// &#XA0;rem</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=right NOWRAP>
+<TT>200</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>xfy</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><TT>**</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=right NOWRAP>
+<TT>200</TT></TD><TD VALIGN=top ALIGN=center NOWRAP><TT>fy</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><TT>+ &#XA0;-</TT></DIV></TD></TR>
+</TABLE><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Priority</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>OpSpecifier</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Operator</TT> is a partial list or a list with an element
+<TT>E</TT> which is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Priority</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Priority)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>OpSpecifier</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, OpSpecifier)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Operator</TT> is neither a partial list nor a list nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Operator)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Operator</TT> list is neither a
+variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Priority</TT> is an integer not &#X2265; 0 and &#X2264; 1200</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(operator_priority, Priority)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>OpSpecifier</TT> is not a valid operator specifier</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(operator_specifier, OpSpecifier)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Operator</TT> (or an element of the
+<TT>Operator</TT> list) is <TT>&#X2019;,&#X2019;</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(modify, operator, &#X2019;,&#X2019;)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>OpSpecifier</TT> is a specifier such that <TT>Operator</TT>
+would have a postfix and an infix definition. </TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(create, operator, Operator)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Operator</TT> (or an element of the <TT>Operator</TT> list) is
+<TT>|</TT> and it would have a prefix or a postfix definition or its
+<TT>Priority</TT> would be &#X2264; 1100.</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(create, operator, &#X2019;|&#X2019;)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Operator</TT> (or an element of the <TT>Operator</TT> list) is
+<TT>[]</TT> or <TT>{}</TT>.</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(create, operator, Operator)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>ISO predicate.</P><P>The ISO reference implies that if a program calls <TT>current_op/3</TT>,
+then modifies an operator definition by calling <TT>op/3</TT> and backtracks
+into the call to <TT>current_op/3</TT>, then the changes are guaranteed not
+to affect that <TT>current_op/3</TT> goal. This is not guaranteed by
+GNU Prolog.</P><H4 CLASS="subsubsection"><A NAME="toc132"></A><A NAME="htoc169">8.14.11</A>&#XA0;&#XA0;<TT>current_op/3</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+current_op(?integer, ?operator_specifier, ?atom)</TT></DD></DL><P><B>Description</B></P><P><TT>current_op(Priority, OpSpecifier, Operator)</TT> succeeds if
+<TT>Operator</TT> is an operator with properties defined by specifier
+<TT>OpSpecifier</TT> and <TT>Priority</TT>. This predicate is re-executable
+on backtracking.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Priority</TT> is neither a variable nor an operator priority</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(operator_priority, Priority)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>OpSpecifier</TT> is neither a variable nor an operator
+specifier</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(operator_specifier, OpSpecifier)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Operator</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Operator)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>ISO predicate.</P><H4 CLASS="subsubsection"><A NAME="toc133"></A><A NAME="htoc170">8.14.12</A>&#XA0;&#XA0;<TT>char_conversion/2</TT></H4><P>
+<A NAME="char-conversion/2"></A>
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+char_conversion(+character, +character)</TT></DD></DL><P><B>Description</B></P><P><TT>char_conversion(InChar, OutChar)</TT> alters the character-conversion
+mapping. This mapping is used by the following read predicates:
+<TT>read_term/3</TT> (section&#XA0;<A HREF="#read-term/3">8.14.1</A>), <TT>read_atom/2</TT>,
+<TT>read_integer/2</TT>, <TT>read_number/2</TT> (section&#XA0;<A HREF="#read-atom/2">8.14.2</A>) and
+<TT>read_token/2</TT> (section&#XA0;<A HREF="#read-token/2">8.14.3</A>) to replace any occurrence of a
+character <TT>InChar</TT> by <TT>OutChar</TT>. However the conversion
+mechanism should have been previously activated by switching on the
+<TT>char_conversion</TT> Prolog flag (section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>). When
+<TT>InChar</TT> and <TT>OutChar</TT> are the same, the effect is to remove
+any conversion of a character <TT>InChar</TT>.</P><P>Note that the single character read predicates (e.g. <TT>get_char/2</TT>)
+never do character conversion. If such behavior is required, it must be
+explicitly done using <TT>current_char_conversion/2</TT>
+(section&#XA0;<A HREF="#current-char-conversion/2">8.14.13</A>).</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>InChar</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>OutChar</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>InChar</TT> is neither a variable nor a character</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(character, InChar)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>OutChar</TT> is neither a variable nor a character</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(character, OutChar)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>ISO predicate. The <TT>type_error(character,&#X2026;)</TT> is a GNU Prolog
+behavior, the ISO reference instead defines a
+<TT>representation_error(character)</TT> in this case. This seems to be an
+error of the ISO reference since, for many other built-in predicates
+accepting a character (e.g. <TT>char_code/2</TT>, <TT>put_char/2</TT>), a
+<TT>type_error</TT> is raised.</P><P>The ISO reference implies that if a program calls
+<TT>current_char_conversion/2</TT>, then modifies the character mapping by
+calling <TT>char_conversion/2</TT>, and backtracks into the call to
+<TT>current_char_conversion/2</TT> then the changes are guaranteed not to
+affect that <TT>current_char_conversion/2</TT> goal. This is not guaranteed
+by GNU Prolog.</P><H4 CLASS="subsubsection"><A NAME="toc134"></A><A NAME="htoc171">8.14.13</A>&#XA0;&#XA0;<TT>current_char_conversion/2</TT></H4><P>
+<A NAME="current-char-conversion/2"></A>
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+current_char_conversion(?character, ?character)</TT></DD></DL><P><B>Description</B></P><P><TT>current_char_conversion(InChar, OutChar)</TT> succeeds if the
+conversion of <TT>InChar</TT> is <TT>OutChar</TT> according to the
+character-conversion mapping. In that case, <TT>InChar</TT> and
+<TT>OutChar</TT> are different. This predicate is re-executable on
+backtracking.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>InChar</TT> is neither a variable nor a character</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(character, InChar)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>OutChar</TT> is neither a variable nor a character</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(character, OutChar)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>ISO predicate. Same remark as for char_conversion/2
+(section&#XA0;<A HREF="#char-conversion/2">8.14.12</A>).</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog037.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog039.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Type testing</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog026.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc70">8.1</A>&#XA0;&#XA0;Type testing</H3><UL>
+<LI><A HREF="gprolog025.html#toc47"><TT>var/1</TT>,
+<TT>nonvar/1</TT>,
+<TT>atom/1</TT>,
+<TT>integer/1</TT>,
+<TT>float/1</TT>,
+<TT>number/1</TT>,
+<TT>atomic/1</TT>,<BR>
+ <TT>compound/1</TT>,
+<TT>callable/1</TT>,
+<TT>ground/1</TT>,
+<TT>is_list/1</TT>,
+<TT>list/1</TT>,
+<TT>partial_list/1</TT>,
+<TT>list_or_partial_list/1</TT></A>
+</LI></UL>
+<H4 CLASS="subsubsection"><A NAME="toc47"></A><A NAME="htoc71">8.1.1</A>&#XA0;&#XA0;<TT>var/1</TT>,
+<TT>nonvar/1</TT>,
+<TT>atom/1</TT>,
+<TT>integer/1</TT>,
+<TT>float/1</TT>,
+<TT>number/1</TT>,
+<TT>atomic/1</TT>,<BR>
+ <TT>compound/1</TT>,
+<TT>callable/1</TT>,
+<TT>ground/1</TT>,
+<TT>is_list/1</TT>,
+<TT>list/1</TT>,
+<TT>partial_list/1</TT>,
+<TT>list_or_partial_list/1</TT></H4><P>
+<A NAME="var/1"></A>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+var(?term)<BR>
+nonvar(?term)<BR>
+atom(?term)<BR>
+integer(?term)<BR>
+float(?term)<BR>
+number(?term)<BR>
+atomic(?term)<BR>
+compound(?term)<BR>
+callable(?term)<BR>
+ground(?term)<BR>
+is_list(?term)<BR>
+list(?term)<BR>
+partial_list(?term)<BR>
+list_or_partial_list(?term)</TT></DD></DL><P><B>Description</B></P><P><TT>var(Term)</TT> succeeds if <TT>Term</TT> is currently
+uninstantiated (which therefore has not been bound to anything, except
+possibly another uninstantiated variable).</P><P><TT>nonvar(Term)</TT> succeeds if <TT>Term</TT> is currently instantiated
+(opposite of <TT>var/1</TT>).</P><P><TT>atom(Term)</TT> succeeds if <TT>Term</TT> is currently instantiated
+to an atom.</P><P><TT>integer(Term)</TT> succeeds if <TT>Term</TT> is currently
+instantiated to an integer.</P><P><TT>float(Term)</TT> succeeds if <TT>Term</TT> is currently instantiated
+to a floating point number.</P><P><TT>number(Term)</TT> succeeds if <TT>Term</TT> is currently instantiated
+to an integer or a floating point number.</P><P><TT>atomic(Term)</TT> succeeds if <TT>Term</TT> is currently instantiated
+to an atom, an integer or a floating point number.</P><P><TT>compound(Term)</TT> succeeds if <TT>Term</TT> is currently
+instantiated to a compound term, i.e. a term of arity &gt; 0 (a list or a
+structure).</P><P><TT>callable(Term)</TT> succeeds if <TT>Term</TT> is currently
+instantiated to a callable term, i.e. an atom or a compound term.</P><P><TT>ground(Term)</TT> succeeds if <TT>Term</TT> is a ground term.</P><P><TT>list(Term)</TT> succeeds if <TT>Term</TT> is currently instantiated
+to a list, i.e. the atom <TT>[]</TT> (empty list) or a term with principal
+functor <TT>&#X2019;.&#X2019;/2</TT> and with second argument (the tail) a list.</P><P><TT>is_list(Term)</TT> behaves like <TT>list(Term)</TT> (for compatibility
+purpose).</P><P><TT>partial_list(Term)</TT> succeeds if <TT>Term</TT> is currently
+instantiated to a partial list, i.e. a variable or a term whose the main
+functor is <TT>&#X2019;.&#X2019;/2</TT> and the second argument (the tail) is a partial
+list.</P><P><TT>list_or_partial_list(Term)</TT> succeeds if <TT>Term</TT> is
+currently instantiated to a list or a partial list.</P><P><B>Errors</B></P><P>None.</P><P><B>Portability</B></P><P><TT>var/1</TT>, <TT>nonvar/1</TT>, <TT>atom/1</TT>, <TT>integer/1</TT>,
+<TT>float/1</TT>, <TT>number/1</TT>, <TT>atomic/1</TT>, <TT>compound/1</TT>
+<TT>callable/1</TT> and <TT>ground/1</TT> are ISO predicates.</P><P><TT>list/1</TT>, <TT>partial_list/1</TT> and
+<TT>list_or_partial_list/1</TT> are GNU Prolog predicates.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog026.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

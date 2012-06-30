@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Optimization constraints</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog064.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog055.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc348">9.10</A>&#XA0;&#XA0;Optimization constraints</H3><UL>
+<LI><A HREF="gprolog065.html#toc285"><TT>fd_minimize/2</TT>,
+<TT>fd_maximize/2</TT></A>
+</LI></UL>
+<H4 CLASS="subsubsection"><A NAME="toc285"></A><A NAME="htoc349">9.10.1</A>&#XA0;&#XA0;<TT>fd_minimize/2</TT>,
+<TT>fd_maximize/2</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+fd_minimize(+callable_term, ?fd_variable)<BR>
+fd_maximize(+callable_term, ?fd_variable)</TT></DD></DL><P><B>Description</B></P><P><TT>fd_minimize(Goal, X)</TT> repeatedly calls <TT>Goal</TT> to find a
+value that minimizes the variable <TT>X</TT>. <TT>Goal</TT> is a Prolog goal
+that should instantiate <TT>X</TT>, a common case being the use of
+<TT>fd_labeling/2</TT> (section&#XA0;<A HREF="gprolog064.html#fd-labeling/2">9.9.1</A>). This predicate uses a
+branch-and-bound algorithm with restart: each time <TT>call(Goal)</TT>
+succeeds the computation restarts with a new constraint <TT>X #&lt; V</TT>
+where <TT>V</TT> is the value of <TT>X</TT> at the end of the last call of
+<TT>Goal</TT>. When a failure occurs (either because there are no remaining
+choice-points for <TT>Goal</TT> or because the added constraint is
+inconsistent with the rest of the store) the last solution is recomputed
+since it is optimal.</P><P><TT>fd_maximize(Goal, X)</TT> is similar to <TT>fd_minimize/2</TT> but
+<TT>X</TT> is maximized<TT>.</TT></P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Goal</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Goal</TT> is neither a variable nor a callable term</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(callable, Goal)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+The predicate indicator <TT>Pred</TT> of <TT>Goal</TT> does not
+correspond to an existing procedure and the value of the <TT>unknown</TT>
+Prolog flag is <TT>error</TT> (section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>existence_error(procedure, Pred)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>X</TT> is neither a variable nor an FD variable nor an integer
+</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(fd_variable, X)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.
+</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog064.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog055.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+</BODY>
+</HTML>

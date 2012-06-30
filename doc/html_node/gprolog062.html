@@ -1,0 +1,222 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Boolean and reified constraints</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog061.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog055.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog063.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc335">9.7</A>&#XA0;&#XA0;Boolean and reified constraints</H3><UL>
+<LI><A HREF="gprolog062.html#toc275">Boolean FD expressions</A>
+</LI><LI><A HREF="gprolog062.html#toc276"><TT>fd_reified_in/4</TT></A>
+</LI><LI><A HREF="gprolog062.html#toc277"><TT>(#</TT><TT>\</TT><TT>)/1</TT> - constraint NOT,
+<TT>(#</TT><TT>&lt;</TT><TT>=</TT><TT>&gt;</TT><TT>)/2</TT> - constraint equivalent,<BR>
+ <TT>(#</TT><TT>\</TT><TT>&lt;</TT><TT>=</TT><TT>&gt;</TT><TT>)/2</TT> - constraint different,
+<TT>(##)/2</TT> - constraint XOR,<BR>
+ <TT>(#==</TT><TT>&gt;</TT><TT>)/2</TT> - constraint imply,
+<TT>(#</TT><TT>\</TT><TT>==</TT><TT>&gt;</TT><TT>)/2</TT> - constraint not imply,<BR>
+ <TT>(#/</TT><TT>\</TT><TT>)/2</TT> - constraint AND,
+<TT>(#</TT><TT>\</TT><TT>/</TT><TT>\</TT><TT>)/2</TT> - constraint NAND,<BR>
+ <TT>(#</TT><TT>\</TT><TT>/)/2</TT> - constraint OR,
+<TT>(#</TT><TT>\</TT><TT>\</TT><TT>/)/2</TT> - constraint NOR</A>
+</LI><LI><A HREF="gprolog062.html#toc278"><TT>fd_cardinality/2</TT>,
+<TT>fd_cardinality/3</TT>,
+<TT>fd_at_least_one/1</TT>,
+<TT>fd_at_most_one/1</TT>,<BR>
+ <TT>fd_only_one/1</TT></A>
+</LI></UL>
+<P>
+<A NAME="Boolean-and-reified-constraints"></A></P><H4 CLASS="subsubsection"><A NAME="toc275"></A><A NAME="htoc336">9.7.1</A>&#XA0;&#XA0;Boolean FD expressions</H4><P>
+<A NAME="Boolean-FD-expressions"></A></P><P>An boolean FD expression is a Prolog term built from integers (0 for false,
+1 for true), variables (Prolog or FD variables), partial AC arithmetic
+constraints (section&#XA0;<A HREF="gprolog061.html#Partial-AC:-(:=)/2">9.6.2</A>), full AC arithmetic constraints
+(section&#XA0;<A HREF="gprolog061.html#Full-AC:-(:=:)/2">9.6.3</A>) and functors (or operators) that represent
+boolean functions. When a sub-expression of a boolean expression is an
+arithmetic constraint <I><TT>c</TT></I>, it is reified. Namely, as soon as the
+solver detects that <I><TT>c</TT></I> is true (i.e. <EM>entailed</EM>) the
+sub-expression has the value <TT>1</TT>. Similarly when the solver detects
+that <I><TT>c</TT></I> is false (i.e. <EM>disentailed</EM>) the sub-expression
+evaluates as <TT>0</TT>. While neither the entailment nor the disentailment
+can be detected the sub-expression is evaluated as a domain <TT>0..1</TT>.
+The following table details the components of an FD boolean expression:</P><TABLE BORDER=1 CELLSPACING=0 CELLPADDING=1><TR><TD ALIGN=left NOWRAP>
+FD Expression</TD><TD ALIGN=left NOWRAP>Result</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+Prolog variable</TD><TD ALIGN=left NOWRAP>domain <TT>0..1</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+FD variable <TT>X</TT></TD><TD ALIGN=left NOWRAP>domain of <TT>X</TT>, <TT>X</TT> is constrained to
+be in <TT>0..1</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>0</TT> (integer)</TD><TD ALIGN=left NOWRAP><TT>0</TT> (false)</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>1</TT> (integer)</TD><TD ALIGN=left NOWRAP><TT>1</TT> (true)</TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>#\ E</TT></TD><TD ALIGN=left NOWRAP>not <TT>E</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>E1 #&lt;=&gt; E2</TT></TD><TD ALIGN=left NOWRAP><TT>E1</TT> equivalent to <TT>E2</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>E1 #\&lt;=&gt; E2</TT></TD><TD ALIGN=left NOWRAP><TT>E1</TT> not equivalent to
+<TT>E2</TT> (i.e. <TT>E1</TT> different from <TT>E2)</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>E1 ## E2</TT></TD><TD ALIGN=left NOWRAP><TT>E1</TT> exclusive OR <TT>E2</TT> (i.e. <TT>E1</TT>
+not equivalent to <TT>E2)</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>E1 #==&gt; E2</TT></TD><TD ALIGN=left NOWRAP><TT>E1</TT> implies <TT>E2</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>E1 #\==&gt; E2</TT></TD><TD ALIGN=left NOWRAP><TT>E1</TT> does not imply <TT>E2</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>E1 #/\ E2</TT></TD><TD ALIGN=left NOWRAP><TT>E1</TT> AND <TT>E2</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>E1 #\/\ E2</TT></TD><TD ALIGN=left NOWRAP><TT>E1</TT> NAND <TT>E2</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>E1 #\/ E2</TT></TD><TD ALIGN=left NOWRAP><TT>E1</TT> OR <TT>E2</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP>
+<TT>E1 #\\/ E2</TT></TD><TD ALIGN=left NOWRAP><TT>E1</TT> NOR <TT>E2</TT></TD></TR>
+</TABLE><P><TT>#&lt;=&gt;</TT>, <TT>#\&lt;=&gt;</TT>, <TT>##</TT>,
+<TT>#==&gt;</TT>, <TT>#\==&gt;</TT>, <TT>#/\</TT>,
+<TT>#\/\</TT>, <TT>#\/</TT> and <TT>#\\/</TT> are
+predefined infix operators. <TT>#\</TT> is a predefined prefix operator
+(section&#XA0;<A HREF="gprolog038.html#op/3:(Term-input/output)">8.14.10</A>).</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+a sub-expression <TT>E</TT> is neither a variable nor an integer (0
+or 1) nor an FD boolean functor nor reified constraint</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(fd_bool_evaluable, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an expression is too complex</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>resource_error(too_big_fd_constraint)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+a sub-expression is an invalid reified constraint</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left>an arithmetic constraint error (section&#XA0;<A HREF="gprolog061.html#FD-arithmetic-expressions">9.6.1</A>)</TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><H4 CLASS="subsubsection"><A NAME="toc276"></A><A NAME="htoc337">9.7.2</A>&#XA0;&#XA0;<TT>fd_reified_in/4</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+fd_reified_in(?fd_variable, +integer, +integer, ?fd_variable)
+</TT></DD></DL><P><B>Description</B></P><P><TT>fd_reified_in(X, Lower, Upper, B)</TT> captures the truth value of the constraint <TT>X</TT> &#X2208; [<TT>Lower</TT>..<TT>Upper</TT>] in the boolean variable <TT>B</TT>.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>X</TT> is neither a variable nor an FD variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(fd_variable, X)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>B</TT> is neither a variable nor an FD variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(fd_variable, B)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Lower</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Lower</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Lower)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Upper</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Upper</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Upper)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><H4 CLASS="subsubsection"><A NAME="toc277"></A><A NAME="htoc338">9.7.3</A>&#XA0;&#XA0;<TT>(#\)/1</TT> - constraint NOT,
+<TT>(#&lt;=&gt;)/2</TT> - constraint equivalent,<BR>
+ <TT>(#\&lt;=&gt;)/2</TT> - constraint different,
+<TT>(##)/2</TT> - constraint XOR,<BR>
+ <TT>(#==&gt;)/2</TT> - constraint imply,
+<TT>(#\==&gt;)/2</TT> - constraint not imply,<BR>
+ <TT>(#/\)/2</TT> - constraint AND,
+<TT>(#\/\)/2</TT> - constraint NAND,<BR>
+ <TT>(#\/)/2</TT> - constraint OR,
+<TT>(#\\/)/2</TT> - constraint NOR</H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+#\(?fd_bool_evaluable)<BR>
+#&lt;=&gt;(?fd_bool_evaluable, ?fd_bool_evaluable)<BR>
+#\&lt;=&gt;(?fd_bool_evaluable, ?fd_bool_evaluable)<BR>
+##(?fd_bool_evaluable, ?fd_bool_evaluable)<BR>
+#==&gt;(?fd_bool_evaluable, ?fd_bool_evaluable)<BR>
+#\==&gt;(?fd_bool_evaluable, ?fd_bool_evaluable)<BR>
+#/\(?fd_bool_evaluable, ?fd_bool_evaluable)<BR>
+#\/\(?fd_bool_evaluable, ?fd_bool_evaluable)<BR>
+#\/(?fd_bool_evaluable, ?fd_bool_evaluable)<BR>
+#\\/(?fd_bool_evaluable, ?fd_bool_evaluable)</TT></DD></DL><P><B>Description</B></P><P><TT>#\= FdBoolExpr1</TT> constraints <TT>FdBoolExpr1</TT> to be
+false.</P><P><TT>FdBoolExpr1 #&lt;=&gt; FdBoolExpr2</TT> constrains
+<TT>FdBoolExpr1</TT> to be equivalent to <TT>FdBoolExpr2</TT>.</P><P><TT>FdBoolExpr1 #\&lt;=&gt; FdBoolExpr2</TT> constrains
+<TT>FdBoolExpr1</TT> to be equivalent to not <TT>FdBoolExpr2</TT>.</P><P><TT>FdBoolExpr1 ## FdBoolExpr2</TT> constrains <TT>FdBoolExpr1</TT> XOR
+<TT>FdBoolExpr2</TT> to be true</P><P><TT>FdBoolExpr1 #==&gt; FdBoolExpr2</TT> constrains
+<TT>FdBoolExpr1</TT> to imply <TT>FdBoolExpr2</TT>.</P><P><TT>FdBoolExpr1 #\==&gt; FdBoolExpr2</TT> constrains
+<TT>FdBoolExpr1</TT> to not imply <TT>FdBoolExpr2</TT>.</P><P><TT>FdBoolExpr1 #/\ FdBoolExpr2</TT> constrains <TT>FdBoolExpr1</TT>
+AND <TT>FdBoolExpr2</TT> to be true.</P><P><TT>FdBoolExpr1 #\/\ FdBoolExpr2</TT> constrains
+<TT>FdBoolExpr1</TT> AND <TT>FdBoolExpr2</TT> to be false.</P><P><TT>FdBoolExpr1 #\/ FdBoolExpr2</TT> constrains <TT>FdBoolExpr1</TT>
+OR <TT>FdBoolExpr2</TT> to be true.</P><P><TT>FdBoolExpr1 #\\/ FdBoolExpr2</TT> constrains
+<TT>FdBoolExpr1</TT> OR <TT>FdBoolExpr2</TT> to be false.</P><P><TT>FdBoolExpr1</TT> and <TT>FdBoolExpr2</TT> are boolean FD expressions
+(section&#XA0;<A HREF="#Boolean-FD-expressions">9.7.1</A>).</P><P>Note that <TT>#\&lt;=&gt;</TT> (not equivalent) and <TT>##</TT>
+(exclusive or) are synonymous.</P><P>These predicates post boolean constraints that are managed by the FD solver
+using a partial arc-consistency algorithm to reduce the domain of involved
+variables. The (dis)entailment of reified constraints is detected using
+either the bounds (for partial AC arithmetic constraints) or the full domain
+(for full AC arithmetic constraints).</P><P><TT>#&lt;=&gt;</TT>, <TT>#\&lt;=&gt;</TT>, <TT>##</TT>,
+<TT>#==&gt;</TT>, <TT>#\==&gt;</TT>, <TT>#/\</TT>,
+<TT>#\/\</TT>, <TT>#\/</TT> and <TT>#\\/</TT> are
+predefined infix operators. <TT>#\</TT> is a predefined prefix operator
+(section&#XA0;<A HREF="gprolog038.html#op/3:(Term-input/output)">8.14.10</A>).</P><P><B>Errors</B></P><P>Refer to the syntax of boolean FD expressions for possible errors
+(section&#XA0;<A HREF="#Boolean-FD-expressions">9.7.1</A>).</P><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc278"></A><A NAME="htoc339">9.7.4</A>&#XA0;&#XA0;<TT>fd_cardinality/2</TT>,
+<TT>fd_cardinality/3</TT>,
+<TT>fd_at_least_one/1</TT>,
+<TT>fd_at_most_one/1</TT>,<BR>
+ <TT>fd_only_one/1</TT></H4><P>
+<A NAME="fd-cardinality/2"></A>
+
+
+
+
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+fd_cardinality(+fd_bool_evaluable_list, ?fd_variable)<BR>
+fd_cardinality(+integer, ?fd_variable, +integer)<BR>
+fd_at_least_one(+fd_bool_evaluable_list)<BR>
+fd_at_most_one(+fd_bool_evaluable_list)<BR>
+fd_only_one(+fd_bool_evaluable_list)</TT></DD></DL><P><B>Description</B></P><P><TT>fd_cardinality(List, Count)</TT> unifies <TT>Count</TT> with the number
+of constraints that are true in <TT>List</TT>. This is equivalent to post
+the constraint <TT>B<SUB>1</SUB> + B<SUB>2</SUB> + &#X2026;+ B<SUB><I>n</I></SUB> #= Count</TT>
+where each variable <TT>Bi</TT> is a new variable defined by the constraint
+<TT>B<SUB><I>i</I></SUB> #&lt;=&gt; C<SUB><I>i</I></SUB></TT> where <TT>C<SUB><I>i</I></SUB></TT> is the
+<TT>i</TT><EM>th</EM> constraint of <TT>List</TT>. Each <TT>C<SUB><I>i</I></SUB></TT>
+must be a boolean FD expression (section&#XA0;<A HREF="#Boolean-FD-expressions">9.7.1</A>).</P><P><TT>fd_cardinality(Lower, List, Upper)</TT> is equivalent to
+<TT>fd_cardinality(List, Count), Lower #=&lt; Count, Count #=&lt;
+Upper</TT></P><P><TT>fd_at_least_one(List)</TT> is equivalent to
+<TT>fd_cardinality(List, Count), Count #&gt;= 1</TT>.</P><P><TT>fd_at_most_one(List)</TT> is equivalent to
+<TT>fd_cardinality(List, Count), Count #=&lt; 1</TT>.</P><P><TT>fd_only_one(List)</TT> is equivalent to <TT>fd_cardinality(List,
+1)</TT>.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>List</TT> is a partial list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>List</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, List)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Count</TT> is neither an FD variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(fd_variable, Count)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Lower</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Lower</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Lower)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Upper</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Upper</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Upper)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>List</TT> list is an invalid
+boolean expression</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left>an FD boolean constraint (section&#XA0;<A HREF="#Boolean-FD-expressions">9.7.1</A>)</TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog061.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog055.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog063.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>FD variable information</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog059.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog055.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog061.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc327">9.5</A>&#XA0;&#XA0;FD variable information</H3><UL>
+<LI><A HREF="gprolog060.html#toc269"><TT>fd_min/2</TT>,
+<TT>fd_max/2</TT>,
+<TT>fd_size/2</TT>,
+<TT>fd_dom/2</TT></A>
+</LI><LI><A HREF="gprolog060.html#toc270"><TT>fd_has_extra_cstr/1</TT>,
+<TT>fd_has_vector/1</TT>,
+<TT>fd_use_vector/1</TT></A>
+</LI></UL>
+<P>
+These predicate allow the user to get some information about FD variables.
+They are not constraints, they only return the current state of a variable.</P><H4 CLASS="subsubsection"><A NAME="toc269"></A><A NAME="htoc328">9.5.1</A>&#XA0;&#XA0;<TT>fd_min/2</TT>,
+<TT>fd_max/2</TT>,
+<TT>fd_size/2</TT>,
+<TT>fd_dom/2</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+fd_min(+fd_variable, ?integer)<BR>
+fd_max(+fd_variable, ?integer)<BR>
+fd_size(+fd_variable, ?integer)<BR>
+fd_dom(+fd_variable, ?integer_list)</TT></DD></DL><P><B>Description</B></P><P><TT>fd_min(X, N)</TT> succeeds if <TT>N</TT> is the minimal value of the
+current domain of <TT>X</TT>.</P><P><TT>fd_max(X, N)</TT> succeeds if <TT>N</TT> is the maximal value of the
+current domain of <TT>X</TT>.</P><P><TT>fd_size(X, N)</TT> succeeds if <TT>N</TT> is the number of elements of
+the current domain of <TT>X</TT>.</P><P><TT>fd_dom(X, Values)</TT> succeeds if <TT>Values</TT> is the list of
+values of the current domain of <TT>X</TT>.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>X</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>X</TT> is neither an FD variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(fd_variable, X)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>N</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, N)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Vars</TT> list is neither a
+variable nor an FD variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(fd_variable, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Values</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Values)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc270"></A><A NAME="htoc329">9.5.2</A>&#XA0;&#XA0;<TT>fd_has_extra_cstr/1</TT>,
+<TT>fd_has_vector/1</TT>,
+<TT>fd_use_vector/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+fd_has_extra_cstr(+fd_variable)<BR>
+fd_has_vector(+fd_variable)<BR>
+fd_use_vector(+fd_variable)</TT></DD></DL><P><B>Description</B></P><P><TT>fd_has_extra_cstr(X)</TT> succeeds if the <TT>extra_cstr</TT>
+of <TT>X</TT> is currently on (section&#XA0;<A HREF="gprolog056.html#Intro-FD">9.1</A>).</P><P><TT>fd_has_vector(X)</TT> succeeds if the current domain of <TT>X</TT>
+uses a sparse representation (section&#XA0;<A HREF="gprolog056.html#Intro-FD">9.1</A>).</P><P><TT>fd_use_vector(X)</TT> enforces a sparse representation for the domain
+of <TT>X</TT> (section&#XA0;<A HREF="gprolog056.html#Intro-FD">9.1</A>).</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>X</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>X</TT> is neither an FD variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(fd_variable, X)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog059.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog055.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog061.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

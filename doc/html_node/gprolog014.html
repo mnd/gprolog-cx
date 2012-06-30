@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Debugging messages</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog013.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog010.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog015.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc28">5.4</A>&#XA0;&#XA0;Debugging messages</H3><P>
+We here described which information is displayed by the debugger when it
+shows a goal. The basic format is as follows:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT><I>S N M Port</I>:&#XA0;<I>Goal</I> ?</TT></DD></DL><P><I><TT>S</TT></I> is a spy-point indicator: if there is a spy-point on the
+current goal the <TT>+</TT> symbol is displayed else a space is displayed.
+<I><TT>N</TT></I> is the invocation number. This unique number can be used
+to correlate the trace messages for the various ports, since it is unique
+for every invocation. <I><TT>M</TT></I> is an index number which
+represents the number of direct ancestors of the goal (i.e. the current
+depth of the goal). <I><TT>Port</TT></I> specifies the particular port
+(<TT>call</TT>, <TT>exit</TT>, <TT>fail</TT>, <TT>redo</TT>,
+<TT>exception</TT>). <I><TT>Goal</TT></I> is the current goal (it is then
+possible to inspect its current instantiation) which is displayed using
+<TT>write_term/3</TT> with <TT>quoted(true)</TT> and
+<TT>max_depth(<I>D</I>)</TT> options (section&#XA0;<A HREF="gprolog038.html#write-term/3">8.14.6</A>). Initially
+<I><TT>D</TT></I> (the print depth) is set to 10 but can be redefined
+using the <TT>&lt;</TT> debugger command (section&#XA0;<A HREF="gprolog015.html#Debugger-commands">5.5</A>). The
+<TT>?</TT> symbol is displayed when the debugger is waiting a command from
+the user. (i.e. <TT>Port</TT> is a leashed port). If the port is unleashed,
+this symbol is not displayed and the debugger continues the execution
+displaying the next goal.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog013.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog010.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog015.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

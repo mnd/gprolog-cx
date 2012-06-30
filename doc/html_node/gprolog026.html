@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Term unification</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog025.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog027.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc72">8.2</A>&#XA0;&#XA0;Term unification</H3><UL>
+<LI><A HREF="gprolog026.html#toc48"><TT>(=)/2</TT> - Prolog unification</A>
+</LI><LI><A HREF="gprolog026.html#toc49"><TT>unify_with_occurs_check/2</TT></A>
+</LI><LI><A HREF="gprolog026.html#toc50"><TT>(</TT><TT>\</TT><TT>=)/2</TT> - not Prolog unifiable</A>
+</LI></UL>
+<H4 CLASS="subsubsection"><A NAME="toc48"></A><A NAME="htoc73">8.2.1</A>&#XA0;&#XA0;<TT>(=)/2</TT> - Prolog unification</H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+=(?term, ?term)</TT></DD></DL><P><B>Description</B></P><P><TT>Term1 = Term2</TT> unifies <TT>Term1</TT> and <TT>Term2</TT>. No occurs
+check is done, i.e. this predicate does not check if a variable is unified
+with a compound term containing this variable (this can lead to an infinite
+loop).</P><P><TT>=</TT> is a predefined infix operator (section&#XA0;<A HREF="gprolog038.html#op/3:(Term-input/output)">8.14.10</A>).</P><P><B>Errors</B></P><P>None.</P><P><B>Portability</B></P><P>ISO predicate.</P><H4 CLASS="subsubsection"><A NAME="toc49"></A><A NAME="htoc74">8.2.2</A>&#XA0;&#XA0;<TT>unify_with_occurs_check/2</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+unify_with_occurs_check(?term, ?term)
+</TT></DD></DL><P><B>Description</B></P><P><TT>unify_with_occurs_check(Term1, Term2)</TT> unifies <TT>Term1</TT> and
+<TT>Term2</TT>. The occurs check test is done (i.e. the unification fails if
+a variable is unified with a compound term containing this variable).</P><P><B>Errors</B></P><P>None.</P><P><B>Portability</B></P><P>ISO predicate.</P><H4 CLASS="subsubsection"><A NAME="toc50"></A><A NAME="htoc75">8.2.3</A>&#XA0;&#XA0;<TT>(\=)/2</TT> - not Prolog unifiable</H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+\=(?term, ?term)
+</TT></DD></DL><P><B>Description</B></P><P><TT>Term1 \= Term2</TT> succeeds if <TT>Term1</TT> and <TT>Term2</TT>
+are not unifiable (no occurs check is done).</P><P><TT>\=</TT> is a predefined infix operator (section&#XA0;<A HREF="gprolog038.html#op/3:(Term-input/output)">8.14.10</A>).</P><P><B>Errors</B></P><P>None.</P><P><B>Portability</B></P><P>ISO predicate.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog025.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog027.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

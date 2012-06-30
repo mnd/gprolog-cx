@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Arithmetic constraints</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog060.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog055.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog062.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc330">9.6</A>&#XA0;&#XA0;Arithmetic constraints</H3><UL>
+<LI><A HREF="gprolog061.html#toc271">FD arithmetic expressions</A>
+</LI><LI><A HREF="gprolog061.html#toc272">Partial AC: <TT>(#=)/2</TT> - constraint equal,
+<TT>(#</TT><TT>\</TT><TT>=)/2</TT> - constraint not equal,<BR>
+ <TT>(#</TT><TT>&lt;</TT><TT>)/2</TT> - constraint less than,
+<TT>(#=</TT><TT>&lt;</TT><TT>)/2</TT> - constraint less than or equal,<BR>
+ <TT>(#</TT><TT>&gt;</TT><TT>)/2</TT> - constraint greater than,
+<TT>(#</TT><TT>&gt;</TT><TT>=)/2</TT> - constraint greater than or equal</A>
+</LI><LI><A HREF="gprolog061.html#toc273">Full AC: <TT>(#=#)/2</TT> - constraint equal,
+<TT>(#</TT><TT>\</TT><TT>=#)/2</TT> - constraint not equal,<BR>
+ <TT>(#</TT><TT>&lt;</TT><TT>#)/2</TT> - constraint less than,
+<TT>(#=</TT><TT>&lt;</TT><TT>#)/2</TT> - constraint less than or equal,<BR>
+ <TT>(#</TT><TT>&gt;</TT><TT>#)/2</TT> - constraint greater than,
+<TT>(#</TT><TT>&gt;</TT><TT>=#)/2</TT> - constraint greater than or equal</A>
+</LI><LI><A HREF="gprolog061.html#toc274"><TT>fd_prime/1</TT>,
+<TT>fd_not_prime/1</TT></A>
+</LI></UL>
+<H4 CLASS="subsubsection"><A NAME="toc271"></A><A NAME="htoc331">9.6.1</A>&#XA0;&#XA0;FD arithmetic expressions</H4><P>
+<A NAME="FD-arithmetic-expressions"></A>
+An FD arithmetic expression is a Prolog term built from integers, variables
+(Prolog or FD variables), and functors (or operators) that represent
+arithmetic functions. The following table details the components of an FD
+arithmetic expression:</P><TABLE BORDER=1 CELLSPACING=0 CELLPADDING=1><TR><TD VALIGN=top ALIGN=left NOWRAP>
+FD Expression</TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">Result</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+Prolog variable</TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">domain <TT>0..fd_max_integer</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+FD variable <TT>X</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">domain of <TT>X</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+integer number <TT>N</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">domain <TT>N..N</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>+ E</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">same as <TT>E</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>- E</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">opposite of <TT>E</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>E1 + E2</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">sum of <TT>E1</TT> and <TT>E2</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>E1 - E2</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">subtraction of <TT>E2</TT> from <TT>E1</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>E1 * E2</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">multiplication of <TT>E1</TT> by <TT>E2</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>E1 / E2</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">integer division of <TT>E1</TT> by <TT>E2</TT> (only
+succeeds if the remainder is 0)</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>E1 ** E2</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><TT>E1</TT> raised to the power of <TT>E2
+</TT>(<TT>E1</TT> or <TT>E2</TT> must be an integer)</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>min(E1,E2)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">minimum of <TT>E1</TT> and <TT>E2</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>max(E1,E2)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">maximum of <TT>E1</TT> and <TT>E2</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>dist(E1,E2)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">distance, i.e. |<TT>E1 - E2|</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>E1 // E2</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">quotient of the integer division of <TT>E1</TT> by
+<TT>E2</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>E1 rem E2</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">remainder of the integer division of <TT>E1</TT> by
+<TT>E2</TT></DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left NOWRAP>
+<TT>quot_rem(E1,E2,R)</TT></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">quotient of the integer division of
+<TT>E1</TT> by <TT>E2</TT>
+<BR>
+(<TT>R</TT> is the remainder of the integer division of <TT>E1</TT> by
+<TT>E2</TT>)</DIV></TD></TR>
+</TABLE><P>FD expressions are not restricted to be linear. However non-linear
+constraints usually yield less constraint propagation than linear
+constraints.</P><P><TT>+</TT>, <TT>-</TT>, <TT>*</TT>, <TT>/</TT>, <TT>//</TT>, <TT>rem</TT>
+and <TT>**</TT> are predefined infix operators. <TT>+</TT> and <TT>-</TT>
+are predefined prefix operators (section&#XA0;<A HREF="gprolog038.html#op/3:(Term-input/output)">8.14.10</A>).</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+a sub-expression is of the form <TT>_ ** E</TT> and <TT>E</TT> is
+a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+a sub-expression <TT>E</TT> is neither a variable nor an integer
+nor an FD arithmetic functor</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(fd_evaluable, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an expression is too complex</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>resource_error(too_big_fd_constraint)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><H4 CLASS="subsubsection"><A NAME="toc272"></A><A NAME="htoc332">9.6.2</A>&#XA0;&#XA0;Partial AC: <TT>(#=)/2</TT> - constraint equal,
+<TT>(#\=)/2</TT> - constraint not equal,<BR>
+ <TT>(#&lt;)/2</TT> - constraint less than,
+<TT>(#=&lt;)/2</TT> - constraint less than or equal,<BR>
+ <TT>(#&gt;)/2</TT> - constraint greater than,
+<TT>(#&gt;=)/2</TT> - constraint greater than or equal</H4><P>
+<A NAME="Partial-AC:-(:=)/2"></A>
+
+
+
+
+
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+#=(?fd_evaluable, ?fd_evaluable)<BR>
+#\=(?fd_evaluable, ?fd_evaluable)<BR>
+#&lt;(?fd_evaluable, ?fd_evaluable)<BR>
+#=&lt;(?fd_evaluable, ?fd_evaluable)<BR>
+#&gt;(?fd_evaluable, ?fd_evaluable)<BR>
+#&gt;=(?fd_evaluable, ?fd_evaluable)</TT></DD></DL><P><B>Description</B></P><P><TT>FdExpr1 #= FdExpr2</TT> constrains <TT>FdExpr1</TT> to be
+equal to <TT>FdExpr2</TT>.</P><P><TT>FdExpr1 #\= FdExpr2</TT> constrains <TT>FdExpr1</TT>
+to be different from <TT>FdExpr2</TT>.</P><P><TT>FdExpr1 #&lt; FdExpr2</TT> constrains <TT>FdExpr1</TT> to
+be less than <TT>FdExpr2</TT>.</P><P><TT>FdExpr1 #=&lt; FdExpr2</TT> constrains <TT>FdExpr1</TT>
+to be less than or equal to <TT>FdExpr2</TT>.</P><P><TT>FdExpr1 #&gt; FdExpr2</TT> constrains <TT>FdExpr1</TT> to
+be greater than <TT>FdExpr2</TT>.</P><P><TT>FdExpr1 #&gt;= FdExpr2</TT> constrains <TT>FdExpr1</TT>
+to be greater than or equal to <TT>FdExpr2</TT>.</P><P><TT>FdExpr1</TT> and <TT>FdExpr2</TT> are arithmetic FD expressions
+(section&#XA0;<A HREF="#FD-arithmetic-expressions">9.6.1</A>).</P><P><TT>#=</TT>, <TT>#\=</TT>, <TT>#&lt;</TT>, <TT>#=&lt;</TT>,
+<TT>#&gt;</TT> and <TT>#&gt;=</TT> are predefined infix operators
+(section&#XA0;<A HREF="gprolog038.html#op/3:(Term-input/output)">8.14.10</A>).</P><P>These predicates post arithmetic constraints that are managed by the solver
+using a partial arc-consistency algorithm to reduce the domain of involved
+variables. In this scheme only the bounds of the domain of variables are
+updated. This leads to less propagation than full arc-consistency techniques
+(section&#XA0;<A HREF="#Full-AC:-(:=:)/2">9.6.3</A>) but is generally more efficient for
+arithmetic. These arithmetic constraints can be reified (section&#XA0;<A HREF="gprolog062.html#Boolean-and-reified-constraints">9.7</A>).</P><P><B>Errors</B></P><P>Refer to the syntax of arithmetic FD expressions for possible errors
+(section&#XA0;<A HREF="#FD-arithmetic-expressions">9.6.1</A>).</P><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc273"></A><A NAME="htoc333">9.6.3</A>&#XA0;&#XA0;Full AC: <TT>(#=#)/2</TT> - constraint equal,
+<TT>(#\=#)/2</TT> - constraint not equal,<BR>
+ <TT>(#&lt;#)/2</TT> - constraint less than,
+<TT>(#=&lt;#)/2</TT> - constraint less than or equal,<BR>
+ <TT>(#&gt;#)/2</TT> - constraint greater than,
+<TT>(#&gt;=#)/2</TT> - constraint greater than or equal</H4><P>
+<A NAME="Full-AC:-(:=:)/2"></A>
+
+
+
+
+
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+#=#(?fd_evaluable, ?fd_evaluable)<BR>
+#\=#(?fd_evaluable, ?fd_evaluable)<BR>
+#&lt;#(?fd_evaluable, ?fd_evaluable)<BR>
+#=&lt;#(?fd_evaluable, ?fd_evaluable)<BR>
+#&gt;#(?fd_evaluable, ?fd_evaluable)<BR>
+#&gt;=#(?fd_evaluable, ?fd_evaluable)</TT></DD></DL><P><B>Description</B></P><P><TT>FdExpr1 #=# FdExpr2</TT> constrains <TT>FdExpr1</TT> to
+be equal to <TT>FdExpr2</TT>.</P><P><TT>FdExpr1 #\=# FdExpr2</TT> constrains <TT>FdExpr1</TT> to be
+different from <TT>FdExpr2</TT>.</P><P><TT>FdExpr1 #&lt;# FdExpr2</TT> constrains <TT>FdExpr1</TT>
+to be less than <TT>FdExpr2</TT>.</P><P><TT>FdExpr1 #=&lt;# FdExpr2</TT> constrains <TT>FdExpr1</TT> to be
+less than or equal to <TT>FdExpr2</TT>.</P><P><TT>FdExpr1 #&gt;# FdExpr2</TT> constrains <TT>FdExpr1</TT>
+to be greater than <TT>FdExpr2</TT>.</P><P><TT>FdExpr1 #&gt;=# FdExpr2</TT> constrains <TT>FdExpr1</TT> to be
+greater than or equal to <TT>FdExpr2</TT>.</P><P><TT>FdExpr1</TT> and <TT>FdExpr2</TT> are arithmetic FD expressions
+(section&#XA0;<A HREF="#FD-arithmetic-expressions">9.6.1</A>).</P><P><TT>#=#</TT>, <TT>#\=#</TT>, <TT>#&lt;#</TT>,
+<TT>#=&lt;#</TT>, <TT>#&gt;#</TT> and <TT>#&gt;=#</TT> are
+predefined infix operators (section&#XA0;<A HREF="gprolog038.html#op/3:(Term-input/output)">8.14.10</A>).</P><P>These predicates post arithmetic constraints that are managed by the solver
+using a full arc-consistency algorithm to reduce the domain of involved
+variables. In this scheme the full domain of variables is updated. This
+leads to more propagation than partial arc-consistency techniques (section&#XA0;<A HREF="#FD-arithmetic-expressions">9.6.1</A>) but is generally less efficient for arithmetic.
+These arithmetic constraints can be reified (section&#XA0;<A HREF="gprolog062.html#Boolean-FD-expressions">9.7.1</A>).</P><P><B>Errors</B></P><P>Refer to the syntax of arithmetic FD expressions for possible errors
+(section&#XA0;<A HREF="#FD-arithmetic-expressions">9.6.1</A>).</P><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc274"></A><A NAME="htoc334">9.6.4</A>&#XA0;&#XA0;<TT>fd_prime/1</TT>,
+<TT>fd_not_prime/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+fd_prime(?fd_variable)<BR>
+fd_not_prime(?fd_variable)</TT></DD></DL><P><B>Description</B></P><P><TT>fd_prime(X)</TT> constraints <TT>X</TT> to be a prime number between
+<TT>0..vector_max</TT>.
+This constraint enforces a sparse representation
+for the domain of <TT>X</TT> (section&#XA0;<A HREF="gprolog056.html#Intro-FD">9.1</A>).</P><P><TT>fd_not_prime(X)</TT> constraints <TT>X</TT> to be a non prime number
+between <TT>0..vector_max</TT>. This constraint enforces a sparse
+representation for the domain of <TT>X</TT> (section&#XA0;<A HREF="gprolog056.html#Intro-FD">9.1</A>).</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>X</TT> is neither an FD variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(fd_variable, X)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog060.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog055.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog062.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

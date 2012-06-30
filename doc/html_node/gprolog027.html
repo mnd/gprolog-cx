@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Term comparison</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog026.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog028.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc76">8.3</A>&#XA0;&#XA0;Term comparison</H3><UL>
+<LI><A HREF="gprolog027.html#toc51">Standard total ordering of terms</A>
+</LI><LI><A HREF="gprolog027.html#toc52"><TT>(==)/2</TT> - term identical,
+<TT>(</TT><TT>\</TT><TT>==)/2</TT> - term not identical,<BR>
+ <TT>(@</TT><TT>&lt;</TT><TT>)/2</TT> - term less than,
+<TT>(@=</TT><TT>&lt;</TT><TT>)/2</TT> - term less than or equal to,<BR>
+ <TT>(@</TT><TT>&gt;</TT><TT>)/2</TT> - term greater than,
+<TT>(@</TT><TT>&gt;</TT><TT>=)/2</TT> - term greater than or equal to</A>
+</LI><LI><A HREF="gprolog027.html#toc53"><TT>compare/3</TT></A>
+</LI></UL>
+<H4 CLASS="subsubsection"><A NAME="toc51"></A><A NAME="htoc77">8.3.1</A>&#XA0;&#XA0;Standard total ordering of terms</H4><P>
+<A NAME="Standard-total-ordering-of-terms"></A>
+The built-in predicates described in this section allows the user to compare
+Prolog terms. Prolog terms are totally ordered according to the standard
+total ordering of terms which is as follows (from the smallest term to the
+greatest):</P><UL CLASS="itemize"><LI CLASS="li-itemize">variables, oldest first.</LI><LI CLASS="li-itemize">finite domain variables (section&#XA0;<A HREF="gprolog056.html#Finite-Domain-variables">9.1.1</A>), oldest
+first.</LI><LI CLASS="li-itemize">floating point numbers, in numeric order.</LI><LI CLASS="li-itemize">integers, in numeric order.</LI><LI CLASS="li-itemize">atoms, in alphabetical (i.e. character code) order.</LI><LI CLASS="li-itemize">compound terms, ordered first by arity, then by the name of the
+principal functor and by the arguments in left-to-right order.</LI></UL><P>A list is treated as a compound term (whose principal functor is
+<TT>&#X2019;.&#X2019;/2</TT>).</P><P>The portability of the order of variables is not guaranteed (in the ISO
+reference the order of variables is system dependent).</P><H4 CLASS="subsubsection"><A NAME="toc52"></A><A NAME="htoc78">8.3.2</A>&#XA0;&#XA0;<TT>(==)/2</TT> - term identical,
+<TT>(\==)/2</TT> - term not identical,<BR>
+ <TT>(@&lt;)/2</TT> - term less than,
+<TT>(@=&lt;)/2</TT> - term less than or equal to,<BR>
+ <TT>(@&gt;)/2</TT> - term greater than,
+<TT>(@&gt;=)/2</TT> - term greater than or equal to</H4><P>
+<A NAME="(==)/2"></A>
+
+
+
+
+
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+==(?term, ?term)<BR>
+\==(?term, ?term)<BR>
+@&lt;(?term, ?term)<BR>
+@=&lt;(?term, ?term)<BR>
+@&gt;(?term, ?term)<BR>
+@&gt;=(?term, ?term)</TT></DD></DL><P><B>Description</B></P><P>These predicates compare two terms according to the standard total ordering
+of terms (section&#XA0;<A HREF="#Standard-total-ordering-of-terms">8.3.1</A>).</P><P><TT>Term1 == Term2</TT> succeeds if <TT>Term1</TT> and <TT>Term2</TT> are
+equal.</P><P><TT>Term1 \== Term2</TT> succeeds if <TT>Term1</TT> and
+<TT>Term2</TT> are different.</P><P><TT>Term1 @&lt; Term2</TT> succeeds if <TT>Term1</TT> is less than
+<TT>Term2</TT>.</P><P><TT>Term1 @=&lt; Term2</TT> succeeds if <TT>Term1</TT> is less than or
+equal to <TT>Term2</TT>.</P><P><TT>Term1 @&gt; Term2</TT> succeeds if <TT>Term1</TT> is greater than
+<TT>Term2</TT>.</P><P><TT>Term1 @&gt;= Term2</TT> succeeds if <TT>Term1</TT> is greater than
+or equal to <TT>Term2</TT>.</P><P><TT>==</TT>, <TT>\==</TT>, <TT>@&lt;</TT>, <TT>@=&lt;</TT>,
+<TT>@&gt;</TT> and <TT>@&gt;=</TT> are predefined infix operators (section&#XA0;<A HREF="gprolog038.html#op/3:(Term-input/output)">8.14.10</A>).</P><P><B>Errors</B></P><P>None.</P><P><B>Portability</B></P><P>ISO predicates.</P><H4 CLASS="subsubsection"><A NAME="toc53"></A><A NAME="htoc79">8.3.3</A>&#XA0;&#XA0;<TT>compare/3</TT></H4><P>
+<A NAME="compare/3"></A>
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+compare(?atom, +term, +term)</TT></DD></DL><P><B>Description</B></P><P><TT>compare(Order, Term1, Term2)</TT> compares <TT>Term1</TT> and
+<TT>Term2</TT> according to the standard (section&#XA0;<A HREF="#Standard-total-ordering-of-terms">8.3.1</A>) and unifies <TT>Order</TT> with:</P><UL CLASS="itemize"><LI CLASS="li-itemize">the atom <TT>&lt;</TT> if <TT>Term1</TT> is less than <TT>Term2</TT>.</LI><LI CLASS="li-itemize">the atom <TT>=</TT> if <TT>Term1</TT> and <TT>Term2</TT> are equal.</LI><LI CLASS="li-itemize">the atom <TT>&gt;</TT> if <TT>Term1</TT> is greater than
+<TT>Term2</TT>.</LI></UL><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Order</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Order)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Order</TT> is an atom but not <TT>&lt;</TT>, <TT>=</TT> or <TT>&gt;</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(order, Order)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>ISO predicate.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog026.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog028.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

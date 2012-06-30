@@ -1,0 +1,337 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Prolog state</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog045.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog047.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc230">8.22</A>&#XA0;&#XA0;Prolog state</H3><UL>
+<LI><A HREF="gprolog046.html#toc186"><TT>set_prolog_flag/2</TT></A>
+</LI><LI><A HREF="gprolog046.html#toc187"><TT>current_prolog_flag/2</TT></A>
+</LI><LI><A HREF="gprolog046.html#toc188"><TT>set_bip_name/2</TT></A>
+</LI><LI><A HREF="gprolog046.html#toc189"><TT>current_bip_name/2</TT></A>
+</LI><LI><A HREF="gprolog046.html#toc190"><TT>write_pl_state_file/1</TT>,
+<TT>read_pl_state_file/1</TT></A>
+</LI></UL>
+<H4 CLASS="subsubsection"><A NAME="toc186"></A><A NAME="htoc231">8.22.1</A>&#XA0;&#XA0;<TT>set_prolog_flag/2</TT></H4><P>
+<A NAME="set-prolog-flag/2"></A>
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+set_prolog_flag(+flag, +term)</TT></DD></DL><P><B>Description</B></P><P><TT>set_prolog_flag(Flag, Value)</TT> sets the value
+of the Prolog flag <TT>Flag</TT> to <TT>Value</TT>.</P><P>
+<B>Prolog flags</B>: a Prolog flag is an atom
+which is associated with a value that is either implementation defined
+or defined by the user. Each flag has a permitted range of values; any
+other value is a <TT>domain_error</TT>. The following two tables
+present available flags, the possible values, a description and if
+they are ISO or an extension. The first table presents unchangeable
+flags while the second one the changeable flags. For flags whose
+default values is machine independent, this value is
+<U>underlined</U>.</P><P><B>Unchangeable flags</B>:</P><TABLE BORDER=1 CELLSPACING=0 CELLPADDING=1><TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+Flag</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">Values</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">Description</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">ISO</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+<TT>bounded</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center"><U><TT>true</TT></U> / <TT>false</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">are integers
+bounded ?</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">Y</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+<TT>max_integer</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">an integer</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">greatest integer</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">Y</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+<TT>min_integer</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">an integer</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">smallest integer</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">Y</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+<TT>integer_rounding_function</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center"><TT>toward_zero</TT>
+<BR>
+<TT>down</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"> <TT><I>rnd</I>(X)</TT> = integer part of <TT>X</TT>
+<BR>
+<TT><I>rnd</I>(X)</TT> = &#X230A;<TT>X&#X230B;</TT>
+(section&#XA0;<A HREF="gprolog030.html#Evaluation-of-an-arithmetic-expression">8.6.1</A>)</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">Y</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+<TT>max_arity</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">an integer</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">maximum arity for compound terms (255)</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">Y</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+<TT>max_atom</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">an integer</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">maximum number of atoms</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">N</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+<TT>max_unget</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">an integer</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">maximum number of successive ungets</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">N</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+<TT>prolog_name</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">an atom</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">name of the Prolog system</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">N</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+<TT>prolog_version</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">an atom</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">version number of the Prolog system</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">N</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+<TT>prolog_date</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">an atom</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">date of the Prolog system</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">N</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+<TT>prolog_copyright</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">an atom</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">copyright message of the Prolog
+system</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">N</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+<TT>dialect</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">an atom</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">fixed to <TT>gprolog</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">N</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+<TT>home</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">an atom</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">GNU Prolog home directory</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">N</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+<TT>host_os</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">an atom</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">Operating System identifier</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">N</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+<TT>host_vendor</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">an atom</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">Operating System vendor</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">N</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+<TT>host_cpu</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">an atom</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">processor identifier</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">N</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+<TT>host</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">an atom</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">a combination of the OS-vendor-cpu</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">N</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+<TT>arch</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">an atom</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">a combination of the OS-cpu</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">N</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+<TT>version</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">an integer</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><I>Major</I> * 10000 + <I>Minor</I> * 100 + <I>Patch</I></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">N</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+<TT>version_data</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">a structure</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><TT>gprolog(Major,Minor,Patch,Extra)</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">N</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+<TT>unix</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center"><TT>true</TT> / <TT>false</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"><TT>true</TT> if the underlying OS is unix-like</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">N</DIV></TD></TR>
+</TABLE><P><B>Changeable flags</B>:</P><TABLE BORDER=1 CELLSPACING=0 CELLPADDING=1><TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+Flag</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">Values</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">Description</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">ISO</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+<TT>char_conversion</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center"><TT>on</TT> / <U><TT>off</TT></U></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">is
+character conversion activated ?</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">Y</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+<TT>debug</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center"><TT>on</TT> / <U><TT>off</TT></U></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">is the debugger
+activated ?</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">Y</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+<TT>singleton_warning</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center"><U><TT>on</TT></U> / <TT>off</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">warn
+about named singleton variables ?</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">N</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+<TT>suspicious_warning</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center"><U><TT>on</TT></U> / <TT>off</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">warn
+about suspicious predicate ?</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">N</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+<TT>multifile_warning</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center"><U><TT>on</TT></U> / <TT>off</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">warn
+about unsupported multifile directive ?</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">N</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+<TT>strict_iso</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center"><U><TT>on</TT></U> / <TT>off</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">strict ISO
+behavior ?</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center">N</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+&#XA0;
+<BR>
+<TT>double_quotes</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center"> &#XA0;
+<BR>
+<TT>atom</TT>
+<BR>
+<TT>chars</TT>
+<BR>
+<U><TT>codes</TT></U>
+<BR>
+<TT>atom_no_escape</TT>
+<BR>
+<TT>chars_no_escape</TT>
+<BR>
+<TT>codes_no_escape</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"> a double quoted constant is returned as:
+<BR>
+an atom
+<BR>
+a list of characters
+<BR>
+a list of character codes
+<BR>
+as <TT>atom</TT> but ignore escape sequences
+<BR>
+as <TT>chars</TT> but ignore escape sequences
+<BR>
+as <TT>code</TT> but ignore escape sequences</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center"> &#XA0;
+<BR>
+Y
+<BR>
+&#XA0;
+<BR>
+&#XA0;
+<BR>
+N</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+&#XA0;
+<BR>
+<TT>back_quotes</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center"> &#XA0;
+<BR>
+<TT>atom</TT>
+<BR>
+<TT>chars</TT>
+<BR>
+<TT>codes</TT>
+<BR>
+<U><TT>atom_no_escape</TT></U>
+<BR>
+<TT>chars_no_escape</TT>
+<BR>
+<TT>codes_no_escape</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"> a back quoted constant is returned as:
+<BR>
+an atom
+<BR>
+a list of characters
+<BR>
+a list of character codes
+<BR>
+as <TT>atom</TT> but ignore escape sequences
+<BR>
+as <TT>chars</TT> but ignore escape sequences
+<BR>
+as <TT>code</TT> but ignore escape sequences</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center"> &#XA0;
+<BR>
+N</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+&#XA0;
+<BR>
+<TT>unknown</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center"> &#XA0;
+<BR>
+<U><TT>error</TT></U>
+<BR>
+<TT>warning</TT>
+<BR>
+<TT>fail</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"> a predicate calls an unknown procedure:
+<BR>
+an <TT>existence_error</TT> is raised
+<BR>
+a message is displayed then fails
+<BR>
+quietly fails</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center"> &#XA0;
+<BR>
+Y</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+&#XA0;
+<BR>
+<TT>syntax_error</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center"> &#XA0;
+<BR>
+<U><TT>error</TT></U>
+<BR>
+<TT>warning</TT>
+<BR>
+<TT>fail</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"> a predicate causes a syntax error:
+<BR>
+a <TT>syntax_error</TT> is raised
+<BR>
+a message is displayed then fails
+<BR>
+quietly fails</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center"> &#XA0;
+<BR>
+N</DIV></TD></TR>
+<TR><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft">
+&#XA0;
+<BR>
+<TT>os_error</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center"> &#XA0;
+<BR>
+<U><TT>error</TT></U>
+<BR>
+<TT>warning</TT>
+<BR>
+<TT>fail</TT></DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="flushleft"> a predicate causes an O.S. error:
+<BR>
+a <TT>system_error</TT> is raised
+<BR>
+a message is displayed then fails
+<BR>
+quietly fails</DIV></TD><TD VALIGN=top ALIGN=left><DIV CLASS="center"> &#XA0;
+<BR>
+N</DIV></TD></TR>
+</TABLE><P>The <TT>strict_iso</TT> flag is introduced to allow a compatibility with
+other Prolog systems. When turned off the following relaxations apply:</P><UL CLASS="itemize"><LI CLASS="li-itemize">built-in predicates are found by <TT>current_predicate/1</TT>
+(section&#XA0;<A HREF="gprolog032.html#current-predicate/1">8.8.1</A>).</LI><LI CLASS="li-itemize">the term parser (<TT>read/1</TT> and friends) is more indulgent, e.g. <TT>0&#X2019;&#X2019;</TT> is
+accepted and returns 39, the escape sequence <TT>\s</TT> (space) and
+<TT>\e</TT> (escape) are accepted.</LI><LI CLASS="li-itemize">the following arithmetic rounding functions: <TT>ceiling</TT>, <TT>floor</TT>, <TT>round</TT>, <TT>truncate</TT> also accept integers (section&#XA0;<A HREF="gprolog030.html#Evaluation-of-an-arithmetic-expression">8.6.1</A>).</LI></UL><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Flag</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Value</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Flag</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Flag)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Flag</TT> is an atom but not a valid flag</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(prolog_flag, Flag)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Value</TT> is inappropriate for Flag</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(flag_value, Flag+Value)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Value</TT> is appropriate for <TT>Flag</TT> but flag
+<TT>Flag</TT> is not modifiable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(modify, flag, Flag)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>ISO predicate. All ISO flags are implemented.</P><H4 CLASS="subsubsection"><A NAME="toc187"></A><A NAME="htoc232">8.22.2</A>&#XA0;&#XA0;<TT>current_prolog_flag/2</TT></H4><P>
+<A NAME="current-prolog-flag/2"></A>
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+current_prolog_flag(?flag, ?term)</TT></DD></DL><P><B>Description</B></P><P><TT>current_prolog_flag(Flag, Value)</TT>
+succeeds if there exists a Prolog flag that unifies with
+<TT>Flag</TT> and whose value unifies with <TT>Value</TT>. This predicate
+is re-executable on backtracking.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Flag</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Flag)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Flag</TT> is an atom but not a valid flag</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(prolog_flag, Flag)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>ISO predicate.</P><H4 CLASS="subsubsection"><A NAME="toc188"></A><A NAME="htoc233">8.22.3</A>&#XA0;&#XA0;<TT>set_bip_name/2</TT></H4><P>
+<A NAME="set-bip-name/2"></A>
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+set_bip_name(+atom, +arity)</TT></DD></DL><P><B>Description</B></P><P><TT>set_bip_name(Functor, Arity)</TT> initializes the context of the error
+(section&#XA0;<A HREF="gprolog020.html#General-format-and-error-context">6.3.1</A>) with <TT>Functor</TT> and
+<TT>Arity</TT> (if <TT>Arity</TT> &lt; 0 only <TT>Functor</TT> is
+significant).</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Functor</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Arity</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Functor</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Functor)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Arity</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Arity)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc189"></A><A NAME="htoc234">8.22.4</A>&#XA0;&#XA0;<TT>current_bip_name/2</TT></H4><P>
+<A NAME="current-bip-name/2"></A>
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+current_bip_name(?atom, ?arity)</TT></DD></DL><P><B>Description</B></P><P><TT>current_bip_name(Functor, Arity)</TT> succeeds if <TT>Functor</TT> and
+<TT>Arity</TT> correspond to the context of the error (section&#XA0;<A HREF="gprolog020.html#General-format-and-error-context">6.3.1</A>) (if <TT>Arity</TT> &lt; 0 only <TT>Functor</TT> is
+significant).</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Functor</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Functor)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Arity</TT> is neither a variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, Arity)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P><H4 CLASS="subsubsection"><A NAME="toc190"></A><A NAME="htoc235">8.22.5</A>&#XA0;&#XA0;<TT>write_pl_state_file/1</TT>,
+<TT>read_pl_state_file/1</TT></H4><P>
+<A NAME="write-pl-state-file/1"></A>
+
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+write_pl_state_file(+source_sink)<BR>
+read_pl_state_file(+source_sink)</TT></DD></DL><P><B>Description</B></P><P><TT>write_pl_state_file(FileName)</TT> writes onto <TT>FileName</TT> all
+information that influences the parsing of a term (section&#XA0;<A HREF="gprolog038.html#Term-input/output">8.14</A>). This allows a sub-process written in Prolog to read this
+file and then process any Prolog term as done by the parent process. This
+file can also be passed as argument of the <TT>--pl-state</TT> option when
+invoking <TT>gplc</TT> (section&#XA0;<A HREF="gprolog009.html#Using-the-compiler">4.4.3</A>). More precisely the
+following elements are saved:</P><UL CLASS="itemize"><LI CLASS="li-itemize">all operator definitions (section&#XA0;<A HREF="gprolog038.html#op/3:(Term-input/output)">8.14.10</A>).</LI><LI CLASS="li-itemize">the character conversion table (section&#XA0;<A HREF="gprolog038.html#char-conversion/2">8.14.12</A>).</LI><LI CLASS="li-itemize">the value of <TT>char_conversion</TT>, <TT>double_quotes</TT>, <TT>back_quotes</TT>, <TT>singleton_warning</TT>, <TT>suspicious_warning</TT> and <TT>multifile_warning</TT> Prolog flags
+(section&#XA0;<A HREF="#set-prolog-flag/2">8.22.1</A>).</LI></UL><P><TT>read_pl_state_file(FileName)</TT> reads (restores) from
+<TT>FileName</TT> all information previously saved by
+<TT>write_pl_state_file/1.</TT></P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>FileName</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>FileName</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, FileName)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an operating system error occurs and the value of the
+<TT>os_error</TT> Prolog flag is <TT>error</TT>
+(section&#XA0;<A HREF="#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>system_error(<I>atom explaining the error</I>)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicate.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog045.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog047.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

@@ -1,0 +1,443 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>The GNU Prolog interactive interpreter</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog006.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog005.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog008.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc6">4.2</A>&#XA0;&#XA0;The GNU Prolog interactive interpreter</H3><UL>
+<LI><A HREF="gprolog007.html#toc1">Starting/exiting the interactive interpreter</A>
+</LI><LI><A HREF="gprolog007.html#toc2">The interactive interpreter read-execute-write loop</A>
+</LI><LI><A HREF="gprolog007.html#toc3">Consulting a Prolog program</A>
+</LI><LI><A HREF="gprolog007.html#toc4">Scripting Prolog</A>
+</LI><LI><A HREF="gprolog007.html#toc5">Interrupting a query</A>
+</LI><LI><A HREF="gprolog007.html#toc6">The line editor</A>
+</LI></UL>
+<P>
+<A NAME="The-GNU-Prolog-interactive-interpreter"></A></P><H4 CLASS="subsubsection"><A NAME="toc1"></A><A NAME="htoc7">4.2.1</A>&#XA0;&#XA0;Starting/exiting the interactive interpreter</H4><P>
+
+GNU Prolog offers a classical Prolog interactive interpreter also called
+<EM>top-level</EM>. It allows the user to execute queries, to consult Prolog
+programs, to list them, to execute them and to debug them. The
+top-level can be invoked using the following command:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP><TT>% gprolog </TT>[<I><TT>OPTION</TT></I>]&#X2026;</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(the <TT>%</TT> symbol is the operating system shell prompt)</TD></TR>
+</TABLE></DD></DL><P><B>Options</B>:</P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD VALIGN=top ALIGN=left><TT>--init-goal</TT> <I><TT>GOAL</TT></I></TD><TD VALIGN=top ALIGN=left NOWRAP>execute <I><TT>GOAL</TT></I> before entering the top-level</TD></TR>
+<TR><TD VALIGN=top ALIGN=left><TT>--consult-file</TT> <I><TT>FILE</TT></I></TD><TD VALIGN=top ALIGN=left NOWRAP>consult <I><TT>FILE</TT></I> inside the top-level</TD></TR>
+<TR><TD VALIGN=top ALIGN=left><TT>--entry-goal</TT> <I><TT>GOAL</TT></I></TD><TD VALIGN=top ALIGN=left NOWRAP>execute <I><TT>GOAL</TT></I> inside the top-level</TD></TR>
+<TR><TD VALIGN=top ALIGN=left><TT>--query-goal</TT> <I><TT>GOAL</TT></I></TD><TD VALIGN=top ALIGN=left NOWRAP>execute <I><TT>GOAL</TT></I> as a query for the top-level</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--help</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>print a help and exit</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--version</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>print version number and exit</TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>--</TT></TD><TD VALIGN=top ALIGN=left NOWRAP>do not parse the rest of the command-line</TD></TR>
+</TABLE><P>The main role of the <TT>gprolog</TT> command is to execute the top-level
+itself, i.e. to execute the built-in predicate
+<TT>top_level/0</TT> (section&#XA0;<A HREF="gprolog042.html#abort/0">8.18.1</A>) which will produce something like:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+</TT><PRE CLASS="verbatim"><TT>GNU Prolog 1.4.0
+By Daniel Diaz
+Copyright (C) 1999-2012 Daniel Diaz
+| ?-
+</TT></PRE></DD></DL><P>The top-level is ready to execute your queries as explained in the next
+section.</P><P>To quit the top-level type the end-of-file key sequence (<TT>Ctl-D</TT>) or
+its term representation: <TT>end_of_file.</TT> It is also possible to use
+the built-in predicate <TT>halt/0</TT> (section&#XA0;<A HREF="gprolog042.html#abort/0">8.18.1</A>).</P><P>However, before entering the top-level itself, the command-line is processed
+to treat all known options (those listed above). All unrecognized arguments
+are collected together to form the argument list which will be available
+using
+<TT>argument_value/2</TT> (section&#XA0;<A HREF="gprolog051.html#argument-value/2">8.27.2</A>) or
+<TT>argument_list/1</TT> (section&#XA0;<A HREF="gprolog051.html#argument-list/1">8.27.3</A>).
+The <TT>--</TT> option stops the parsing of the command-line, all remainding
+options are collected into the argument list.</P><P>Several options are provided to execute a goal before entering the
+interaction with the user:</P><UL CLASS="itemize"><LI CLASS="li-itemize">The <TT>--init-goal</TT> option executes the <I><TT>GOAL</TT></I> as soon as
+it is encountered (while the command-line is processed). <I><TT>GOAL</TT></I> is thus
+executed before entering <TT>top_level/0</TT>.</LI><LI CLASS="li-itemize">The <TT>--consult-file</TT> option consults the <I><TT>FILE</TT></I> at the
+entry of <TT>top_level/0</TT> just after the banner is displayed. 
+<TT>--consult-file</TT> options are handled before <TT>--consult-file</TT> options.</LI><LI CLASS="li-itemize">The <TT>--entry-goal</TT> option executes the <I><TT>GOAL</TT></I> at the
+entry of <TT>top_level/0</TT> just after the banner is displayed.</LI><LI CLASS="li-itemize">The <TT>--query-goal</TT> option executes the <I><TT>GOAL</TT></I> as if the
+user has typed in (under the top-level).</LI></UL><P>The above order is thus the order in which each kind of goal (init, entry,
+query) is executed. If there are several goals of a same kind they are
+executed in the order of appearance. Thus, all init goals are executed (in the
+order of appearance) before all entry goals and all entry goals are executed
+before all query goals.</P><P>Each <I><TT>GOAL</TT></I> is passed as a shell argument (i.e. one shell string) and
+should not contain a terminal dot. Example:
+<TT>--init-goal &#X2019;write(hello), nl&#X2019;</TT> under a sh-like.
+To be executed, a <I><TT>GOAL</TT></I> is transformed into a term using
+<TT>read_term_from_atom(Goal, Term, [end_of_term(eof)])</TT>. Respecting both
+the syntax of shell strings and of Prolog can be heavy. For
+instance, passing a backslash character <TT>\</TT> can be difficult
+since it introduces an escape sequence both in sh and inside Prolog
+quoted atoms. The use of back quotes can then be useful since, by default, no
+escape sequence is processed inside back quotes (this behavior can be
+controlled using the <TT>back_quotes</TT> Prolog flag (section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)).</P><P>Since the Prolog argument list is created when the whole command-line is
+parsed, if a <TT>--init-goal</TT> option uses <TT>argument_value/2</TT> or
+<TT>argument_list/1</TT> it will obtained the original command-line
+arguments (i.e. including all recognized arguments).</P><P>Here is an example of using execution goal options:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+% gprolog --init-goal &#X2019;write(before), nl&#X2019; --entry-goal &#X2019;write(inside), nl&#X2019;<BR>
+--query-goal &#X2019;append([a,b],[c,d],X)&#X2019;
+</TT></DD></DL><P>will produce the following:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+</TT><PRE CLASS="verbatim"><TT>before
+GNU Prolog 1.4.0
+By Daniel Diaz
+Copyright (C) 1999-2012 Daniel Diaz
+inside
+| ?- append([a,b],[c,d],X).
+
+X = [a,b,c,d]
+
+yes
+| ?-
+</TT></PRE></DD></DL><P>NB: depending on the used shell it may be necessary to use other string
+delimiters (e.g. use <TT>"</TT> under Windows <TT>cmd.exe</TT>).</P><H4 CLASS="subsubsection"><A NAME="toc2"></A><A NAME="htoc8">4.2.2</A>&#XA0;&#XA0;The interactive interpreter read-execute-write loop</H4><P>
+The GNU Prolog top-level is built on a classical read-execute-write loop that
+also allows for re-executions (when the query is not deterministic) as
+follows:</P><UL CLASS="itemize"><LI CLASS="li-itemize">display the prompt, i.e. &#X2019;<TT>| ?-</TT>&#X2019;.</LI><LI CLASS="li-itemize">read a query (i.e. a goal).</LI><LI CLASS="li-itemize">execute the query.</LI><LI CLASS="li-itemize">in case of success display the values of the variables of the query.</LI><LI CLASS="li-itemize">if there are remaining alternatives (i.e. the query is not
+deterministic), display a <TT>?</TT> and ask the user who can use one of the
+following commands: <TT>RETURN</TT> to stop the execution, <TT>;</TT> to
+compute the next solution or <TT>a</TT> to compute all remaining solution.</LI></UL><P>Here is an example of execution of a query (&#X201C;find the lists <TT>X</TT> and
+<TT>Y</TT> such that the concatenation of <TT>X</TT> and <TT>Y</TT> is
+<TT>[a,b]</TT>&#X201D;):</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>| ?- append(X,Y,[a,b,c]).</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>X = []</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>Y = [a,b,c] ? ;</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(here the user presses <TT>;</TT> to compute another
+solution)</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>X = [a]</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>Y = [b,c] ? a</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(here the user presses <TT>a</TT> to compute all remaining
+solutions)</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>X = [a,b]</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>Y = [c]</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(here the user is not asked and the next solution is
+computed)</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>X = [a,b,c]</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>Y = []</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(here the user is not asked and the next solution is
+computed)</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>no</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(no more solution)</TD></TR>
+</TABLE></DD></DL><P>In some cases the top-level can detect that the current solution is the last
+one (no more alternatives remaining). In such a case it does not display the
+<TT>?</TT> symbol (and does not ask the user). Example:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>| ?- (X=1 ; X=2).</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>X = 1 ? ;</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(here the user presses <TT>;</TT> to compute another solution)</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>X = 2</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(here the user is not prompted since there are no more
+alternatives)</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>yes</TT></TD></TR>
+</TABLE></DD></DL><P>The user can stop the execution even if there are more alternatives by
+typing <TT>RETURN</TT>.</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>| ?- (X=1 ; X=2).</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>X = 1 ?</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(here the user presses <TT>RETURN</TT> to stop the execution)</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>yes</TT></TD></TR>
+</TABLE></DD></DL><P>The top-level tries to display the values of the variables of the query in a
+readable manner. For instance, when a variable is bound to a query variable,
+the name of this variable appears. When a variable is a singleton an
+underscore symbol <TT>_</TT> is displayed (<TT>_</TT> is a generic name
+for a singleton variable, it is also called an anonymous variable). Other
+variables are bound to new brand variable names. When a query variable name
+<TT>X</TT> appears as the value of another query variable <TT>Y</TT> it is
+because <TT>X</TT> is itself not instantiated otherwise the value of
+<TT>X</TT> is displayed. In such a case, nothing is output for <TT>X</TT>
+itself (since it is a variable). Example:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>| ?- X=f(A,B,_,A), A=k.</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>A = k</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(the value of <TT>A</TT> is displayed also in <TT>f/3</TT> for
+<TT>X</TT>)</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>X = f(k,B,_,k)</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(since <TT>B</TT> is a variable which is also a part
+of <TT>X</TT>, <TT>B</TT> is not displayed)</TD></TR>
+</TABLE></DD></DL><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>| ?- functor(T,f,3), arg(1,T,X), arg(3,T,X).</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>T = f(X,_,X)</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(the 1<I><SUP>st</SUP></I> and 3<I><SUP>rd</SUP></I> args are equal to <TT>X</TT>,
+the 2<I><SUP>nd</SUP></I> is an anonymous variable)</TD></TR>
+</TABLE></DD></DL><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>| ?- read_from_atom(&#X2019;k(X,Y,X).&#X2019;,T).</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>T = k(A,_,A)</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(the 1<I><SUP>st</SUP></I> and 3<I><SUP>rd</SUP></I> args are unified, a new
+variable name <TT>A</TT> is introduced)</TD></TR>
+</TABLE></DD></DL><P>The top-level uses variable binding predicates (section&#XA0;<A HREF="gprolog029.html#Variable-naming/numbering">8.5</A>). To display the value of a variable, the top-level calls
+<TT>write_term/3</TT> with the following option list:
+<TT>[quoted(true),numbervars(false),
+namevars(true)]</TT> (section&#XA0;<A HREF="gprolog038.html#write-term/3">8.14.6</A>). A term of the
+form <TT>&#X2019;$VARNAME&#X2019;(Name)</TT> where <TT>Name</TT> is an atom is displayed
+as a variable name while a term of the form <TT>&#X2019;$VAR&#X2019;(N)</TT> where
+<TT>N</TT> is an integer is displayed as a normal compound term (such a term
+could be output as a variable name by <TT>write_term/3</TT>). Example:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>| ?- X=&#X2019;$VARNAME&#X2019;(&#X2019;Y&#X2019;), Y=&#X2019;$VAR&#X2019;(1).</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>X = Y</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(the term <TT>&#X2019;$VARNAME&#X2019;(&#X2019;Y&#X2019;)</TT> is displayed as <TT>Y</TT>)</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>Y = &#X2019;$VAR&#X2019;(1)</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(the term <TT>&#X2019;$VAR&#X2019;(1)</TT> is displayed as is)</TD></TR>
+</TABLE></DD></DL><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>| ?- X=Y, Y=&#X2019;$VAR&#X2019;(1).</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>X = &#X2019;$VAR&#X2019;(1)</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>Y = &#X2019;$VAR&#X2019;(1)</TT></TD></TR>
+</TABLE></DD></DL><P>In the first example, <TT>X</TT> is explicitly bound to
+<TT>&#X2019;$VARNAME&#X2019;(&#X2019;Y&#X2019;)</TT> by the query so the top-level displays <TT>Y</TT>
+as the value of <TT>X</TT>. <TT>Y</TT> is unified with <TT>&#X2019;$VAR&#X2019;(1)</TT> so
+the top-level displays it as a normal compound term. It should be clear that
+<TT>X</TT> is not bound to <TT>Y</TT> (whereas it is in the second
+query). This behavior should be kept in mind when doing variable binding
+operations.</P><P>Finally, the top-level computes the user-time (section&#XA0;<A HREF="gprolog048.html#user-time/1">8.24.2</A>) taken
+by a query and displays it when it is significant. Example:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>| ?- retractall(p(_)), assertz(p(0)),</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;repeat,</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;retract(p(X)),</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;Y is X + 1,</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;assertz(p(Y)),</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;X = 1000, !.</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>X = 1000</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>Y = 1001</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>(180 ms) yes</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(the query took 180ms of user time)</TD></TR>
+</TABLE></DD></DL><H4 CLASS="subsubsection"><A NAME="toc3"></A><A NAME="htoc9">4.2.3</A>&#XA0;&#XA0;Consulting a Prolog program</H4><P>
+<A NAME="Consulting-a-Prolog-program"></A>
+The top-level allows the user to consult Prolog source files. Consulted
+predicates can be listed, executed and debugged (while predicates compiled
+to native-code cannot). For more information about the difference between a
+native-code predicate and a consulted predicate refer to the introduction of
+this section (section&#XA0;<A HREF="gprolog006.html#Introduction:(Using-GNU-Prolog)">4.1</A>) and to the part devoted
+to the compiler (section&#XA0;<A HREF="gprolog009.html#Different-kinds-of-codes">4.4.1</A>).</P><P>To consult a program use the built-in predicate <TT>consult/1</TT>
+(section&#XA0;<A HREF="gprolog047.html#consult/1">8.23.1</A>). The argument of this predicate is a Prolog file name or
+<TT>user</TT> to specify the terminal. This allows the user to directly input
+the predicates from the terminal. In that case the input shall be terminated
+by the end-of-file key sequence (<TT>Ctl-D</TT>) or its term representation:
+<TT>end_of_file.</TT> A shorthand for
+<TT>consult(<I>FILE</I>)</TT> is
+<TT>[<I>FILE</I>]</TT>. Example:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>| ?- [user].</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>{compiling user for byte code...}</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>even(0).</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>even(s(s(X))):-</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;even(X).</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP>&nbsp;</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(here the user presses <TT>Ctl-D</TT> to end the input)</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>{user compiled, 3 lines read - 350 bytes written, 1180 ms}</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>| ?- even(X).</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>X = 0 ? ;</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(here the user presses <TT>;</TT> to compute another solution)</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>X = s(s(0)) ? ;</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(here the user presses <TT>;</TT> to compute another
+solution)</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>X = s(s(s(s(0)))) ?</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(here the user presses <TT>RETURN</TT> to stop the
+execution)</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>yes</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>| ?- listing.</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>even(0).</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>even(s(s(A))) :-</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;&#XA0;even(A).</TT></TD></TR>
+</TABLE></DD></DL><P>When <TT>consult/1</TT> (section&#XA0;<A HREF="gprolog047.html#consult/1">8.23.1</A>) is invoked on a Prolog file it
+first runs the GNU Prolog compiler (section&#XA0;<A HREF="gprolog009.html#The-GNU-Prolog-compiler">4.4</A>) as a child
+process to generate a temporary WAM file for byte-code. If the compilation
+fails a message is displayed and nothing is loaded. If the compilation
+succeeds, the produced file is loaded into memory using <TT>load/1</TT>
+(section&#XA0;<A HREF="gprolog047.html#load/1">8.23.2</A>). Namely, the byte-code of each predicate is loaded. When a
+predicate <I><TT>P</TT></I> is loaded if there is a previous definition
+for <I><TT>P</TT></I> it is removed (i.e. all clauses defining
+<I><TT>P</TT></I> are erased). We say that <I><TT>P</TT></I> is
+redefined. Note that only consulted predicates can be redefined. If
+<I><TT>P</TT></I> is a native-code predicate, trying to redefine it will
+produce an error at load-time: the predicate redefinition will be ignored
+and the following message displayed:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>native code procedure <I>P</I> cannot be redefined</TT></DD></DL><P>Finally, an existing predicate will not be removed if it is not re-loaded.
+This means that if a predicate <I><TT>P</TT></I> is loaded when consulting
+the file <I><TT>F</TT></I>, and if later the definition of
+<I><TT>P</TT></I> is removed from the file <I><TT>F</TT></I>, consulting
+<I><TT>F</TT></I> again will not remove the previously loaded definition
+of <I><TT>P</TT></I> from the memory.</P><P>Consulted predicates can be debugged using the Prolog debugger. Use the
+debugger predicate <TT>trace/0</TT> or <TT>debug/0</TT> (section&#XA0;<A HREF="gprolog013.html#Running-and-stopping-the-debugger">5.3.1</A>) to activate the debugger.</P><H4 CLASS="subsubsection"><A NAME="toc4"></A><A NAME="htoc10">4.2.4</A>&#XA0;&#XA0;Scripting Prolog</H4><P>
+<A NAME="Scripting-Prolog"></A>
+Since version 1.4.0 it is possible to use a Prolog source file as a Unix
+script-file (shebang support). A PrologScript file should begin as follows:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+</TT><PRE CLASS="verbatim"><TT>#!/usr/bin/gprolog --consult-file
+</TT></PRE></DD></DL><P>GNU Prolog will be invoked as</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+</TT><PRE CLASS="verbatim"><TT>/usr/bin/gprolog --consult-file FILE
+</TT></PRE></DD></DL><P>Then <TT>FILE</TT> will be consulted. In order to correctly deal with the
+<TT>#!</TT> first line, <TT>consult/1</TT> treats as a comment a first line
+of a file which begins with <TT>#</TT> (if you want to use a predicate name
+starting with a <TT>#</TT>, simply skip a line before its definition).</P><P>Remark: it is almost never possible to pass additionnal parameters
+(e.g. <TT>query-goal</TT>) this way since in most systems 
+the shebang implementation deliver all arguments (following
+<TT>#!/usr/bin/gprolog</TT>) as a single string (which cannot then correctly
+be recognized by <TT>gprolog</TT>).</P><H4 CLASS="subsubsection"><A NAME="toc5"></A><A NAME="htoc11">4.2.5</A>&#XA0;&#XA0;Interrupting a query</H4><P>
+<A NAME="Interrupting-a-query"></A>
+Under the top-level it is possible to interrupt the execution of a query by
+typing the interruption key (<TT>Ctl-C</TT>). This can be used to abort a
+query, to stop an infinite loop, to activate the debugger,&#X2026;When an
+interruption occurs the top-level displays the following message:
+<TT>Prolog interruption (h for help)&#XA0;?</TT> The user can then type one of
+the following commands:</P><TABLE BORDER=1 CELLSPACING=0 CELLPADDING=1><TR><TD ALIGN=center NOWRAP>
+Command</TD><TD ALIGN=center NOWRAP>Name</TD><TD ALIGN=left NOWRAP>Description</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>a</TT></TD><TD ALIGN=center NOWRAP>abort</TD><TD ALIGN=left NOWRAP>abort the current execution. Same as <TT>abort/0</TT>
+(section&#XA0;<A HREF="gprolog042.html#abort/0">8.18.1</A>)</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>e</TT></TD><TD ALIGN=center NOWRAP>exit</TD><TD ALIGN=left NOWRAP>quit the current Prolog process.
+Same as <TT>halt/0</TT> (section&#XA0;<A HREF="gprolog042.html#abort/0">8.18.1</A>)</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>b</TT></TD><TD ALIGN=center NOWRAP>break</TD><TD ALIGN=left NOWRAP>invoke a recursive top-level. Same as <TT>break/0</TT>
+(section&#XA0;<A HREF="gprolog042.html#abort/0">8.18.1</A>)</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>c</TT></TD><TD ALIGN=center NOWRAP>continue</TD><TD ALIGN=left NOWRAP>resume the execution</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>t</TT></TD><TD ALIGN=center NOWRAP>trace</TD><TD ALIGN=left NOWRAP>start the debugger using <TT>trace/0</TT>
+(section&#XA0;<A HREF="gprolog013.html#Running-and-stopping-the-debugger">5.3.1</A>)</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>d</TT></TD><TD ALIGN=center NOWRAP>debug</TD><TD ALIGN=left NOWRAP>start the debugger using <TT>debug/0</TT>
+(section&#XA0;<A HREF="gprolog013.html#Running-and-stopping-the-debugger">5.3.1</A>)</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>h</TT> or <TT>?</TT></TD><TD ALIGN=center NOWRAP>help</TD><TD ALIGN=left NOWRAP>display a summary of available commands</TD></TR>
+</TABLE><H4 CLASS="subsubsection"><A NAME="toc6"></A><A NAME="htoc12">4.2.6</A>&#XA0;&#XA0;The line editor</H4><P>
+<A NAME="The-line-editor"></A>
+The line editor (<TT>linedit</TT>) allows the user to build/update the current
+input line using a variety of commands. This facility is available if the
+<TT>linedit</TT> part of GNU Prolog has been installed. <TT>linedit</TT> is
+implicitly called by any built-in predicate reading from a terminal (e.g.
+<TT>get_char/1</TT>, <TT>read/1</TT>,&#X2026;). This is the case when the
+top-level reads a query.</P><P><B>Bindings</B>: each command of <TT>linedit</TT> is activated using a
+key. For some commands another key is also available to invoke the command
+(on some terminals this other key may not work properly while the primary
+key always works). Here is the list of available commands:</P><TABLE BORDER=1 CELLSPACING=0 CELLPADDING=1><TR><TD ALIGN=center NOWRAP>
+Key</TD><TD ALIGN=center NOWRAP>Alternate key</TD><TD ALIGN=left NOWRAP>Description</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Ctl-B</TT></TD><TD ALIGN=center NOWRAP><TT>&#X2190;</TT></TD><TD ALIGN=left NOWRAP>go to the previous character</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Ctl-F</TT></TD><TD ALIGN=center NOWRAP><TT>&#X2192;</TT></TD><TD ALIGN=left NOWRAP>go to the next character</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Esc-B</TT></TD><TD ALIGN=center NOWRAP><TT>Ctl-&#X2190;</TT></TD><TD ALIGN=left NOWRAP>go to the previous word</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Esc-F</TT></TD><TD ALIGN=center NOWRAP><TT>Ctl-&#X2192;</TT></TD><TD ALIGN=left NOWRAP>go to the next word</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Ctl-A</TT></TD><TD ALIGN=center NOWRAP><TT>Home</TT></TD><TD ALIGN=left NOWRAP>go to the beginning of the line</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Ctl-E</TT></TD><TD ALIGN=center NOWRAP><TT>End</TT></TD><TD ALIGN=left NOWRAP>go to the end of the line</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Ctl-H</TT></TD><TD ALIGN=center NOWRAP><TT>Backspace</TT></TD><TD ALIGN=left NOWRAP>delete the previous character</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Ctl-D</TT></TD><TD ALIGN=center NOWRAP><TT>Delete</TT></TD><TD ALIGN=left NOWRAP>delete the current character</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Ctl-U</TT></TD><TD ALIGN=center NOWRAP><TT>Ctl-Home</TT></TD><TD ALIGN=left NOWRAP>delete from beginning of the line to the current character</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Ctl-K</TT></TD><TD ALIGN=center NOWRAP><TT>Ctl-End</TT></TD><TD ALIGN=left NOWRAP>delete from the current character to the end of the line</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Esc-L</TT></TD><TD ALIGN=center NOWRAP>&nbsp;</TD><TD ALIGN=left NOWRAP>lower case the next word</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Esc-U</TT></TD><TD ALIGN=center NOWRAP>&nbsp;</TD><TD ALIGN=left NOWRAP>upper case the next word</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Esc-C</TT></TD><TD ALIGN=center NOWRAP>&nbsp;</TD><TD ALIGN=left NOWRAP>capitalize the next word</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Ctl-T</TT></TD><TD ALIGN=center NOWRAP>&nbsp;</TD><TD ALIGN=left NOWRAP>exchange last two characters</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Ctl-V</TT></TD><TD ALIGN=center NOWRAP><TT>Insert</TT></TD><TD ALIGN=left NOWRAP>switch on/off the insert/replace mode</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Ctl-I</TT></TD><TD ALIGN=center NOWRAP><TT>Tab</TT></TD><TD ALIGN=left NOWRAP>complete word (twice displays all possible
+completions)</TD></TR>
+<TR><TD ALIGN=center NOWRAP><TT>Esc-Ctl-I</TT></TD><TD ALIGN=center NOWRAP><TT>Esc-Tab</TT></TD><TD ALIGN=left NOWRAP>insert spaces to emulate a tabulation</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Ctl-space</TT></TD><TD ALIGN=center NOWRAP>&nbsp;</TD><TD ALIGN=left NOWRAP>mark beginning of the selection</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Esc-W</TT></TD><TD ALIGN=center NOWRAP>&nbsp;</TD><TD ALIGN=left NOWRAP>copy (from the begin selection mark to the current
+character)</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Ctl-W</TT></TD><TD ALIGN=center NOWRAP>&nbsp;</TD><TD ALIGN=left NOWRAP>cut (from the begin selection mark to the current
+character)</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Ctl-Y</TT></TD><TD ALIGN=center NOWRAP>&nbsp;</TD><TD ALIGN=left NOWRAP>paste</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Ctl-P</TT></TD><TD ALIGN=center NOWRAP><TT>&#X2191;</TT></TD><TD ALIGN=left NOWRAP>recall previous history line</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Ctl-N</TT></TD><TD ALIGN=center NOWRAP><TT>&#X2193;</TT></TD><TD ALIGN=left NOWRAP>recall next history line</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Esc-P</TT></TD><TD ALIGN=center NOWRAP>&nbsp;</TD><TD ALIGN=left NOWRAP>recall previous history line beginning with the current
+prefix</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Esc-N</TT></TD><TD ALIGN=center NOWRAP>&nbsp;</TD><TD ALIGN=left NOWRAP>recall next history line beginning with the current
+prefix</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Esc-&lt;</TT></TD><TD ALIGN=center NOWRAP><TT>Page Up</TT></TD><TD ALIGN=left NOWRAP>recall first history line</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Esc-&gt;</TT></TD><TD ALIGN=center NOWRAP><TT>Page Down</TT></TD><TD ALIGN=left NOWRAP>recall last history line</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Ctl-C</TT></TD><TD ALIGN=center NOWRAP>&nbsp;</TD><TD ALIGN=left NOWRAP>generate an interrupt signal (section&#XA0;<A HREF="#Interrupting-a-query">4.2.5</A>)</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Ctl-D</TT></TD><TD ALIGN=center NOWRAP>&nbsp;</TD><TD ALIGN=left NOWRAP>generate an end-of-file character (at the begin of the
+line)</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>RETURN</TT></TD><TD ALIGN=center NOWRAP>&nbsp;</TD><TD ALIGN=left NOWRAP>validate a line</TD></TR>
+<TR><TD ALIGN=center NOWRAP>
+<TT>Esc-?</TT></TD><TD ALIGN=center NOWRAP>&nbsp;</TD><TD ALIGN=left NOWRAP>display a summary of available commands</TD></TR>
+</TABLE><P><B>History</B>: when a line is entered (i.e. terminated by <TT>RETURN</TT>),
+<TT>linedit</TT> records it in an internal list called
+history. It is later possible to recall history lines using appropriate
+commands (e.g. <TT>Ctl-P</TT> recall the last entered line) and to modify
+them as needed. It is also possible to recall a history line beginning with
+a given prefix. For instance to recall the previous line beginning with
+<TT>write</TT> simply type <TT>write</TT> followed by <TT>Esc-P</TT>.
+Another <TT>Esc-P</TT> will recall an earlier line beginning with
+<TT>write</TT>,&#X2026;</P><P><B>Completion</B>: another important feature of <TT>linedit</TT> is its
+completion facility. Indeed, <TT>linedit</TT> maintains a list of
+known words and uses it to complete the prefix of a word. Initially this list
+contains all predefined atoms and the atoms corresponding to available
+predicates. This list is dynamically updated when a new atom appears in the
+system (whether read at the top-level, created with a built-in predicate,
+associated with a new consulted predicate,&#X2026;). When the completion key
+(<TT>Tab</TT>) is pressed <TT>linedit</TT> acts as follows:</P><UL CLASS="itemize"><LI CLASS="li-itemize">use the current word as a prefix.</LI><LI CLASS="li-itemize">collect all words of the list that begin with this prefix.</LI><LI CLASS="li-itemize">complete the current word with the longest common part of all matching
+words.</LI><LI CLASS="li-itemize">if more than one word matches emit a beep (a second <TT>Tab</TT> will
+display all possibilities).</LI></UL><P>Example:</P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP><TT>| ?- argu</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(here the user presses <TT>Tab</TT> to complete the word)</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>| ?- argument_</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(<TT>linedit</TT> completes <TT>argu</TT> with
+<TT>argument_</TT> and emits a beep)</TD></TR>
+<TR><TD ALIGN=left NOWRAP>&nbsp;</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(the user presses again <TT>Tab</TT> to see all possible completions)</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>argument_counter</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(<TT>linedit</TT> shows 3 possible completions)</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>argument_list</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3><TT>argument_value</TT></TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>| ?- argument_</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(<TT>linedit</TT> redisplays the input line)</TD></TR>
+<TR><TD ALIGN=left NOWRAP COLSPAN=3>&nbsp;</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>| ?- argument_c</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(to select <TT>argument_counter</TT> the user presses
+<TT>c</TT> and <TT>Tab</TT>)</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>| ?- argument_counter</TT></TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD ALIGN=left NOWRAP>(<TT>linedit</TT> completes with
+<TT>argument_counter</TT>)</TD></TR>
+</TABLE></DD></DL><P><B>Balancing</B>: <TT>linedit</TT> allows the user to check that (square/curly)
+brackets are well balanced. For this, when a close bracket symbol, i.e.
+<TT>)</TT>, <TT>]</TT> or <TT>}</TT>, is typed, <TT>linedit</TT> determines
+the associated open bracket, i.e. <TT>(</TT>, <TT>[</TT> or <TT>{</TT>, and
+temporarily repositions the cursor on it to show the match.</P><P><B>Customization</B>: the behavior of <TT>linedit</TT> can be controlled via an environment variable called <TT>LINEDIT</TT>. This variable can contain the following substrings:</P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD ALIGN=left NOWRAP>
+<TT>ansi=no</TT></TD><TD ALIGN=left NOWRAP>do not use ANSI escape sequence (unix only)</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>out=</TT><I>N</I></TD><TD ALIGN=left NOWRAP>use the file descriptor <I>N</I> for the output (unix only)</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>gui=no</TT></TD><TD ALIGN=left NOWRAP>even if compiled with the GUI console run in text mode (windows)</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>cp=</TT><I>N</I></TD><TD ALIGN=left NOWRAP>use code page <I>N</I> (windows text console)</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>oem_put=no</TT></TD><TD ALIGN=left NOWRAP>do not use Char&#X2192;Oem conversion when emitting a char (windows text console)</TD></TR>
+<TR><TD ALIGN=left NOWRAP><TT>oem_get=no</TT></TD><TD ALIGN=left NOWRAP>do not use Oem&#X2192;Char conversion when reading a char (windows text console)</TD></TR>
+</TABLE>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog006.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog005.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog008.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

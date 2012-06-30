@@ -1,0 +1,207 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Constant term streams</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog034.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog036.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc141">8.11</A>&#XA0;&#XA0;Constant term streams</H3><UL>
+<LI><A HREF="gprolog035.html#toc108">Introduction</A>
+</LI><LI><A HREF="gprolog035.html#toc109"><TT>open_input_atom_stream/2</TT>,
+<TT>open_input_chars_stream/2</TT>,<BR>
+ <TT>open_input_codes_stream/2</TT></A>
+</LI><LI><A HREF="gprolog035.html#toc110"><TT>close_input_atom_stream/1</TT>,
+<TT>close_input_chars_stream/1</TT>,<BR>
+ <TT>close_input_codes_stream/1</TT></A>
+</LI><LI><A HREF="gprolog035.html#toc111"><TT>open_output_atom_stream/1</TT>,
+<TT>open_output_chars_stream/1</TT>,<BR>
+ <TT>open_output_codes_stream/1</TT></A>
+</LI><LI><A HREF="gprolog035.html#toc112"><TT>close_output_atom_stream/2</TT>,
+<TT>close_output_chars_stream/2</TT>,<BR>
+ <TT>close_output_codes_stream/2</TT></A>
+</LI></UL>
+<P>
+<A NAME="Constant-term-streams"></A></P><H4 CLASS="subsubsection"><A NAME="toc108"></A><A NAME="htoc142">8.11.1</A>&#XA0;&#XA0;Introduction</H4><P>
+<A NAME="Introduction:(Constant-term-streams)"></A>
+Constant term streams allow the user to consider a constant term (atom,
+character list or character code list) as a source/sink by associating to
+them a stream. Reading from a constant term stream will deliver the
+characters of the constant term as if they had been read from a standard
+file. Characters written on a constant term stream are stored to form the
+final constant term when the stream is closed. The built-in predicates
+described in this section allow the user to open and close a constant term
+stream for input or output. However, very often, a constant term stream is
+created to be only read or written once and then closed. To avoid the
+creation and the destruction of such a stream, GNU Prolog offers several
+built-in predicates to perform single input/output from/to constant terms
+(section&#XA0;<A HREF="gprolog039.html#Input/output-from/to-constant-terms">8.15</A>).</P><H4 CLASS="subsubsection"><A NAME="toc109"></A><A NAME="htoc143">8.11.2</A>&#XA0;&#XA0;<TT>open_input_atom_stream/2</TT>,
+<TT>open_input_chars_stream/2</TT>,<BR>
+ <TT>open_input_codes_stream/2</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+open_input_atom_stream(+atom, -stream)<BR>
+open_input_chars_stream(+character_list, -stream)<BR>
+open_input_codes_stream(+character_code_list, -stream)</TT></DD></DL><P><B>Description</B></P><P><TT>open_input_atom_stream(Atom, Stream)</TT> unifies <TT>Stream</TT>
+with the stream-term which is associated with a new input text-stream whose
+data are the characters of <TT>Atom</TT>.</P><P><TT>open_input_chars_stream(Chars, Stream)</TT> is similar to
+<TT>open_input_atom_stream/2</TT> except that data are the content of the
+character list <TT>Chars</TT>.</P><P><TT>open_input_codes_stream(Codes, Stream)</TT> is similar to
+<TT>open_input_atom_stream/2</TT> except that data are the content of the
+character code list <TT>Codes</TT>.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Stream</TT> is not a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(variable, Stream)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Atom</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Chars</TT> is a partial list or a list with an element
+<TT>E</TT> which is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Codes</TT> is a partial list or a list with an element
+<TT>E</TT> which is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Atom</TT> is neither a variable nor a an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Atom)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Chars</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Chars)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Codes</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Codes)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Chars</TT> list is neither a
+variable nor a character</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(character, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Codes</TT> list is neither a
+variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Codes</TT> list is an integer but
+not a character code</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>representation_error(character_code)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc110"></A><A NAME="htoc144">8.11.3</A>&#XA0;&#XA0;<TT>close_input_atom_stream/1</TT>,
+<TT>close_input_chars_stream/1</TT>,<BR>
+ <TT>close_input_codes_stream/1</TT></H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+close_input_atom_stream(+stream_or_alias)<BR>
+close_input_chars_stream(+stream_or_alias)<BR>
+close_input_codes_stream(+stream_or_alias)</TT></DD></DL><P><B>Description</B></P><P><TT>close_input_atom_stream(SorA)</TT> closes the constant term stream
+associated with the stream-term or alias <TT>SorA</TT>. <TT>SorA</TT> must a
+stream open with <TT>open_input_atom_stream/2</TT>
+(section&#XA0;<A HREF="#Introduction:(Constant-term-streams)">8.11.1</A>).</P><P><TT>close_input_chars_stream(SorA)</TT> acts similarly for a character
+list stream.</P><P><TT>close_input_codes_stream(SorA)</TT> acts similarly for a character
+code list stream.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is neither a variable nor a stream-term or alias</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(stream_or_alias, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is not associated with an open stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>existence_error(stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is an output stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(close, stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is a stream-term or alias but does not refer to a
+constant term stream.</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(term_stream_or_alias, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc111"></A><A NAME="htoc145">8.11.4</A>&#XA0;&#XA0;<TT>open_output_atom_stream/1</TT>,
+<TT>open_output_chars_stream/1</TT>,<BR>
+ <TT>open_output_codes_stream/1</TT></H4><P>
+<A NAME="open-output-atom-stream/1"></A>
+
+
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+open_output_atom_stream(-stream)<BR>
+open_output_chars_stream(-stream)<BR>
+open_output_codes_stream(-stream)</TT></DD></DL><P><B>Description</B></P><P><TT>open_output_atom_stream(Stream)</TT> unifies <TT>Stream</TT> with the
+stream-term which is associated with a new output text-stream. All characters
+written to this stream are collected and will be returned as an atom when
+the stream is closed by <TT>close_output_atom_stream/2</TT>
+(section&#XA0;<A HREF="#close-output-atom-stream/2">8.11.5</A>).</P><P><TT>open_output_chars_stream(Stream)</TT> is similar to
+<TT>open_output_atom_stream/1</TT> except that the result will be a
+character list.</P><P><TT>open_output_codes_stream(Stream)</TT> is similar to
+<TT>open_output_atom_stream/1</TT> except that the result will be a
+character code list.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Stream</TT> is not a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(variable, Stream)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P><H4 CLASS="subsubsection"><A NAME="toc112"></A><A NAME="htoc146">8.11.5</A>&#XA0;&#XA0;<TT>close_output_atom_stream/2</TT>,
+<TT>close_output_chars_stream/2</TT>,<BR>
+ <TT>close_output_codes_stream/2</TT></H4><P>
+<A NAME="close-output-atom-stream/2"></A>
+
+
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+close_output_atom_stream(+stream_or_alias, ?atom)<BR>
+close_output_chars_stream(+stream_or_alias, ?character_list)<BR>
+close_output_codes_stream(+stream_or_alias, ?character_code_list)</TT></DD></DL><P><B>Description</B></P><P><TT>close_output_atom_stream(SorA, Atom)</TT> closes the constant term
+stream associated with the stream-term or alias <TT>SorA</TT>. <TT>SorA</TT> must
+be associated with a stream open with <TT>open_output_atom_stream/1</TT>
+(section&#XA0;<A HREF="#open-output-atom-stream/1">8.11.4</A>). <TT>Atom</TT> is unified with an atom
+formed with all characters written on the stream.</P><P><TT>close_output_chars_stream(SorA, Chars)</TT> acts similarly for a
+character list stream.</P><P><TT>close_output_codes_stream(SorA, Codes)</TT> acts similarly for a
+character code list stream.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Atom</TT> is neither a variable nor an atom</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(atom, Atom)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Chars</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Chars)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Codes</TT> is neither a partial list nor a list</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(list, Codes)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Chars</TT> list is neither a
+variable nor a character</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(character, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Codes</TT> list is neither a
+variable nor an integer</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(integer, E)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+an element <TT>E</TT> of the <TT>Codes</TT> list is an integer but
+not a character code</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>representation_error(character_code)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is neither a variable nor a stream-term or alias</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(stream_or_alias, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is not associated with an open stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>existence_error(stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is an input stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>permission_error(close, stream, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>SorA</TT> is a stream-term or alias but does not refer to a
+constant term stream</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>domain_error(term_stream_or_alias, SorA)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>GNU Prolog predicates.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog034.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<A HREF="gprolog036.html"><IMG SRC="next_motif.gif" ALT="Next"></A>
+</BODY>
+</HTML>

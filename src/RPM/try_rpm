@@ -1,0 +1,26 @@
+#!/bin/sh -x
+
+if test $# != 1; then
+	echo usage $0 RPM
+	exit 1
+fi
+
+default_db_dir=/var/lib/rpm
+if [ ! -f $default_db_dir/Packages ]; then
+    echo "cannot find the RPM database path (I tried $default_db_dir)"
+    exit 1
+fi
+
+dummy_dir=/tmp/try_rpm/
+rpmdb_dir=$dummy_dir/rpmdb/
+install_dir=$dummy_dir/prefix/
+
+rm -rf $dummy_dir
+mkdir -p $rpmdb_dir
+mkdir -p $install_dir
+
+cp -r $default_db_dir/* $rpmdb_dir
+rpm --nodeps -Uvh --prefix $install_dir --dbpath $rpmdb_dir $1
+echo rpm --nodeps -Uvh --prefix $install_dir --dbpath $rpmdb_dir $1
+
+echo "RPM installed in $install_dir (can be removed safely)"

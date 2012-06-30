@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Source reader facility</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog053.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc296">8.30</A>&#XA0;&#XA0;Source reader facility</H3><UL>
+<LI><A HREF="gprolog054.html#toc244">Introduction</A>
+</LI><LI><A HREF="gprolog054.html#toc245"><TT>sr_open/3</TT></A>
+</LI><LI><A HREF="gprolog054.html#toc246"><TT>sr_change_options/2</TT></A>
+</LI><LI><A HREF="gprolog054.html#toc247"><TT>sr_close/1</TT></A>
+</LI><LI><A HREF="gprolog054.html#toc248"><TT>sr_read_term/4</TT></A>
+</LI><LI><A HREF="gprolog054.html#toc249"><TT>sr_current_descriptor/1</TT></A>
+</LI><LI><A HREF="gprolog054.html#toc250"><TT>sr_get_stream/2</TT></A>
+</LI><LI><A HREF="gprolog054.html#toc251"><TT>sr_get_module/3</TT></A>
+</LI><LI><A HREF="gprolog054.html#toc252"><TT>sr_get_file_name/2</TT></A>
+</LI><LI><A HREF="gprolog054.html#toc253"><TT>sr_get_position/3</TT></A>
+</LI><LI><A HREF="gprolog054.html#toc254"><TT>sr_get_include_list/2</TT></A>
+</LI><LI><A HREF="gprolog054.html#toc255"><TT>sr_get_include_stream_list/2</TT></A>
+</LI><LI><A HREF="gprolog054.html#toc256"><TT>sr_get_size_counters/3</TT></A>
+</LI><LI><A HREF="gprolog054.html#toc257"><TT>sr_get_error_counters/3</TT></A>
+</LI><LI><A HREF="gprolog054.html#toc258"><TT>sr_set_error_counters/3</TT></A>
+</LI><LI><A HREF="gprolog054.html#toc259"><TT>sr_error_from_exception/2</TT></A>
+</LI><LI><A HREF="gprolog054.html#toc260"><TT>sr_write_message/8</TT>,
+<TT>sr_write_message/6</TT>,
+<TT>sr_write_message/4</TT></A>
+</LI><LI><A HREF="gprolog054.html#toc261"><TT>sr_write_error/6</TT>,
+<TT>sr_write_error/4</TT>,
+<TT>sr_write_error/2</TT></A>
+</LI></UL>
+<H4 CLASS="subsubsection"><A NAME="toc244"></A><A NAME="htoc297">8.30.1</A>&#XA0;&#XA0;Introduction</H4><P>To be written...</P><H4 CLASS="subsubsection"><A NAME="toc245"></A><A NAME="htoc298">8.30.2</A>&#XA0;&#XA0;<TT>sr_open/3</TT></H4><H4 CLASS="subsubsection"><A NAME="toc246"></A><A NAME="htoc299">8.30.3</A>&#XA0;&#XA0;<TT>sr_change_options/2</TT></H4><H4 CLASS="subsubsection"><A NAME="toc247"></A><A NAME="htoc300">8.30.4</A>&#XA0;&#XA0;<TT>sr_close/1</TT></H4><H4 CLASS="subsubsection"><A NAME="toc248"></A><A NAME="htoc301">8.30.5</A>&#XA0;&#XA0;<TT>sr_read_term/4</TT></H4><H4 CLASS="subsubsection"><A NAME="toc249"></A><A NAME="htoc302">8.30.6</A>&#XA0;&#XA0;<TT>sr_current_descriptor/1</TT></H4><H4 CLASS="subsubsection"><A NAME="toc250"></A><A NAME="htoc303">8.30.7</A>&#XA0;&#XA0;<TT>sr_get_stream/2</TT></H4><H4 CLASS="subsubsection"><A NAME="toc251"></A><A NAME="htoc304">8.30.8</A>&#XA0;&#XA0;<TT>sr_get_module/3</TT></H4><H4 CLASS="subsubsection"><A NAME="toc252"></A><A NAME="htoc305">8.30.9</A>&#XA0;&#XA0;<TT>sr_get_file_name/2</TT></H4><H4 CLASS="subsubsection"><A NAME="toc253"></A><A NAME="htoc306">8.30.10</A>&#XA0;&#XA0;<TT>sr_get_position/3</TT></H4><H4 CLASS="subsubsection"><A NAME="toc254"></A><A NAME="htoc307">8.30.11</A>&#XA0;&#XA0;<TT>sr_get_include_list/2</TT></H4><H4 CLASS="subsubsection"><A NAME="toc255"></A><A NAME="htoc308">8.30.12</A>&#XA0;&#XA0;<TT>sr_get_include_stream_list/2</TT></H4><H4 CLASS="subsubsection"><A NAME="toc256"></A><A NAME="htoc309">8.30.13</A>&#XA0;&#XA0;<TT>sr_get_size_counters/3</TT></H4><H4 CLASS="subsubsection"><A NAME="toc257"></A><A NAME="htoc310">8.30.14</A>&#XA0;&#XA0;<TT>sr_get_error_counters/3</TT></H4><H4 CLASS="subsubsection"><A NAME="toc258"></A><A NAME="htoc311">8.30.15</A>&#XA0;&#XA0;<TT>sr_set_error_counters/3</TT></H4><H4 CLASS="subsubsection"><A NAME="toc259"></A><A NAME="htoc312">8.30.16</A>&#XA0;&#XA0;<TT>sr_error_from_exception/2</TT></H4><H4 CLASS="subsubsection"><A NAME="toc260"></A><A NAME="htoc313">8.30.17</A>&#XA0;&#XA0;<TT>sr_write_message/8</TT>,
+<TT>sr_write_message/6</TT>,
+<TT>sr_write_message/4</TT></H4><H4 CLASS="subsubsection"><A NAME="toc261"></A><A NAME="htoc314">8.30.18</A>&#XA0;&#XA0;<TT>sr_write_error/6</TT>,
+<TT>sr_write_error/4</TT>,
+<TT>sr_write_error/2</TT></H4>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog053.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog024.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+</BODY>
+</HTML>

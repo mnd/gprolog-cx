@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+
+<META http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<META name="GENERATOR" content="hevea 1.10">
+<LINK rel="stylesheet" type="text/css" href="gprolog.css">
+<TITLE>Prolog control constructs</TITLE>
+</HEAD>
+<BODY TEXT=black BGCOLOR=white>
+<A HREF="gprolog022.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog021.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+<HR>
+<H3 CLASS="subsection"><A NAME="htoc64">7.2</A>&#XA0;&#XA0;Prolog control constructs</H3><UL>
+<LI><A HREF="gprolog023.html#toc43"><TT>true/0</TT>,
+<TT>fail/0</TT>,
+<TT>!/0</TT></A>
+</LI><LI><A HREF="gprolog023.html#toc44"><TT>(&#X2019;,&#X2019;)/2</TT> - conjunction,
+<TT>(;)/2</TT> - disjunction,
+<TT>(-</TT><TT>&gt;</TT><TT>)/2</TT> - if-then,
+<TT>(*-</TT><TT>&gt;</TT><TT>)/2</TT> - soft-cut (soft if-then)</A>
+</LI><LI><A HREF="gprolog023.html#toc45"><TT>call/1</TT></A>
+</LI><LI><A HREF="gprolog023.html#toc46"><TT>catch/3</TT>,
+<TT>throw/1</TT></A>
+</LI></UL>
+<P>
+<A NAME="control-construct"></A></P><P>GNU Prolog follows the ISO notion of control constructs. </P><H4 CLASS="subsubsection"><A NAME="toc43"></A><A NAME="htoc65">7.2.1</A>&#XA0;&#XA0;<TT>true/0</TT>,
+<TT>fail/0</TT>,
+<TT>!/0</TT></H4><P>
+<A NAME="true/0"></A>
+
+
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+true<BR>
+fail<BR>
+!</TT></DD></DL><P><B>Description</B></P><P><TT>true</TT> always succeeds.</P><P><TT>fail</TT> always fails (enforces backtracking).</P><P><TT>!</TT> always succeeds and the for side-effect of removing all
+choice-points created since the invocation of the predicate activating it.</P><P><B>Errors</B></P><P>None.</P><P><B>Portability</B></P><P>ISO control constructs.</P><H4 CLASS="subsubsection"><A NAME="toc44"></A><A NAME="htoc66">7.2.2</A>&#XA0;&#XA0;<TT>(&#X2019;,&#X2019;)/2</TT> - conjunction,
+<TT>(;)/2</TT> - disjunction,
+<TT>(-&gt;)/2</TT> - if-then,
+<TT>(*-&gt;)/2</TT> - soft-cut (soft if-then)</H4><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+&#X2019;,&#X2019;(+callable_term, +callable_term)<BR>
+;(+callable_term, +callable_term)<BR>
+-&gt;(+callable_term, +callable_term)<BR>
+*-&gt;(+callable_term, +callable_term)</TT></DD></DL><P><B>Description</B></P><P><TT>Goal1 , Goal2</TT> executes <TT>Goal1</TT> and, in case of
+success, executes <TT>Goal2</TT>.</P><P><TT>Goal1 ; Goal2</TT> first creates a choice-point and executes
+<TT>Goal1</TT>. On backtracking <TT>Goal2</TT> is executed.</P><P><TT>Goal1 -&gt; Goal2</TT> first executes <TT>Goal1</TT> and,
+in case of success, removes all choice-points created by <TT>Goal1</TT> and
+executes <TT>Goal2</TT>. This control construct acts like an if-then
+(<TT>Goal1</TT> is the test part and <TT>Goal2</TT> the then part). Note that
+if <TT>Goal1</TT> fails <TT>-&gt;/2</TT> fails also. <TT>-&gt;/2</TT> is
+often combined with <TT>;/2</TT> to define an if-then-else as follows:
+<TT>Goal1 -&gt; Goal2 ; Goal3</TT>. Note that <TT>Goal1 -&gt; Goal2</TT>
+is the first argument of the <TT>(;)/2</TT> and <TT>Goal3</TT> (the else
+part) is the second argument. Such an if-then-else control construct first
+creates a choice-point for the else-part (intuitively associated with
+<TT>;/2</TT>) and then executes <TT>Goal1</TT>. In case of success, all
+choice-points created by <TT>Goal1</TT> together with the choice-point for
+the else-part are removed and <TT>Goal2</TT> is executed. If <TT>Goal1</TT>
+fails then <TT>Goal3</TT> is executed.</P><P><TT>Goal1 *-&gt; Goal2 ; Goal3</TT> implements the so-called
+soft-cut. It acts as the above if-then-else except that if
+<TT>Goal1</TT> succeeds only <TT>Goal3</TT> is cut (the alternative solutions
+of <TT>Goal1</TT> are preserved and can be found by backtracking). Note that
+<TT>Goal1 *-&gt; Goal2</TT> alone (i.e. without an else branch
+<TT>Goal3</TT>) is equivalent to <TT>(Goal1 , Goal2)</TT>.</P><P><TT>&#X2019;,&#X2019;</TT>, <TT>;</TT>, <TT>-&gt;</TT> and <TT>*-&gt;</TT> are predefined
+infix operators (section&#XA0;<A HREF="gprolog038.html#op/3:(Term-input/output)">8.14.10</A>).</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Goal1</TT> or <TT>Goal2</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Goal1</TT> is neither a variable nor a callable term</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(callable, Goal1)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Goal2</TT> is neither a variable nor a callable term</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(callable, Goal2)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+The predicate indicator <TT>Pred</TT> of <TT>Goal1</TT> or
+<TT>Goal2</TT> does not correspond to an existing procedure and the value of
+the <TT>unknown</TT> Prolog flag is <TT>error</TT> (section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>existence_error(procedure, Pred)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>ISO control constructs except <TT>(*-&gt;)/2</TT> which is GNU Prolog specific.</P><H4 CLASS="subsubsection"><A NAME="toc45"></A><A NAME="htoc67">7.2.3</A>&#XA0;&#XA0;<TT>call/1</TT></H4><P>
+<A NAME="call/1"></A>
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+call(+callable_term)</TT></DD></DL><P><B>Description</B></P><P><TT>call(Goal)</TT> executes <TT>Goal</TT>. <TT>call/1</TT> succeeds if
+<TT>Goal</TT> represents a goal which is true. When <TT>Goal</TT> contains a
+cut symbol <TT>!</TT> (section&#XA0;<A HREF="#true/0">7.2.1</A>) as a subgoal, the effect of
+<TT>!</TT> does not extend outside <TT>Goal</TT>.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Goal</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Goal</TT> is neither a variable nor a callable term</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>type_error(callable, Goal)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+The predicate indicator <TT>Pred</TT> of <TT>Goal</TT> does not
+correspond to an existing procedure and the value of the <TT>unknown</TT>
+Prolog flag is <TT>error</TT> (section&#XA0;<A HREF="gprolog046.html#set-prolog-flag/2">8.22.1</A>)</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>existence_error(procedure, Pred)</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P><B>Portability</B></P><P>ISO control construct.</P><H4 CLASS="subsubsection"><A NAME="toc46"></A><A NAME="htoc68">7.2.4</A>&#XA0;&#XA0;<TT>catch/3</TT>,
+<TT>throw/1</TT></H4><P>
+<A NAME="catch/3"></A>
+
+</P><P><B>Templates</B></P><DL CLASS="list"><DT CLASS="dt-list">
+</DT><DD CLASS="dd-list"><TT>
+catch(?callable_term, ?term, ?term)<BR>
+throw(+nonvar)</TT></DD></DL><P><B>Description</B></P><P><TT>catch(Goal, Catcher, Recovery)</TT> is similar to <TT>call(Goal)</TT>
+(section&#XA0;<A HREF="#call/1">7.2.3</A>). If this succeeds or fails, so does the call to
+<TT>catch/3</TT>. If however, during the execution of <TT>Goal</TT>, there
+is a call to <TT>throw(Ball)</TT>, the current flow of control is
+interrupted, and control returns to a call of <TT>catch/3</TT> that is being
+executed. This can happen in one of two ways:</P><UL CLASS="itemize"><LI CLASS="li-itemize">implicitly, when an error condition for a built-in predicate is
+satisfied.</LI><LI CLASS="li-itemize">explicitly, when the program executes a call of <TT>throw/1</TT>
+because the program wishes to abandon the current processing, and instead to
+take an alternative action.</LI></UL><P><TT>throw(Ball)</TT> causes the normal flow of control to be transferred
+back to an existing call of <TT>catch/3</TT>. When a call to
+<TT>throw(Ball)</TT> happens, <TT>Ball</TT> is copied and the stack is
+unwound back to the call to <TT>catch/3</TT>, whereupon the copy of
+<TT>Ball</TT> is unified with <TT>Catcher</TT>. If this unification
+succeeds, then <TT>catch/3</TT> executes the goal <TT>Recovery</TT> using
+<TT>call/1</TT> (section&#XA0;<A HREF="#call/1">7.2.3</A>) in order to determine the success or
+failure of <TT>catch/3</TT>. Otherwise, in case the unification fails,
+the stack keeps unwinding, looking for an earlier invocation of
+<TT>catch/3</TT>. <TT>Ball</TT> may be any non-variable term.</P><P><B>Errors</B></P><TABLE CELLSPACING=6 CELLPADDING=0><TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+<TR><TD VALIGN=top ALIGN=left>
+<TT>Ball</TT> is a variable</TD><TD VALIGN=top ALIGN=center NOWRAP>&#XA0;&#XA0;</TD><TD VALIGN=top ALIGN=left><TT>instantiation_error</TT></TD></TR>
+<TR><TD CLASS="hbar" COLSPAN=3></TD></TR>
+</TABLE><P>If <TT>Ball</TT> does not unify with the <TT>Catcher</TT> argument of
+any call of <TT>catch/3</TT>, a system error message is displayed and
+<TT>throw/1</TT> fails.</P><P>When <TT>catch/3</TT> calls <TT>Goal</TT> or <TT>Recovery</TT> it uses <TT>call/1</TT>
+(section&#XA0;<A HREF="#call/1">7.2.3</A>), an <TT>instantiation_error</TT>, a <TT>type_error</TT>
+or an <TT>existence_error</TT> can then occur depending on
+<TT>Goal</TT> or <TT>Recovery</TT>.</P><P><B>Portability</B></P><P>ISO control constructs.</P>
+<HR SIZE=2>
+Copyright (C) 1999-2012 Daniel Diaz
+Verbatim copying and distribution of this entire article is permitted in any
+medium, provided this notice is preserved. <A HREF="index.html#copyright">More about the copyright</A>
+<HR>
+<A HREF="gprolog022.html"><IMG SRC="previous_motif.gif" ALT="Previous"></A>
+<A HREF="gprolog021.html"><IMG SRC="contents_motif.gif" ALT="Up"></A>
+</BODY>
+</HTML>
