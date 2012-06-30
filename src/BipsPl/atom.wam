@@ -1,8 +1,8 @@
-% compiler: GNU Prolog 1.4.1
+% compiler: GNU Prolog/CX 1.4.1
 % file    : atom.pl
 
 
-file_name('/home/diaz/GP/src/src/BipsPl/atom.pl').
+file_name('/home/kim/Source/gprolog-1.4.1/src/BipsPl/atom.pl').
 
 
 predicate('$use_atom'/0,42,static,private,monofile,built_in,[
@@ -114,12 +114,16 @@ predicate('$current_atom_alt'/0,147,static,private,monofile,built_in,[
 
 
 predicate(atom_property/2,154,static,private,monofile,built_in,[
-    allocate(2),
+    allocate(3),
     get_variable(y(0),0),
     get_variable(y(1),1),
+    get_variable(y(2),255),
+    cxt_assign_K(y(2)),
     call_c('Pl_Set_Bip_Name_Untagged_2',[by_value],[atom_property,2]),
+    cxt_assign_K(y(2)),
     put_value(y(0),0),
     call('$current_atom'/1),
+    cxt_assign_K(y(2)),
     put_value(y(0),0),
     put_value(y(1),1),
     deallocate,
@@ -127,11 +131,14 @@ predicate(atom_property/2,154,static,private,monofile,built_in,[
 
 
 predicate('$atom_property_any'/2,159,static,private,monofile,built_in,[
-    allocate(2),
+    allocate(3),
     get_variable(y(0),0),
     get_variable(y(1),1),
+    get_variable(y(2),255),
+    cxt_assign_K(y(2)),
     put_value(y(0),0),
     call('$current_atom_any'/1),
+    cxt_assign_K(y(2)),
     put_value(y(0),0),
     put_value(y(1),1),
     deallocate,
@@ -141,13 +148,17 @@ predicate('$atom_property_any'/2,159,static,private,monofile,built_in,[
 predicate('$atom_property1'/2,166,static,private,monofile,built_in,[
     pragma_arity(3),
     get_current_choice(x(2)),
-    allocate(3),
+    allocate(4),
     get_variable(y(0),0),
     get_variable(y(1),1),
     get_variable(y(2),2),
+    get_variable(y(3),255),
+    cxt_assign_K(y(3)),
     put_value(y(1),0),
     call('$check_atom_prop'/1),
+    cxt_assign_K(y(3)),
     cut(y(2)),
+    cxt_assign_K(y(3)),
     put_value(y(0),0),
     put_variable(x(2),1),
     put_variable(x(3),7),
@@ -155,6 +166,7 @@ predicate('$atom_property1'/2,166,static,private,monofile,built_in,[
     put_variable(x(5),9),
     put_variable(x(6),10),
     call_c('Pl_Atom_Property_6',[],[x(0),x(1),x(7),x(8),x(9),x(10)]),
+    cxt_assign_K(y(3)),
     put_value(y(1),0),
     put_value(y(0),1),
     deallocate,
@@ -303,12 +315,16 @@ label(16),
 
 
 predicate(new_atom/1,215,static,private,monofile,built_in,[
-    allocate(1),
+    allocate(2),
     get_variable(y(0),0),
+    get_variable(y(1),255),
+    cxt_assign_K(y(1)),
     call_c('Pl_Set_Bip_Name_Untagged_2',[by_value],[new_atom,1]),
+    cxt_assign_K(y(1)),
     put_integer(0,0),
     put_integer(0,1),
     call('$sys_var_write'/2),
+    cxt_assign_K(y(1)),
     put_atom(atom_,0),
     put_integer(0,1),
     put_value(y(0),2),
@@ -318,13 +334,17 @@ predicate(new_atom/1,215,static,private,monofile,built_in,[
 
 
 predicate(new_atom/2,220,static,private,monofile,built_in,[
-    allocate(2),
+    allocate(3),
     get_variable(y(0),0),
     get_variable(y(1),1),
+    get_variable(y(2),255),
+    cxt_assign_K(y(2)),
     call_c('Pl_Set_Bip_Name_Untagged_2',[by_value],[new_atom,2]),
+    cxt_assign_K(y(2)),
     put_integer(0,0),
     put_integer(0,1),
     call('$sys_var_write'/2),
+    cxt_assign_K(y(2)),
     put_value(y(0),0),
     put_integer(0,1),
     put_value(y(1),2),
@@ -334,14 +354,18 @@ predicate(new_atom/2,220,static,private,monofile,built_in,[
 
 
 predicate(new_atom/3,225,static,private,monofile,built_in,[
-    allocate(3),
+    allocate(4),
     get_variable(y(0),0),
     get_variable(y(1),1),
     get_variable(y(2),2),
+    get_variable(y(3),255),
+    cxt_assign_K(y(3)),
     call_c('Pl_Set_Bip_Name_Untagged_2',[by_value],[new_atom,3]),
+    cxt_assign_K(y(3)),
     put_integer(0,0),
     put_integer(1,1),
     call('$sys_var_write'/2),
+    cxt_assign_K(y(3)),
     put_value(y(0),0),
     put_value(y(1),1),
     put_value(y(2),2),

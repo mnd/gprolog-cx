@@ -99,6 +99,7 @@
 
 #define M_MAGIC1                   0x12345678
 #define M_MAGIC2                   0xdeadbeef
+#define M_SECURITY_MARGIN          128	/* in WamWords */
 
 #define UNKNOWN_SYS_ERRNO          "Unknown error (%d)"
 

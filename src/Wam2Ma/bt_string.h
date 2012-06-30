@@ -52,6 +52,7 @@ typedef struct btnode
   char *str;
   int no;
   char info[32];		/* a buffer to store some information */
+  int arity;			/* FIXME: CROCK */
   PBTNode left;
   PBTNode right;
 }

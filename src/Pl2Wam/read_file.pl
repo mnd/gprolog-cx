@@ -148,6 +148,7 @@ read_file_init(PlFile) :-
 	g_assign(syn_error_nb, 0),
 	g_assign(in_lines, 0),
 	g_assign(in_bytes, 0),
+	cxt_first_pass(PlFile),
 	open_new_prolog_file(PlFile).
 
 
@@ -207,6 +208,13 @@ read_predicate(Pred, N, LSrcCl) :-
 	repeat,
 	read_predicate1(Pred, N, LSrcCl),                % standard predicate
 % !,
+	(   Pred = '$$cxt_unit$$' ->
+	    LSrcCl = [_ + '$$cxt_unit$$'(U)],
+	    cxt_emit_unit_name(U),
+	    fail
+	;
+	    true
+	),
 	(   g_read(reading_dyn_pred, f),
 	    g_read(native_code, t) ->
 	    read_predicate_next(Pred, N, LSrcCl)
@@ -373,7 +381,7 @@ get_next_clause(Pred, N, SrcCl) :-
 get_next_clause(Pred, N, SrcCl) :-
 	g_read(open_file_stack, OpenFileStack),
 	OpenFileStack = [_ * Stream|_],
-	'$catch'(read_term(Stream, Cl, [singletons(SingNames)]), error(syntax_error(Err), _), after_syn_error, any, 0, false),
+	'$catch'(read_term(Stream, Cl, [variable_names(VN), singletons(SingNames)]), error(syntax_error(Err), _), after_syn_error, any, 0, false),
 	(   var(Err) ->
 	    last_read_start_line_column(L1, _),
 	    '$catch'(expand_term(Cl, Cl1), error(Err, _), dcg_error(Err), any, 0, false),
@@ -384,7 +392,8 @@ get_next_clause(Pred, N, SrcCl) :-
 	    ),
 	    Where = OpenFileStack + (L1 - L2),
 	    g_assign(where, Where),
-	    get_next_clause1(Cl1, Where, SingNames, Pred, N, SrcCl)
+	    cxt_rewrite_term(Cl1, SingNames, VN, Cl2, SingNames1),
+	    get_next_clause1(Cl2, Where, SingNames1, Pred, N, SrcCl)
 	;   get_next_clause(Pred, N, SrcCl)
 	), !.
 
@@ -981,6 +990,7 @@ set_flag_for_preds(Pred / N, Flag) :-
 
 
 
+define_predicate('$$cxt_unit$$', 1) :- !.
 
 define_predicate(F, N) :-
 	set_pred_info(def, F, N),

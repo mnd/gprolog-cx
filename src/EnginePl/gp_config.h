@@ -36,7 +36,7 @@
  * not, see http://www.gnu.org/licenses/.                                  *
  *-------------------------------------------------------------------------*/
 
-/* $Id: gp_config.h,v 1.117 2012/06/28 16:54:27 diaz Exp $ */
+/* $Id: gp_config.h.in,v 1.31 2012/06/20 13:07:35 diaz Exp $ */
 
 #ifndef _GP_CONFIG_H
 #define _GP_CONFIG_H
@@ -80,6 +80,9 @@
 /* Define if you have a mallopt function */
 #define HAVE_MALLOPT 1
 
+/* Define if you have a mkstemp function */
+/* #undef HAVE_MKSTEMP */
+
 /* Define inline keyword */
 /* #undef inline */
 
@@ -120,13 +123,13 @@
 /* #undef M_sparc */
 
 /* Define if the cpu is a ix86 */
-/* #undef M_ix86 */
+#define M_ix86 1
 
 /* Define if the cpu is a powerpc */
 /* #undef M_powerpc */
 
 /* Define if the cpu is a x86-64 */
-#define M_x86_64 1
+/* #undef M_x86_64 */
 
 
 /* Define if the OS is an SGI IRIX */
@@ -173,7 +176,7 @@
 /* #undef M_alpha_osf */
 
 /* Define if the system is a ix86/linux */
-/* #undef M_ix86_linux */
+#define M_ix86_linux 1
 
 /* Define if the system is a ix86/sco */
 /* #undef M_ix86_sco */
@@ -215,7 +218,7 @@
 /* #undef M_powerpc_bsd */
 
 /* Define if the system is a x86-64/linux */
-#define M_x86_64_linux 1
+/* #undef M_x86_64_linux */
 
 /* Define if the system is a x86-64/solaris */
 /* #undef M_x86_64_solaris */
@@ -234,9 +237,10 @@
 /* Constant definitions */
 
 #define PROLOG_DIALECT "gprolog"
-#define PROLOG_NAME "GNU Prolog"
+#define PROLOG_NAME "GNU Prolog/CX"
 #define PROLOG_VERSION "1.4.1"
-#define PROLOG_DATE "Jun 28 2012"
+#define PROLOG_VARIANT "-cx"
+#define PROLOG_DATE "Jul  1 2012"
 #define PROLOG_COPYRIGHT "Copyright (C) 1999-2012 Daniel Diaz"
 
 #define TOP_LEVEL "gprolog"
@@ -244,18 +248,18 @@
 #define HEXGPLC "hexgplc"
 #define ENV_VARIABLE "PL_PATH"
 
-#define M_VENDOR "unknown"
-#define M_CPU "x86_64"
+#define M_VENDOR "pc"
+#define M_CPU "i686"
 #define M_OS "linux-gnu"
 
 #define CC "gcc"
 #define CFLAGS_PREFIX_REG "-ffixed-%s"
-#define CFLAGS "-g -Wall"
-#define CFLAGS_MACHINE " -fno-strict-aliasing"
+#define CFLAGS "-O3 -fomit-frame-pointer"
+#define CFLAGS_MACHINE "-march=pentiumpro -m32 -fno-strict-aliasing"
 #define LDFLAGS ""
 #define LDLIBS "-lm"
 #define AS "as"
-#define ASFLAGS "--64"
+#define ASFLAGS "--32"
 #define STRIP "strip"
 
 #define ASM_SUFFIX ".s"
@@ -275,8 +279,8 @@
 #define LIB_BIPS_FD "libbips_fd.a"
 
 
-#define SIZEOF_LONG 8
-#define SIZEOF_VOIDP 8
+#define SIZEOF_LONG 4
+#define SIZEOF_VOIDP 4
 
 #define SIZEOF_PTR                 SIZEOF_VOIDP
 #define WORD_SIZE                  (8 * SIZEOF_PTR)

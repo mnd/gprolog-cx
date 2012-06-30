@@ -2,6 +2,7 @@ GPLC      = @GPLC@
 GPLCFLAGS = --fast-math
 CFLAGS = @CFLAGS@
 PLS       = pl2wam.pl read_file.pl syn_sugar.pl internal.pl \
+            context.pl \
             code_gen.pl reg_alloc.pl inst_codif.pl first_arg.pl \
             indexing.pl wam_emit.pl
 OBJS      = $(PLS:.pl=@OBJ_SUFFIX@)
@@ -50,6 +51,7 @@ distclean: clean
 
 pl2wam.wam:     pl2wam.pl
 read_file.wam:  read_file.pl
+context.wam:	context.pl
 syn_sugar.wam:  syn_sugar.pl
 internal.wam:   internal.pl
 code_gen.wam:   code_gen.pl

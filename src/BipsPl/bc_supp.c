@@ -137,7 +137,23 @@ typedef enum
   CUT_Y,
 
   SOFT_CUT_X,
-  SOFT_CUT_Y
+  SOFT_CUT_Y,
+
+  CXT_CALL_X,
+  CXT_CALL_Y,
+  CXT_EXECUTE_X,
+  CXT_EXECUTE_Y,
+  CXT_ASSIGN_K_X,
+  CXT_ASSIGN_K_Y,
+  CXT_UNIT_FOR_NEXT_CALL,
+  CXT_ARG_LOAD_XX,
+  CXT_ARG_LOAD_XY,
+  CXT_ARG_LOAD_YX,
+  CXT_ARG_LOAD_YY,
+  CXT_ARG_UNIFY_XX,		/* X X => +0 */
+  CXT_ARG_UNIFY_XY,		/* X Y => +1 */
+  CXT_ARG_UNIFY_YX,		/* Y X => +2 */
+  CXT_ARG_UNIFY_YY,		/* Y Y => +3 */
 }
 BCCodOp;
 
@@ -319,6 +335,13 @@ Byte_Code_Initializer(void)
   Op_In_Tbl("execute", EXECUTE);
   Op_In_Tbl("proceed", PROCEED);
   Op_In_Tbl("fail", FAIL);
+
+  Op_In_Tbl("cxt_call", CXT_CALL_X);
+  Op_In_Tbl("cxt_execute", CXT_EXECUTE_X);
+  Op_In_Tbl("cxt_assign_K", CXT_ASSIGN_K_X);
+  Op_In_Tbl("cxt_unit_for_next_call", CXT_UNIT_FOR_NEXT_CALL);
+  Op_In_Tbl("cxt_arg_load", CXT_ARG_LOAD_XX);
+  Op_In_Tbl("cxt_arg_unify", CXT_ARG_UNIFY_XX);
 
   Op_In_Tbl("get_current_choice", GET_CURRENT_CHOICE_X);
   Op_In_Tbl("cut", CUT_X);
@@ -704,6 +727,51 @@ Pl_BC_Emit_Inst_1(WamWord inst_word)
 	  w2 = (unsigned) Functor_Arity(caller_func, caller_arity);
 	}
       break;
+
+/** ------------------------------------------------------------------------ */
+/** -- Format for context-related operations ----------------------------------
+    --
+    -- cxt_call(MODULE:FUNC/ARITY, CALL_CX_REG)
+    -- cxt_execute(MODULE:FUNC/ARITY, CALL_CX_REG)
+    -- cxt_call(FUNC/ARITY, CALL_CX_REG)
+    -- cxt_execute(FUNC/ARITY, CALL_CX_REG)
+    --    [0] -> [8]OP, [16]
+    ------------------------------------------------------------------------ */
+
+    case CXT_CALL_X:		/* unlike regular call and execute, we */
+    case CXT_EXECUTE_X:		/* can't resolve to predicate code address */
+      nb_word = 4;		/* before runtime. */
+      w1 = func = BC_Arg_Func_Arity(*arg_adr++, &arity);
+      BC2_Arity(w) = arity;
+      w2 = (unsigned) BC_Arg_X_Or_Y (*arg_adr, &op);
+      w3 = (unsigned) Functor_Arity(caller_func, caller_arity);
+      break;
+
+    case CXT_ASSIGN_K_X:	/* arg: an X or a Y */
+      BC2_XY(w) = BC_Arg_X_Or_Y(*arg_adr, &op);
+      break;
+
+    case CXT_ARG_LOAD_XX:	/* args: NUMBER, X or Y, X or Y */
+    case CXT_ARG_UNIFY_XX:
+      {
+	unsigned int op1 = 0;
+	unsigned int op2 = 0;
+	nb_word = 2;
+	BC2_Arity(w) = Pl_Rd_Integer (*arg_adr++);
+	BC2_XY(w) = BC_Arg_X_Or_Y(*arg_adr++, (int *) &op1);
+	w1 = (unsigned) BC_Arg_X_Or_Y (*arg_adr, (int *) &op2);
+	op += (op1 << 1) | op2;
+      }
+      break;
+
+    case CXT_UNIT_FOR_NEXT_CALL: /* arg: FUNCTOR/ARITY; ignore for now */
+      nb_word = 2;
+      w1 = func = BC_Arg_Func_Arity(*arg_adr++, &arity);
+      BC2_Arity(w) = arity;
+      break;
+
+/** ------------------------------------------------------------------------ */
+
     }
 
 
@@ -989,6 +1057,7 @@ BC_Emulate_Byte_Code(BCWord *bc)
   int x0, x, y;
   int w1;
   PlLong l;
+  WamWord term, subterm;
   WamCont codep;
   int func, arity;
   PredInf *pred;
@@ -1414,6 +1483,110 @@ bc_loop:
       y = BC2_XY(w);
       Pl_Soft_Cut(Y(E, y));
       goto bc_loop;
+/** ------------------------------------------------------------------------ */
+
+    case CXT_CALL_X:		/* OK? */
+      BCI = (WamWord) (bc + 3) | debug_call;	/* use low bit of adr */
+      CP = Adjust_CP(Prolog_Predicate(BC_EMULATE_CONT, 0));
+    case CXT_EXECUTE_X:		/* OK? */
+      w1 = X(bc->word);		/* fetch call context */
+      goto CXT_EXECUTE_COMMON;
+
+    case CXT_CALL_Y:		/* OK? */
+      BCI = (WamWord) (bc + 3) | debug_call;	/* use low bit of adr */
+      CP = Adjust_CP(Prolog_Predicate(BC_EMULATE_CONT, 0));
+    case CXT_EXECUTE_Y:		/* OK? */
+      w1 = Y(E, bc->word);	/* fetch call context */
+      goto CXT_EXECUTE_COMMON;
+
+    CXT_EXECUTE_COMMON:		/* TBD */
+      arity = BC2_Arity (w);
+      func = bc->word;
+      bc++;
+
+      if (pl_debug_call_code != NULL && debug_call &&
+	  Pl_Detect_If_Aux_Name(func) == NULL)
+	{
+	  w1 = bc->word;
+	  caller_func = Functor_Of(w1);
+	  caller_arity = Arity_Of(w1);
+	  Prep_Debug_Call(func, arity, caller_func, caller_arity);
+	  return pl_debug_call_code;
+	}
+
+      if ((pred = Cxt_Lookup_Pred(Functor_Arity (func, arity))) == NULL)
+	{
+	  w1 = bc->word;
+	  caller_func = Functor_Of(w1);
+	  caller_arity = Arity_Of(w1);
+	  Pl_Set_Bip_Name_2(Tag_ATM(caller_func),
+			 Tag_INT(caller_arity));
+	  Pl_Unknown_Pred_Error(func, arity);
+	  goto fail;
+	}
+
+/** -- side effect: context has already been altered when we get here ------ */
+
+#if 0
+      bc++;			/* useless since CP already set */
+#endif
+      glob_func = func;
+      glob_dyn = (DynPInf *) (pred->dyn);
+      return NULL;		/* to then call BC_Emulate_Pred */
+
+      goto bc_loop;
+
+    case CXT_ASSIGN_K_X:	/* OK */
+      x = BC2_XY(w);
+      Cxt_Assign_K (X(x));
+      goto bc_loop;
+
+    case CXT_ASSIGN_K_Y:	/* OK */
+      y = BC2_XY(w);
+      Cxt_Assign_K (Y(E, y));
+      goto bc_loop;
+
+    case CXT_ARG_LOAD_XX:	/* OK? */
+    case CXT_ARG_UNIFY_XX:	/* OK? */
+      term = X(BC2_XY(w));
+      subterm = X(bc->word);
+      goto CXT_ARG_COMMON;
+
+    case CXT_ARG_LOAD_XY:	/* OK? */
+    case CXT_ARG_UNIFY_XY:
+      term = X(BC2_XY(w));
+      subterm = Y(E, bc->word);
+      goto CXT_ARG_COMMON;
+
+    case CXT_ARG_LOAD_YX:	/* OK? */
+    case CXT_ARG_UNIFY_YX:
+      term = Y(E, BC2_XY(w));
+      subterm = X(bc->word);
+      goto CXT_ARG_COMMON;
+
+    case CXT_ARG_LOAD_YY:	/* OK? */
+    case CXT_ARG_UNIFY_YY:
+      term = Y(E, BC2_XY(w));
+      subterm = Y(E, bc->word);
+      goto CXT_ARG_COMMON;
+
+    CXT_ARG_COMMON:
+      ++bc;
+      if (BC_Op(w) < CXT_ARG_UNIFY_XX) {
+	if (!Cxt_Arg_Load (BC2_Arity(w), term, subterm)) /* FIXME: subterm should be ww* */
+	  goto fail;
+      }
+      else {
+	if (!Cxt_Arg_Unify (BC2_Arity(w), term, subterm))
+	  goto fail;
+      }
+      goto bc_loop;
+
+
+    case CXT_UNIT_FOR_NEXT_CALL: /* ignore? */
+      goto bc_loop;
+
+/** ------------------------------------------------------------------------ */
     }
 
 fail:

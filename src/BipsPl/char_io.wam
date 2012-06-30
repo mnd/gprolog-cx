@@ -1,8 +1,8 @@
-% compiler: GNU Prolog 1.4.1
+% compiler: GNU Prolog/CX 1.4.1
 % file    : char_io.pl
 
 
-file_name('/home/diaz/GP/src/src/BipsPl/char_io.pl').
+file_name('/home/kim/Source/gprolog-1.4.1/src/BipsPl/char_io.pl').
 
 
 predicate('$use_char_io'/0,42,static,private,monofile,built_in,[

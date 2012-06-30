@@ -1,8 +1,8 @@
-% compiler: GNU Prolog 1.4.1
+% compiler: GNU Prolog/CX 1.4.1
 % file    : write.pl
 
 
-file_name('/home/diaz/GP/src/src/BipsPl/write.pl').
+file_name('/home/kim/Source/gprolog-1.4.1/src/BipsPl/write.pl').
 
 
 predicate('$use_write'/0,42,static,private,monofile,built_in,[
@@ -59,15 +59,21 @@ predicate(display/2,87,static,private,monofile,built_in,[
 
 predicate(write_term/2,111,static,private,monofile,built_in,[
     try_me_else(1),
-    allocate(2),
+    allocate(3),
     get_variable(y(0),0),
     get_variable(y(1),1),
+    get_variable(y(2),255),
+    cxt_assign_K(y(2)),
     call_c('Pl_Set_Bip_Name_Untagged_2',[by_value],[write_term,2]),
+    cxt_assign_K(y(2)),
     call('$set_write_defaults'/0),
+    cxt_assign_K(y(2)),
     put_value(y(1),0),
     call('$get_write_options'/1),
+    cxt_assign_K(y(2)),
     put_value(y(0),0),
     call_c('Pl_Write_Term_1',[],[x(0)]),
+    cxt_assign_K(y(2)),
     fail,
 
 label(1),
@@ -77,17 +83,23 @@ label(1),
 
 predicate(write_term/3,121,static,private,monofile,built_in,[
     try_me_else(1),
-    allocate(3),
+    allocate(4),
     get_variable(y(0),0),
     get_variable(y(1),1),
     get_variable(y(2),2),
+    get_variable(y(3),255),
+    cxt_assign_K(y(3)),
     call_c('Pl_Set_Bip_Name_Untagged_2',[by_value],[write_term,3]),
+    cxt_assign_K(y(3)),
     call('$set_write_defaults'/0),
+    cxt_assign_K(y(3)),
     put_value(y(2),0),
     call('$get_write_options'/1),
+    cxt_assign_K(y(3)),
     put_value(y(0),0),
     put_value(y(1),1),
     call_c('Pl_Write_Term_2',[],[x(0),x(1)]),
+    cxt_assign_K(y(3)),
     fail,
 
 label(1),
@@ -96,16 +108,21 @@ label(1),
 
 
 predicate('$set_write_defaults'/0,132,static,private,monofile,built_in,[
-    allocate(0),
+    allocate(1),
+    get_variable(y(0),255),
+    cxt_assign_K(y(0)),
     put_integer(0,0),
     put_integer(0,1),
     call('$sys_var_write'/2),
+    cxt_assign_K(y(0)),
     put_integer(1,0),
     put_integer(-1,1),
     call('$sys_var_write'/2),
+    cxt_assign_K(y(0)),
     put_integer(2,0),
     put_integer(1200,1),
     call('$sys_var_write'/2),
+    cxt_assign_K(y(0)),
     put_integer(3,0),
     put_integer(0,1),
     deallocate,
@@ -113,27 +130,34 @@ predicate('$set_write_defaults'/0,132,static,private,monofile,built_in,[
 
 
 predicate('$get_write_options'/1,141,static,private,monofile,built_in,[
-    allocate(1),
+    allocate(2),
     get_variable(y(0),0),
+    get_variable(y(1),255),
+    cxt_assign_K(y(1)),
     put_value(y(0),0),
     call('$check_list'/1),
+    cxt_assign_K(y(1)),
     put_value(y(0),0),
     call('$get_write_options1'/1),
+    put_value(y(1),0),
     deallocate,
-    execute('$$get_write_options/1_$aux1'/0)]).
+    execute('$$get_write_options/1_$aux1'/1)]).
 
 
-predicate('$$get_write_options/1_$aux1'/0,141,static,private,monofile,local,[
-    pragma_arity(1),
-    get_current_choice(x(0)),
+predicate('$$get_write_options/1_$aux1'/1,141,static,private,monofile,local,[
+    pragma_arity(2),
+    get_current_choice(x(1)),
     try_me_else(1),
-    allocate(1),
+    allocate(2),
     get_variable(y(0),0),
+    get_variable(y(1),1),
+    cxt_assign_K(y(0)),
     put_integer(0,0),
     put_integer(6,1),
     put_integer(1,2),
     call('$sys_var_get_bit'/3),
-    cut(y(0)),
+    cut(y(1)),
+    cxt_assign_K(y(0)),
     put_integer(0,0),
     put_integer(3,1),
     deallocate,
@@ -141,6 +165,7 @@ predicate('$$get_write_options/1_$aux1'/0,141,static,private,monofile,local,[
 
 label(1),
     trust_me_else_fail,
+    cxt_assign_K(x(0)),
     proceed]).
 
 
@@ -160,13 +185,17 @@ label(3),
     trust_me_else_fail,
 
 label(4),
-    allocate(2),
+    allocate(3),
     get_list(0),
     unify_variable(x(0)),
     unify_variable(y(0)),
     get_variable(y(1),1),
+    get_variable(y(2),255),
+    cxt_assign_K(y(2)),
     call('$get_write_options2'/1),
+    cxt_assign_K(y(2)),
     cut(y(1)),
+    cxt_assign_K(y(2)),
     put_value(y(0),0),
     deallocate,
     execute('$get_write_options1'/1)]).
@@ -189,36 +218,40 @@ label(3),
 
 label(4),
     get_structure(quoted/1,0),
-    unify_variable(x(0)),
-    call_c('Pl_Blt_Non_Var',[fast_call,boolean],[x(0)]),
-    execute('$$get_write_options2/1_$aux1'/1),
+    unify_variable(x(1)),
+    call_c('Pl_Blt_Non_Var',[fast_call,boolean],[x(1)]),
+    put_value(x(255),0),
+    execute('$$get_write_options2/1_$aux1'/2),
 
 label(5),
     retry_me_else(7),
 
 label(6),
     get_structure(ignore_ops/1,0),
-    unify_variable(x(0)),
-    call_c('Pl_Blt_Non_Var',[fast_call,boolean],[x(0)]),
-    execute('$$get_write_options2/1_$aux2'/1),
+    unify_variable(x(1)),
+    call_c('Pl_Blt_Non_Var',[fast_call,boolean],[x(1)]),
+    put_value(x(255),0),
+    execute('$$get_write_options2/1_$aux2'/2),
 
 label(7),
     retry_me_else(9),
 
 label(8),
     get_structure(numbervars/1,0),
-    unify_variable(x(0)),
-    call_c('Pl_Blt_Non_Var',[fast_call,boolean],[x(0)]),
-    execute('$$get_write_options2/1_$aux3'/1),
+    unify_variable(x(1)),
+    call_c('Pl_Blt_Non_Var',[fast_call,boolean],[x(1)]),
+    put_value(x(255),0),
+    execute('$$get_write_options2/1_$aux3'/2),
 
 label(9),
     retry_me_else(11),
 
 label(10),
     get_structure(namevars/1,0),
-    unify_variable(x(0)),
-    call_c('Pl_Blt_Non_Var',[fast_call,boolean],[x(0)]),
-    execute('$$get_write_options2/1_$aux4'/1),
+    unify_variable(x(1)),
+    call_c('Pl_Blt_Non_Var',[fast_call,boolean],[x(1)]),
+    put_value(x(255),0),
+    execute('$$get_write_options2/1_$aux4'/2),
 
 label(11),
     retry_me_else(13),
@@ -235,29 +268,34 @@ label(13),
 
 label(14),
     get_structure(space_args/1,0),
-    unify_variable(x(0)),
-    call_c('Pl_Blt_Non_Var',[fast_call,boolean],[x(0)]),
-    execute('$$get_write_options2/1_$aux5'/1),
+    unify_variable(x(1)),
+    call_c('Pl_Blt_Non_Var',[fast_call,boolean],[x(1)]),
+    put_value(x(255),0),
+    execute('$$get_write_options2/1_$aux5'/2),
 
 label(15),
     retry_me_else(17),
 
 label(16),
     get_structure(portrayed/1,0),
-    unify_variable(x(0)),
-    call_c('Pl_Blt_Non_Var',[fast_call,boolean],[x(0)]),
-    execute('$$get_write_options2/1_$aux6'/1),
+    unify_variable(x(1)),
+    call_c('Pl_Blt_Non_Var',[fast_call,boolean],[x(1)]),
+    put_value(x(255),0),
+    execute('$$get_write_options2/1_$aux6'/2),
 
 label(17),
     retry_me_else(19),
 
 label(18),
-    allocate(1),
+    allocate(2),
     get_structure(variable_names/1,0),
     unify_variable(y(0)),
+    get_variable(y(1),255),
+    cxt_assign_K(y(1)),
     put_integer(0,0),
     put_integer(6,1),
     call('$sys_var_set_bit'/2),
+    cxt_assign_K(y(1)),
     put_value(y(0),0),
     deallocate,
     execute('$name_variables'/1),
@@ -289,151 +327,115 @@ label(23),
     execute('$pl_err_domain'/2)]).
 
 
-predicate('$$get_write_options2/1_$aux6'/1,207,static,private,monofile,local,[
-    switch_on_term(2,1,fail,fail,fail),
-
-label(1),
-    switch_on_atom([(false,3),(true,5)]),
-
-label(2),
-    try_me_else(4),
-
-label(3),
-    get_atom(false,0),
+predicate('$$get_write_options2/1_$aux6'/2,207,static,private,monofile,local,[
+    try_me_else(1),
+    cxt_assign_K(x(0)),
+    get_atom(false,1),
+    cxt_assign_K(x(0)),
     put_integer(0,0),
     put_integer(5,1),
     execute('$sys_var_reset_bit'/2),
 
-label(4),
+label(1),
     trust_me_else_fail,
-
-label(5),
-    get_atom(true,0),
+    cxt_assign_K(x(0)),
+    get_atom(true,1),
+    cxt_assign_K(x(0)),
     put_integer(0,0),
     put_integer(5,1),
     execute('$sys_var_set_bit'/2)]).
 
 
-predicate('$$get_write_options2/1_$aux5'/1,199,static,private,monofile,local,[
-    switch_on_term(2,1,fail,fail,fail),
-
-label(1),
-    switch_on_atom([(false,3),(true,5)]),
-
-label(2),
-    try_me_else(4),
-
-label(3),
-    get_atom(false,0),
+predicate('$$get_write_options2/1_$aux5'/2,199,static,private,monofile,local,[
+    try_me_else(1),
+    cxt_assign_K(x(0)),
+    get_atom(false,1),
+    cxt_assign_K(x(0)),
     put_integer(0,0),
     put_integer(4,1),
     execute('$sys_var_reset_bit'/2),
 
-label(4),
+label(1),
     trust_me_else_fail,
-
-label(5),
-    get_atom(true,0),
+    cxt_assign_K(x(0)),
+    get_atom(true,1),
+    cxt_assign_K(x(0)),
     put_integer(0,0),
     put_integer(4,1),
     execute('$sys_var_set_bit'/2)]).
 
 
-predicate('$$get_write_options2/1_$aux4'/1,187,static,private,monofile,local,[
-    switch_on_term(2,1,fail,fail,fail),
-
-label(1),
-    switch_on_atom([(false,3),(true,5)]),
-
-label(2),
-    try_me_else(4),
-
-label(3),
-    get_atom(false,0),
+predicate('$$get_write_options2/1_$aux4'/2,187,static,private,monofile,local,[
+    try_me_else(1),
+    cxt_assign_K(x(0)),
+    get_atom(false,1),
+    cxt_assign_K(x(0)),
     put_integer(0,0),
     put_integer(3,1),
     execute('$sys_var_reset_bit'/2),
 
-label(4),
+label(1),
     trust_me_else_fail,
-
-label(5),
-    get_atom(true,0),
+    cxt_assign_K(x(0)),
+    get_atom(true,1),
+    cxt_assign_K(x(0)),
     put_integer(0,0),
     put_integer(3,1),
     execute('$sys_var_set_bit'/2)]).
 
 
-predicate('$$get_write_options2/1_$aux3'/1,179,static,private,monofile,local,[
-    switch_on_term(2,1,fail,fail,fail),
-
-label(1),
-    switch_on_atom([(false,3),(true,5)]),
-
-label(2),
-    try_me_else(4),
-
-label(3),
-    get_atom(false,0),
+predicate('$$get_write_options2/1_$aux3'/2,179,static,private,monofile,local,[
+    try_me_else(1),
+    cxt_assign_K(x(0)),
+    get_atom(false,1),
+    cxt_assign_K(x(0)),
     put_integer(0,0),
     put_integer(2,1),
     execute('$sys_var_reset_bit'/2),
 
-label(4),
+label(1),
     trust_me_else_fail,
-
-label(5),
-    get_atom(true,0),
+    cxt_assign_K(x(0)),
+    get_atom(true,1),
+    cxt_assign_K(x(0)),
     put_integer(0,0),
     put_integer(2,1),
     execute('$sys_var_set_bit'/2)]).
 
 
-predicate('$$get_write_options2/1_$aux2'/1,171,static,private,monofile,local,[
-    switch_on_term(2,1,fail,fail,fail),
-
-label(1),
-    switch_on_atom([(false,3),(true,5)]),
-
-label(2),
-    try_me_else(4),
-
-label(3),
-    get_atom(false,0),
+predicate('$$get_write_options2/1_$aux2'/2,171,static,private,monofile,local,[
+    try_me_else(1),
+    cxt_assign_K(x(0)),
+    get_atom(false,1),
+    cxt_assign_K(x(0)),
     put_integer(0,0),
     put_integer(1,1),
     execute('$sys_var_reset_bit'/2),
 
-label(4),
+label(1),
     trust_me_else_fail,
-
-label(5),
-    get_atom(true,0),
+    cxt_assign_K(x(0)),
+    get_atom(true,1),
+    cxt_assign_K(x(0)),
     put_integer(0,0),
     put_integer(1,1),
     execute('$sys_var_set_bit'/2)]).
 
 
-predicate('$$get_write_options2/1_$aux1'/1,163,static,private,monofile,local,[
-    switch_on_term(2,1,fail,fail,fail),
-
-label(1),
-    switch_on_atom([(false,3),(true,5)]),
-
-label(2),
-    try_me_else(4),
-
-label(3),
-    get_atom(false,0),
+predicate('$$get_write_options2/1_$aux1'/2,163,static,private,monofile,local,[
+    try_me_else(1),
+    cxt_assign_K(x(0)),
+    get_atom(false,1),
+    cxt_assign_K(x(0)),
     put_integer(0,0),
     put_integer(0,1),
     execute('$sys_var_reset_bit'/2),
 
-label(4),
+label(1),
     trust_me_else_fail,
-
-label(5),
-    get_atom(true,0),
+    cxt_assign_K(x(0)),
+    get_atom(true,1),
+    cxt_assign_K(x(0)),
     put_integer(0,0),
     put_integer(0,1),
     execute('$sys_var_set_bit'/2)]).
@@ -455,38 +457,46 @@ label(3),
     trust_me_else_fail,
 
 label(4),
-    allocate(1),
+    allocate(2),
     get_list(0),
     unify_variable(x(0)),
     unify_variable(y(0)),
     get_structure((=)/2,0),
     unify_variable(x(0)),
-    unify_variable(x(3)),
-    get_variable(x(2),1),
-    put_value(x(3),1),
-    call('$$name_variables/1_$aux1'/3),
+    unify_variable(x(2)),
+    get_variable(x(3),1),
+    get_variable(y(1),255),
+    put_value(x(0),1),
+    put_value(y(1),0),
+    call('$$name_variables/1_$aux1'/4),
+    cxt_assign_K(y(1)),
     put_value(y(0),0),
     deallocate,
     execute('$name_variables'/1)]).
 
 
-predicate('$$name_variables/1_$aux1'/3,234,static,private,monofile,local,[
+predicate('$$name_variables/1_$aux1'/4,234,static,private,monofile,local,[
     try_me_else(1),
-    allocate(3),
+    allocate(4),
     get_variable(y(0),0),
     get_variable(y(1),1),
     get_variable(y(2),2),
-    put_value(y(0),0),
-    call('$is_valid_var_name'/1),
+    get_variable(y(3),3),
+    cxt_assign_K(y(0)),
     put_value(y(1),0),
+    call('$is_valid_var_name'/1),
+    cxt_assign_K(y(0)),
+    put_value(y(2),0),
     get_structure('$VARNAME'/1,0),
-    unify_local_value(y(0)),
-    cut(y(2)),
+    unify_local_value(y(1)),
+    cxt_assign_K(y(0)),
+    cut(y(3)),
     deallocate,
     proceed,
 
 label(1),
     trust_me_else_fail,
+    cxt_assign_K(x(0)),
     proceed]).
 
 

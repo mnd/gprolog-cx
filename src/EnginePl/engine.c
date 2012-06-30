@@ -242,6 +242,8 @@ Pl_Reset_Prolog(void)
   Pl_Create_Choice_Point(Call_Prolog_Fail, 0);  /* 1st choice point */
 
   Pl_Fd_Reset_Solver();
+
+  Cxt_Init();
 }
 
 

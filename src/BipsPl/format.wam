@@ -1,8 +1,8 @@
-% compiler: GNU Prolog 1.4.1
+% compiler: GNU Prolog/CX 1.4.1
 % file    : format.pl
 
 
-file_name('/home/diaz/GP/src/src/BipsPl/format.pl').
+file_name('/home/kim/Source/gprolog-1.4.1/src/BipsPl/format.pl').
 
 
 predicate('$use_format'/0,42,static,private,monofile,built_in,[

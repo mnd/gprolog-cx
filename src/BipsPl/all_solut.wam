@@ -1,8 +1,8 @@
-% compiler: GNU Prolog 1.4.1
+% compiler: GNU Prolog/CX 1.4.1
 % file    : all_solut.pl
 
 
-file_name('/home/diaz/GP/src/src/BipsPl/all_solut.pl').
+file_name('/home/kim/Source/gprolog-1.4.1/src/BipsPl/all_solut.pl').
 
 
 predicate('$use_all_solut'/0,42,static,private,monofile,built_in,[
@@ -15,20 +15,24 @@ predicate(findall/3,45,static,private,monofile,built_in,[
 
 
 predicate('$findall'/4,48,static,private,monofile,built_in,[
-    allocate(5),
+    allocate(6),
     get_variable(y(0),0),
     get_variable(y(1),1),
     get_variable(y(2),2),
     get_variable(y(3),3),
+    get_variable(y(4),255),
+    cxt_assign_K(y(4)),
     put_value(y(2),0),
     put_value(y(3),1),
     call('$check_list_arg'/2),
+    cxt_assign_K(y(4)),
     put_value(y(0),0),
     put_value(y(1),1),
-    put_variable(y(4),2),
+    put_variable(y(5),2),
     put_value(y(3),3),
     call('$store_solutions'/4),
-    put_unsafe_value(y(4),0),
+    cxt_assign_K(y(4)),
+    put_unsafe_value(y(5),0),
     put_integer(0,1),
     put_value(y(2),2),
     deallocate,
@@ -37,13 +41,16 @@ predicate('$findall'/4,48,static,private,monofile,built_in,[
 
 
 predicate(setof/3,56,static,private,monofile,built_in,[
-    allocate(3),
+    allocate(4),
     get_variable(y(0),0),
     get_variable(y(1),1),
     get_variable(y(2),2),
+    get_variable(y(3),255),
+    cxt_assign_K(y(3)),
     put_value(y(2),0),
     put_atom(setof,1),
     call('$check_list_arg'/2),
+    cxt_assign_K(y(3)),
     put_value(y(0),0),
     put_value(y(1),1),
     put_value(y(2),2),
@@ -53,13 +60,16 @@ predicate(setof/3,56,static,private,monofile,built_in,[
 
 
 predicate(bagof/3,64,static,private,monofile,built_in,[
-    allocate(3),
+    allocate(4),
     get_variable(y(0),0),
     get_variable(y(1),1),
     get_variable(y(2),2),
+    get_variable(y(3),255),
+    cxt_assign_K(y(3)),
     put_value(y(2),0),
     put_atom(bagof,1),
     call('$check_list_arg'/2),
+    cxt_assign_K(y(3)),
     put_value(y(0),0),
     put_value(y(1),1),
     put_value(y(2),2),
@@ -72,107 +82,133 @@ predicate('$bagof'/4,69,static,private,monofile,built_in,[
     pragma_arity(5),
     get_current_choice(x(4)),
     try_me_else(1),
-    allocate(5),
+    allocate(6),
     get_variable(y(0),2),
     get_variable(y(1),3),
     get_variable(x(3),1),
     get_variable(x(2),0),
+    get_variable(y(2),255),
+    cxt_assign_K(y(2)),
     put_variable(x(1),0),
-    put_variable(y(2),5),
+    put_variable(y(3),5),
     call_c('Pl_Free_Variables_4',[boolean],[x(2),x(3),x(0),x(5)]),
+    cxt_assign_K(y(2)),
     cut(x(4)),
+    cxt_assign_K(y(2)),
     put_structure((-)/2,0),
-    unify_local_value(y(2)),
+    unify_local_value(y(3)),
     unify_local_value(x(2)),
-    put_variable(y(3),2),
+    put_variable(y(4),2),
     put_value(y(1),3),
     call('$store_solutions'/4),
+    cxt_assign_K(y(2)),
     put_value(y(1),0),
     put_integer(3,1),
     call_c('Pl_Set_Bip_Name_2',[],[x(0),x(1)]),
-    put_value(y(3),0),
+    cxt_assign_K(y(2)),
+    put_value(y(4),0),
     put_integer(1,1),
-    put_variable(y(4),2),
+    put_variable(y(5),2),
     call_c('Pl_Recover_Solutions_2',[boolean],[x(0),x(1),x(2)]),
-    put_value(y(1),0),
-    put_value(y(4),1),
-    call('$$bagof/4_$aux1'/2),
-    put_unsafe_value(y(4),0),
-    put_unsafe_value(y(2),1),
+    put_value(y(2),0),
+    put_value(y(1),1),
+    put_value(y(5),2),
+    call('$$bagof/4_$aux1'/3),
+    cxt_assign_K(y(2)),
+    put_unsafe_value(y(5),0),
+    put_unsafe_value(y(3),1),
     put_value(y(0),2),
     deallocate,
     execute('$group_solutions'/3),
 
 label(1),
     trust_me_else_fail,
-    allocate(2),
+    allocate(3),
     get_variable(y(0),2),
     get_variable(y(1),3),
+    get_variable(y(2),255),
+    cxt_assign_K(y(2)),
     put_variable(x(1),2),
     call_c('Pl_Recover_Generator_1',[],[x(2)]),
+    cxt_assign_K(y(2)),
     put_value(y(0),2),
     put_value(y(1),3),
     call('$findall'/4),
+    cxt_assign_K(y(2)),
     put_value(y(0),0),
     put_nil(1),
     call_c('Pl_Blt_Term_Neq',[fast_call,boolean],[x(0),x(1)]),
-    put_value(y(1),0),
-    put_value(y(0),1),
+    put_value(y(2),0),
+    put_value(y(1),1),
+    put_value(y(0),2),
     deallocate,
-    execute('$$bagof/4_$aux2'/2)]).
+    execute('$$bagof/4_$aux2'/3)]).
 
 
-predicate('$$bagof/4_$aux2'/2,80,static,private,monofile,local,[
-    pragma_arity(3),
-    get_current_choice(x(2)),
+predicate('$$bagof/4_$aux2'/3,80,static,private,monofile,local,[
+    pragma_arity(4),
+    get_current_choice(x(3)),
     try_me_else(1),
-    get_atom(bagof,0),
-    cut(x(2)),
+    cxt_assign_K(x(0)),
+    get_atom(bagof,1),
+    cut(x(3)),
+    cxt_assign_K(x(0)),
     proceed,
 
 label(1),
     trust_me_else_fail,
-    put_value(x(1),0),
+    cxt_assign_K(x(0)),
+    put_value(x(2),0),
     execute(sort/1)]).
 
 
-predicate('$$bagof/4_$aux1'/2,69,static,private,monofile,local,[
-    pragma_arity(3),
-    get_current_choice(x(2)),
+predicate('$$bagof/4_$aux1'/3,69,static,private,monofile,local,[
+    pragma_arity(4),
+    get_current_choice(x(3)),
     try_me_else(1),
-    get_atom(bagof,0),
-    cut(x(2)),
-    put_value(x(1),0),
+    cxt_assign_K(x(0)),
+    get_atom(bagof,1),
+    cut(x(3)),
+    cxt_assign_K(x(0)),
+    put_value(x(2),0),
     execute(keysort/1),
 
 label(1),
     trust_me_else_fail,
-    put_value(x(1),0),
+    cxt_assign_K(x(0)),
+    put_value(x(2),0),
     execute(sort/1)]).
 
 
 predicate('$store_solutions'/4,92,static,private,monofile,built_in,[
-    get_variable(x(4),2),
-    get_variable(x(2),0),
-    call_c('Pl_Stop_Mark_1',[],[x(4)]),
-    put_value(x(1),0),
-    put_value(x(3),1),
-    execute('$$store_solutions/4_$aux1'/3)]).
+    get_variable(x(4),3),
+    get_variable(x(3),0),
+    call_c('Pl_Stop_Mark_1',[],[x(2)]),
+    put_value(x(255),0),
+    put_value(x(4),2),
+    execute('$$store_solutions/4_$aux1'/4)]).
 
 
-predicate('$$store_solutions/4_$aux1'/3,92,static,private,monofile,local,[
+predicate('$$store_solutions/4_$aux1'/4,92,static,private,monofile,local,[
     try_me_else(1),
-    allocate(1),
-    get_variable(y(0),2),
+    allocate(2),
+    get_variable(y(0),0),
+    get_variable(y(1),3),
+    cxt_assign_K(y(0)),
+    put_value(x(1),0),
+    put_value(x(2),1),
     put_integer(3,2),
     put_atom(true,3),
     call('$call'/4),
-    put_value(y(0),0),
+    cxt_assign_K(y(0)),
+    put_value(y(1),0),
     call_c('Pl_Store_Solution_1',[],[x(0)]),
+    cxt_assign_K(y(0)),
     fail,
 
 label(1),
     trust_me_else_fail,
+    cxt_assign_K(x(0)),
     proceed]).
 
 

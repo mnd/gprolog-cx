@@ -131,11 +131,14 @@ Pl_Init_Pred(void)
  * byte-code support.                                                      *
  *-------------------------------------------------------------------------*/
 PredInf * FC
-Pl_Create_Pred(int func, int arity, int pl_file, int pl_line, int prop,
-	       PlLong *codep)
+Pl_Create_Pred_Module(int module, int marity,
+		      int func, int arity, int pl_file, int pl_line,
+		      int prop, PlLong *codep)
 {
   PredInf pred_info;
   PredInf *pred;
+  AtomInf *atom_module;
+  char **p_tbl;
   PlLong key = Functor_Arity(func, arity);
 
 
@@ -143,8 +146,31 @@ Pl_Create_Pred(int func, int arity, int pl_file, int pl_line, int prop,
     prop |= MASK_PRED_BUILTIN;	/* now an FD built-in or a CC is also a built-in */
 
 #ifdef DEBUG
-  DBGPRINTF("Create pred: %s/%d  prop: %x\n", pl_atom_tbl[func].name, arity, prop);
+  DBGPRINTF("Create pred: %s/%d  unit: %s/%d  prop: %x\n",
+	    pl_atom_tbl[func].name, arity,
+	    module > 0 ? (pl_atom_tbl[module].name) : "<NONE>", marity,
+	    prop);
 #endif
+
+  if (module < 0 || module == ATOM_NIL || module == pl_atom_void)
+    p_tbl = &pl_pred_tbl;
+  else
+    {				/* lookup or create a module pred table */
+      atom_module = pl_atom_tbl + module;
+
+      if (atom_module->modules == NULL) /* no units yet */
+	atom_module->modules = (void *) Calloc (256, (sizeof (void *)));
+
+#if 0				/* cannot happen because of max_arity */
+      if (marity > 255)
+	Fatal_Error("Fatal error: attemted unit with arity %d!", marity);
+#endif
+
+      if (atom_module->modules[marity] == NULL)
+	atom_module->modules[marity] =
+	  Pl_Hash_Alloc_Table(START_MODULE_PRED_TBL_SIZE, sizeof(PredInf));
+      p_tbl = &atom_module->modules[marity];
+    }
 
   pred_info.f_n = key;
   pred_info.prop = prop;
@@ -153,8 +179,8 @@ Pl_Create_Pred(int func, int arity, int pl_file, int pl_line, int prop,
   pred_info.codep = codep;
   pred_info.dyn = NULL;
 
-  Pl_Extend_Table_If_Needed(&pl_pred_tbl);
-  pred = (PredInf *) Pl_Hash_Insert(pl_pred_tbl, (char *) &pred_info, FALSE);
+  Pl_Extend_Table_If_Needed(p_tbl);
+  pred = (PredInf *) Pl_Hash_Insert(*p_tbl, (char *) &pred_info, FALSE);
 
   if (prop != pred->prop)	/* predicate exists - occurs for multifile pred */
     {
@@ -172,7 +198,29 @@ Pl_Create_Pred(int func, int arity, int pl_file, int pl_line, int prop,
 }
 
 
+/*-------------------------------------------------------------------------*
+ * Pl_CREATE_PRED                                                          *
+ *                                                                         *
+ * Called by compiled prolog code, by dynamic predicate support and by     *
+ * byte-code support.                                                      *
+ *-------------------------------------------------------------------------*/
+PredInf * FC
+Pl_Create_Pred(int func, int arity, int pl_file, int pl_line, int prop,
+	       long *codep)
+{
+  return Pl_Create_Pred_Module(-1, 0, func, arity, pl_file, pl_line, prop, codep);
+}
 
+
+/* --- TO DO: Lookup_Pred_Module and Delete_Pred_Module --- */
+
+PredInf * FC
+Pl_Lookup_Pred_in_Cxt(int func, int arity, WamWord cxt)
+{
+  long key = Functor_Arity(func, arity);
+
+  return (PredInf *) Cxt_Lookup_Pred_With_K(key, cxt);
+}
 
 /*-------------------------------------------------------------------------*
  * PL_LOOKUP_PRED                                                          *
@@ -182,10 +230,16 @@ PredInf * FC
 Pl_Lookup_Pred(int func, int arity)
 {
   PlLong key = Functor_Arity(func, arity);
+  PredInf *p = (PredInf *) Pl_Hash_Find(pl_pred_tbl, key);
 
-  return (PredInf *) Pl_Hash_Find(pl_pred_tbl, key);
+  if (p)
+    return p;
+  else
+    {
+      X(254) = X(255);
+      return (PredInf *) Pl_Lookup_Pred_in_Cxt (func, arity, X(255));
+    }
 }
-
 
 
 

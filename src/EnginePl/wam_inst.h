@@ -540,6 +540,30 @@ PlLong chain_len;
   while (0)
 
 
+/* -- context support ------------------------------------------------------ */
+
+#ifdef UnTag_ATM
+
+static inline PredInf * FC
+Cxt_Lookup_Pred_In (int key, WamWord unit, int arity)
+{
+  int unit_atom = UnTag_ATM (unit);
+  void *ptable = pl_pred_tbl;
+
+  if (unit_atom && unit_atom != ATOM_NIL &&
+      pl_atom_tbl[unit_atom].modules && pl_atom_tbl[unit_atom].modules[arity])
+    ptable = pl_atom_tbl[unit_atom].modules[arity];
+  else
+    ptable = pl_pred_tbl;
+
+  return (PredInf *) Pl_Hash_Find (ptable, key);
+}
+
+#endif
+
+/* ------------------------------------------------------------------------- */
+
+
 
 
 #define Assign_B(newB)              (B = (newB), HB1 = HB(B))

@@ -58,6 +58,7 @@
 void Source_Line(int line_no, char *cmt);
 
 
+void F_unit_name(ArgVal arg[]);
 
 void F_file_name(ArgVal arg[]);
 
@@ -177,3 +178,17 @@ void F_function(ArgVal arg[]);
 void F_call_c(ArgVal arg[]);
 
 void F_foreign_call_c(ArgVal arg[]);
+
+/* --- Contexts --- */
+
+void F_cxt_call(ArgVal arg[]);
+
+void F_cxt_execute(ArgVal arg[]);
+
+void F_cxt_assign_K(ArgVal arg[]);
+
+void F_cxt_unit_for_next_call(ArgVal arg[]);
+
+void F_cxt_arg_load(ArgVal arg[]);
+
+void F_cxt_arg_unify(ArgVal arg[]);

@@ -140,6 +140,30 @@ Encode_Hexa(char *module, char *pred, int arity, char *str)
 }
 
 
+/*-------------------------------------------------------------------------*
+ * NATIVE_ENCODE_HEXA                                                      *
+ *                                                                         *
+ * ctx_unit  : the context unit                                            *
+ * uarity    : the unit arity (or -1 if no arity present)                  *
+ * module    : the module to encode (NULL or '\0' if no module qualif)     *
+ * pred      : the predicate functor                                       *
+ * arity     : the arity (or -1 if no arity present)                       *
+ * str       : the resulting encoded string                                *
+ *                                                                         *
+ * Returns the next position in str                                        *
+ *-------------------------------------------------------------------------*/
+char *
+Native_Encode_Hexa(char *cxt_unit, int uarity,
+		   char *module, char *pred, int arity, char *str)
+{
+  if (cxt_unit && cxt_unit[0])
+    {
+      str = Encode_Hexa((char *) NULL, cxt_unit, uarity, str);
+    }
+  str = Encode_Hexa(module, pred, arity, str);
+}
+
+
 
 /*-------------------------------------------------------------------------*
  * ENCODE_HEXA_LINE                                                        *

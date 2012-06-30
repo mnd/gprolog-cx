@@ -86,6 +86,7 @@ ParseInf;
  *---------------------------------*/
 
 ParseInf decl[] = {
+  {"unit_name", F_unit_name, 1, {MP_N}},
   {"file_name", F_file_name, 1, {ATOM}},
   {"directive", F_directive, 3, {INTEGER, ATOM, LIST_INST}},
   {"predicate", F_predicate, 7, {MP_N, INTEGER, ATOM, ATOM, ATOM, ATOM, LIST_INST}},
@@ -162,6 +163,13 @@ ParseInf inst[] = {
 
   {"foreign_call_c", F_foreign_call_c, 5, {ATOM, ATOM, F_N, INTEGER,
 					   L2(ATOM, ATOM)}},
+
+  {"cxt_call", F_cxt_call, 2, {F_N, X_Y}},
+  {"cxt_execute", F_cxt_execute, 2, {F_N, X_Y}},
+  {"cxt_assign_K", F_cxt_assign_K, 1, {X_Y}},
+  {"cxt_unit_for_next_call", F_cxt_unit_for_next_call, 1, {F_N}},
+  {"cxt_arg_load", F_cxt_arg_load, 3, {INTEGER, X_Y, X_Y}},
+  {"cxt_arg_unify", F_cxt_arg_unify, 3, {INTEGER, X_Y, X_Y}},
 
   {NULL, NULL, 0, {0}}
 };

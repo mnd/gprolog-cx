@@ -6,9 +6,9 @@
 #define __GPROLOG_VERSION__   	10401
 
 #define PROLOG_DIALECT  	"gprolog"
-#define PROLOG_NAME     	"GNU Prolog"
+#define PROLOG_NAME     	"GNU Prolog/CX"
 #define PROLOG_VERSION  	"1.4.1"
-#define PROLOG_DATE     	"Jun 28 2012"
+#define PROLOG_DATE     	"Jul  1 2012"
 #define PROLOG_COPYRIGHT	"Copyright (C) 1999-2012 Daniel Diaz"
 
 #define PL_MIN_INTEGER		-268435456

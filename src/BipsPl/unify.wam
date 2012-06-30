@@ -1,8 +1,8 @@
-% compiler: GNU Prolog 1.4.1
+% compiler: GNU Prolog/CX 1.4.1
 % file    : unify.pl
 
 
-file_name('/home/diaz/GP/src/src/BipsPl/unify.pl').
+file_name('/home/kim/Source/gprolog-1.4.1/src/BipsPl/unify.pl').
 
 
 predicate('$use_unify'/0,43,static,private,monofile,built_in,[

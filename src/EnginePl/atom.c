@@ -280,6 +280,7 @@ Pl_Create_Atom(char *name)
   pl_nb_atom++;
 
   patom->name = name;
+  patom->modules = NULL;	/* first time around it's got no units */
   prop.needs_scan = FALSE;
 
   identifier = graphic = (*name != '\0');

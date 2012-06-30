@@ -41,6 +41,8 @@
 
 #define START_PRED_TBL_SIZE        4096
 
+#define START_MODULE_PRED_TBL_SIZE 128
+
 #define START_OPER_TBL_SIZE        1024
 
 #define ATOM_SIZE                  20

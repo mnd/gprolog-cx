@@ -84,7 +84,7 @@
 #define DEFAULT_OUTPUT_SUFFIX      ".ma"
 
 #define MAX_PRED_NAME_LENGTH       2048
-#define MAX_HEXA_LENGTH            MAX_PRED_NAME_LENGTH * 2 + 2 + 16
+#define MAX_HEXA_LENGTH            (MAX_PRED_NAME_LENGTH * 2 + 2) * 2 + 16
 #define MAX_LABEL_LENGTH           32
 
 
@@ -161,6 +161,7 @@ typedef struct predinf
   char *hexa;
   int line_no;
   int prop;
+  BTNode *cxt_unit;
   BTNode *pl_file;
   int pl_line;
   SwtTbl *swt_tbl[3];
@@ -196,6 +197,10 @@ FILE *file_out;
 BTString bt_atom;
 BTString bt_tagged_atom;
 BTString bt_tagged_f_n;
+
+BTNode *cxt_cur_unit;
+char cxt_unit_for_next_call[MAX_LABEL_LENGTH];
+int cxt_arity_for_next_call = 0;
 
 BTNode *cur_pl_file;
 
@@ -296,10 +301,12 @@ void Display_Help(void);
 
 
 #define DEF_X_Y(xy)           PlLong xy; char c
+#define DEF_X_Y1(c, xy)	      PlLong xy; char c
 
 #define LOAD_X_Y(xy)          Get_Arg(top, PlLong, xy); \
                               if (xy < 5000) c = 'X'; else xy -= 5000, c='Y'
-
+#define LOAD_X_Y1(c, xy)      Get_Arg(top, PlLong, xy); \
+                              if (xy < 5000) c = 'X'; else xy -= 5000, c='Y'
 
 
 
@@ -311,6 +318,8 @@ void Display_Help(void);
 #else
 #define DEF_F_N(atom, n)      DEF_F_N_0(atom, n)
 #endif
+
+#define LOAD_STR_N(str, n)    LOAD_STR(str); LOAD_INTEGER(n)
 
 #define LOAD_F_N_0(atom, n)   LOAD_ATOM_0(atom); LOAD_INTEGER(n)
 #define LOAD_F_N_1(atom, n)   LOAD_STR(str_##atom); LOAD_INTEGER(n);\
@@ -329,6 +338,8 @@ void Display_Help(void);
 
 #define LOAD_MP_N(m, p, n)    LOAD_STR(m); LOAD_STR(p); LOAD_INTEGER(n)
 
+
+#define DEF_STR_N(str, n)     DEF_STR(str); DEF_INTEGER(n)
 
 
 #define DEF_LABEL(l)          char l[MAX_LABEL_LENGTH]; PlLong val_##l
@@ -466,6 +477,22 @@ F_file_name(ArgVal arg[])
   cur_pl_file = BT_String_Add(&bt_atom, pl_file);
 }
 
+/*-------------------------------------------------------------------------*
+ * F_UNIT_NAME                                                             *
+ *                                                                         *
+ *-------------------------------------------------------------------------*/
+void
+F_unit_name(ArgVal arg[])
+{
+  Args1(MP_N(module, atom, n));
+
+  if (strcmp(atom, "[]") == 0)
+    cxt_cur_unit = NULL;
+  else {
+    cxt_cur_unit = BT_String_Add(&bt_atom, atom);
+    cxt_cur_unit->arity = n;
+  }
+}
 
 
 /*-------------------------------------------------------------------------*
@@ -557,6 +584,7 @@ F_predicate(ArgVal arg[])
   cur_pred->module = atom_module;
   cur_pred->functor = atom_functor;
   cur_pred->arity = arity;
+  cur_pred->cxt_unit = cxt_cur_unit;
   cur_pred->pl_file = cur_pl_file;
   cur_pred->pl_line = pl_line;
   cur_pred->prop = prop;
@@ -579,7 +607,10 @@ F_predicate(ArgVal arg[])
    *    - it owns to module 'user' or 'system'
    */
 
-  Encode_Hexa((local_symbol || module_user_system) ? NULL : module, functor, arity, buff_hexa + 1);
+  Native_Encode_Hexa((cur_pred->cxt_unit) ? cur_pred->cxt_unit->str : NULL,
+		     (cur_pred->cxt_unit) ? cur_pred->cxt_unit->arity : 0,
+		     (local_symbol || module_user_system) ? NULL : module,
+		     functor, arity, buff_hexa + 1);
   *buff_hexa = '&';
   cur_pred->hexa = strdup(buff_hexa);
 
@@ -1191,7 +1222,9 @@ F_call(ArgVal arg[])
 {
   Args1(MP_N(m, p, n));
 
-  Encode_Hexa(m, p, n, buff_hexa);
+  Native_Encode_Hexa(cxt_unit_for_next_call, cxt_arity_for_next_call,
+		     m, p, n, buff_hexa);
+  cxt_unit_for_next_call[0] = '\0';
 
   Inst_Printf("pl_call", buff_hexa);
 }
@@ -1208,7 +1241,9 @@ F_execute(ArgVal arg[])
 {
   Args1(MP_N(m, p, n));
 
-  Encode_Hexa(m, p, n, buff_hexa);
+  Native_Encode_Hexa(cxt_unit_for_next_call, cxt_arity_for_next_call,
+		     m, p, n, buff_hexa);
+  cxt_unit_for_next_call[0] = '\0';
 
   Inst_Printf("pl_jump", buff_hexa);
 }
@@ -1660,8 +1695,8 @@ F_call_c(ArgVal arg[])
   int set_cp = 0;
   char *str;
   int adr_of;
-  PlLong ret_xy;
-  char ret_c;
+  PlLong ret_xy = 0;
+  char ret_c = 0;
   int i;
 
   DEF_STR(c_option);
@@ -2078,6 +2113,13 @@ Emit_Obj_Initializer(void)
 		  p->module->no, p->functor->no, p->arity, p->pl_file->no, p->pl_line,
 		  p->prop, q);
 #else
+      if (p->cxt_unit)
+	Inst_Printf("call_c", FAST
+		    "Pl_Create_Pred_Module(at(%d),%d,at(%d),%d,at(%d),%d,%d,%s)",
+		    p->cxt_unit->no, p->cxt_unit->arity,
+		    p->functor->no, p->arity, p->pl_file->no, p->pl_line,
+		    p->prop, q);
+      else
       Inst_Printf("call_c", FAST "Pl_Create_Pred(at(%d),%d,at(%d),%d,%d,%s)",
 		  p->functor->no, p->arity, p->pl_file->no, p->pl_line,
 		  p->prop, q);
@@ -2420,3 +2462,110 @@ Display_Help(void)
 }
 
 #undef L
+
+
+/* --- Contexts --- */
+
+
+/*-------------------------------------------------------------------------*
+ * F_CXT_EXECUTE                                                           *
+ *                                                                         *
+ *-------------------------------------------------------------------------*/
+void
+F_cxt_execute(ArgVal arg[])
+{
+  Args2(F_N(atom, n), X_Y(xy));
+
+#ifdef USE_TAGGED_CALLS_FOR_WAM_FCTS
+  Inst_Printf("call_c", FAST "Cxt_Call_Tagged(fn(%d),%c(%d))",
+	      f_n_no, c, xy);
+#else
+  Inst_Printf("call_c", FAST "Cxt_Call(at(%d),%ld,%c(%d))",
+	      atom->no, n, c, xy);
+#endif
+  Inst_Printf("jump_ret", "");
+}
+
+
+
+
+/*-------------------------------------------------------------------------*
+ * F_CXT_CALL                                                              *
+ *                                                                         *
+ *-------------------------------------------------------------------------*/
+void
+F_cxt_call(ArgVal arg[])
+{
+  Inst_Printf("prep_cp", "");
+  F_cxt_execute(arg);
+  Inst_Printf("here_cp", "");
+}
+
+
+
+
+/*-------------------------------------------------------------------------*
+ * F_CXT_ASSIGN_K                                                          *
+ *                                                                         *
+ *-------------------------------------------------------------------------*/
+void
+F_cxt_assign_K(ArgVal arg[])
+{
+  Args1(X_Y(xy));
+
+  Inst_Printf("call_c", FAST "Cxt_Assign_K(%c(%d))", c, xy);
+}
+
+
+
+
+/*-------------------------------------------------------------------------*
+ * F_CXT_UNIT_FOR_NEXT_CALL                                                *
+ *                                                                         *
+ *-------------------------------------------------------------------------*/
+void
+F_cxt_unit_for_next_call(ArgVal arg[])
+{
+  register char *p;
+  Args1(F_N(atom, n));
+
+  sprintf (cxt_unit_for_next_call, "%s", str_atom);
+  for (p=cxt_unit_for_next_call; *p && *p != '/'; ++p)
+    ;
+  *p = 0;
+  cxt_arity_for_next_call = n;
+}
+
+
+
+
+/*-------------------------------------------------------------------------*
+ * F_CXT_ARG_UNIFY                                                         *
+ *                                                                         *
+ *-------------------------------------------------------------------------*/
+void
+F_cxt_arg_unify(ArgVal arg[])
+{
+  Args3(INTEGER(i), X_Y(xy), X_Y1(c1, xy1));
+
+  Inst_Printf("call_c", FAST "Cxt_Arg_Unify(%d,%c(%d),%c(%d))",
+	      i - 1, c, xy, c1, xy1);
+  Inst_Printf("fail_ret", "");
+}
+
+
+
+
+/*-------------------------------------------------------------------------*
+ * F_CXT_ARG_LOAD                                                          *
+ *                                                                         *
+ *-------------------------------------------------------------------------*/
+void
+F_cxt_arg_load(ArgVal arg[])
+{
+  Args3(INTEGER(i), X_Y(xy), X_Y1(c1, xy1));
+
+  Inst_Printf("call_c", FAST "Cxt_Arg_Load(%d,%c(%d),&%c(%d))",
+	      i - 1, c, xy, c1, xy1);
+  Inst_Printf("fail_ret", "");
+}

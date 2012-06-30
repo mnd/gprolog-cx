@@ -39,6 +39,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "engine_pl.h"
 
@@ -1660,3 +1661,349 @@ Pl_Untrail(WamWord *low_adr)
 #define OCCURS_CHECK
 
 #include "unify.c"
+
+
+
+/* --- Contexts --- */
+
+
+#define cur_K X(255)
+#define cur_CK X(254)
+static WamWord stamp_K;
+static WamWord stamp_CK;
+
+WamCont Cxt_Call_Tagged(WamWord key, WamWord call_K) FC;
+
+WamCont Cxt_Call(int func, int arity, WamWord call_K) FC;
+
+void Cxt_Assign_K(WamWord new_K) FC;
+
+Bool Cxt_Arg_Load(int arg_no, WamWord term_word, WamWord *sub_term_word) FC;
+
+Bool Cxt_Arg_Unify(int arg_no, WamWord term_word, WamWord sub_term_word) FC;
+
+
+
+
+/*-------------------------------------------------------------------------*
+ * CXT_INIT                                                                *
+ *                                                                         *
+ *-------------------------------------------------------------------------*/
+void FC
+Cxt_Init(void)
+{
+  cur_K = NIL_WORD;
+  cur_CK = NIL_WORD;
+  stamp_K = 0;
+  stamp_CK = 0;
+}
+
+
+
+
+/*-------------------------------------------------------------------------*
+ * CXT_ASSIGN_K                                                            *
+ *                                                                         *
+ *-------------------------------------------------------------------------*/
+void FC
+Cxt_Assign_K(WamWord new_K)
+{
+  if (stamp_K != STAMP)
+    {
+      if (new_K == cur_K)
+	return;
+
+      Trail_OV(&cur_K);
+      Trail_OV(&stamp_K);
+      stamp_K = STAMP;
+    }
+  cur_K = new_K;
+}
+
+
+
+
+/*-------------------------------------------------------------------------*
+ * CXT_ASSIGN_CK                                                           *
+ *                                                                         *
+ *-------------------------------------------------------------------------*/
+void FC
+Cxt_Assign_CK(WamWord new_CK)
+{
+  if (stamp_CK != STAMP)
+    {
+      if (new_CK == cur_CK)
+	return;
+
+      Trail_OV(&cur_CK);
+      Trail_OV(&stamp_CK);
+      stamp_CK = STAMP;
+    }
+  cur_CK = new_CK;
+}
+
+
+
+
+/*-------------------------------------------------------------------------*
+ * CXT_LOOKUP_PRED_WITH_K                                                  *
+ *                                                                         *
+ *-------------------------------------------------------------------------*/
+PredInf * FC
+Cxt_Lookup_Pred_With_K(long key, WamWord cxt_call_K)
+{
+  WamWord call_K = cxt_call_K;
+  WamWord word, tag_mask;
+  WamWord *lst_adr;
+  int atom, arity;
+  char *ctable;
+  PredInf *pred;
+
+  Cxt_Assign_CK(cxt_call_K);
+
+#if 1
+
+  for (;;)
+    {
+      DEREF(call_K, word, tag_mask);
+
+      if (tag_mask == TAG_STC_MASK) { /* non-list context */
+	atom = Functor(UnTag_STC(word));
+	arity = Arity(UnTag_STC(word));
+	lst_adr = NULL;
+      }
+      else if (tag_mask != TAG_LST_MASK)
+	break;
+      else {
+	lst_adr = UnTag_LST(word);
+	DEREF(Car(lst_adr), word, tag_mask);
+
+	if (tag_mask == TAG_ATM_MASK) {
+	  atom = UnTag_ATM(word);
+	  arity = 0;
+	}
+	else if (tag_mask == TAG_STC_MASK) {
+	  atom = Functor(UnTag_STC(word));
+	  arity = Arity(UnTag_STC(word));
+	}
+	else
+	  goto next;		/* or display an error ? */
+      }
+
+      if (pl_atom_tbl[atom].modules &&
+	  (ctable = pl_atom_tbl[atom].modules[arity]) &&
+	  (pred = (PredInf *) Pl_Hash_Find(ctable, key)))
+	{
+	  Cxt_Assign_K(call_K);
+	  return pred;
+	}
+    next:
+      if (lst_adr)
+	call_K = Cdr(lst_adr);
+      else
+	break;
+    }
+				/* IS IT CORRECT ??? */
+  Cxt_Assign_K(cxt_call_K);
+  return (PredInf *) Pl_Hash_Find(pl_pred_tbl, key);
+
+#else  /* FIXME: TRY THIS (lookup in global first) LATER... */
+
+  if ((pred = (PredInf *) Pl_Hash_Find(pl_pred_tbl, key))) {
+    printf ("Cxt_Lookup_Pred_With_K(%s/%d): found global\n",
+	    pl_atom_tbl[Functor_Of(key)].name,
+	    Arity_Of(key));
+    return pred;
+  }
+
+  for (;;) {
+    DEREF(call_K, word, tag_mask);
+
+    if (tag_mask != TAG_LST_MASK)
+      break;
+
+    lst_adr = UnTag_LST(word);
+    DEREF(Car(lst_adr), word, tag_mask);
+
+    if (tag_mask == TAG_STC_MASK) { /* non-atomic: regular case */
+      atom = Functor(UnTag_STC(word));
+      arity = Arity(UnTag_STC(word));
+    }
+    else if (tag_mask == TAG_ATM_MASK) { /* atomic: like ATOM/0 */
+      atom = UnTag_ATM(word);
+      arity = 0;
+    }
+    else
+      goto next;		/* or display an error ? */
+
+    if (pl_atom_tbl[atom].modules &&
+	(ctable = pl_atom_tbl[atom].modules[arity]) &&
+	(pred = (PredInf *) Pl_Hash_Find(ctable, key)))
+      {			/* found it */
+	Cxt_Assign_K(call_K);
+	printf ("Cxt_Lookup_Pred_With_K(%s/%d): found in %s/%d\n",
+		pl_atom_tbl[Functor_Of(key)].name,
+		Arity_Of(key),
+		pl_atom_tbl[atom].name,
+		arity);
+	return pred;
+      }
+  next:
+    call_K = Cdr(lst_adr);
+  }
+				/* IS IT CORRECT ??? */
+  Cxt_Assign_K(cxt_call_K);
+  return (PredInf *) Pl_Hash_Find(pl_pred_tbl, key);
+
+#endif
+}
+
+
+
+
+/*-------------------------------------------------------------------------*
+ * CXT_LOOKUP_PRED                                                         *
+ *                                                                         *
+ * Called by compiled prolog code.                                         *
+ *-------------------------------------------------------------------------*/
+PredInf * FC
+Cxt_Lookup_Pred(long key)
+{
+  return Cxt_Lookup_Pred_With_K(key, cur_K);
+}
+
+#include "../BipsPl/error_supp.h"
+
+
+/*-------------------------------------------------------------------------*
+ * CXT_CALL_TAGGED                                                         *
+ *                                                                         *
+ * Called by compiled prolog code.                                         *
+ *-------------------------------------------------------------------------*/
+WamCont FC
+Cxt_Call_Tagged(WamWord key, WamWord cxt_call_K)
+{
+  PredInf *pred = Cxt_Lookup_Pred_With_K(key, cxt_call_K);
+  WamCont Pl_BC_Emulate_Pred(int, void *); /* WARNING: Why not headers?! */
+
+  if (pred == NULL)
+    {
+      WamWord call_K = cxt_call_K;
+      static char pseudo_bip_name[512];
+      char *p = pseudo_bip_name;
+//    int n = 0;
+//    int l = sizeof (pseudo_bip_name);
+      char *sep = "";
+      WamWord *lst_adr;
+      WamWord word, tag_mask;
+
+      strcpy(pseudo_bip_name, "context([");
+      p += strlen(p);
+      for (;;) {
+	DEREF(call_K, word, tag_mask);
+
+	if (tag_mask != TAG_LST_MASK)
+	  break;
+
+	lst_adr = UnTag_LST(word);
+	DEREF(Car(lst_adr), word, tag_mask);
+
+	if (tag_mask == TAG_ATM_MASK)
+	  sprintf (p, "%s%s/%d", sep, pl_atom_tbl[UnTag_ATM(word)].name, 0);
+	else if (tag_mask == TAG_STC_MASK)
+	  sprintf (p, "%s%s/%ld", sep,
+		   pl_atom_tbl[Functor(UnTag_STC(word))].name,
+		   Arity(UnTag_STC(word)));
+	else
+	  goto next;		/* or display an error ? */
+
+	p += strlen(p);
+	sep = ", ";
+
+      next:
+	call_K = Cdr(lst_adr);
+      }
+      sprintf (p, "])");
+
+
+      Pl_Set_C_Bip_Name(pseudo_bip_name, -1); /* FIXME: properly dump context */
+      Pl_Unknown_Pred_Error(Functor_Of(key), Arity_Of(key));
+
+      return ALTB(B);		/* i.e. fail */
+    }
+
+  if (pred->codep)
+    return (WamCont) pred->codep;
+  else if (pred->dyn)
+    return Pl_BC_Emulate_Pred ((int) key, pred->dyn);
+  else
+    return ALTB(B);		/* fail for dynamic w/o any clauses */
+}
+
+
+
+
+/*-------------------------------------------------------------------------*
+ * CXT_CALL                                                                *
+ *                                                                         *
+ * Called by compiled prolog code.                                         *
+ *-------------------------------------------------------------------------*/
+WamCont FC
+Cxt_Call(int func, int arity, WamWord cxt_call_K)
+{
+  return Cxt_Call_Tagged(Functor_Arity(func, arity), cxt_call_K);
+}
+
+
+
+
+/*-------------------------------------------------------------------------*
+ * CXT_ARG_LOAD                                                            *
+ *                                                                         *
+ *-------------------------------------------------------------------------*/
+Bool FC
+Cxt_Arg_Load(int arg_no, WamWord term_word, WamWord *sub_term_adr)
+{
+  WamWord word, tag_mask;
+  WamWord *adr;
+
+  DEREF(term_word, word, tag_mask);
+
+  if (tag_mask == TAG_STC_MASK)
+    {
+      adr = UnTag_STC(word);
+      if ((unsigned) arg_no >= (unsigned) Arity(adr))
+	return FALSE;
+      *sub_term_adr = Arg(adr, arg_no);
+      return TRUE;
+    }
+
+  if (tag_mask == TAG_LST_MASK)
+    {
+      adr = UnTag_LST(word);
+      if ((unsigned) arg_no >= 2)
+	return FALSE;
+      *sub_term_adr = (arg_no == 0) ? Car(adr) : Cdr(adr);
+      return TRUE;
+    }
+
+  return FALSE;
+}
+
+
+
+
+/*-------------------------------------------------------------------------*
+ * CXT_ARG_UNIFY                                                           *
+ *                                                                         *
+ *-------------------------------------------------------------------------*/
+Bool FC
+Cxt_Arg_Unify(int arg_no, WamWord term_word, WamWord sub_term_word)
+{
+  WamWord word;
+
+  if (!Cxt_Arg_Load(arg_no, term_word, &word))
+    return FALSE;
+
+  return Pl_Unify(sub_term_word, word);
+}

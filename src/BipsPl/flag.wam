@@ -1,8 +1,8 @@
-% compiler: GNU Prolog 1.4.1
+% compiler: GNU Prolog/CX 1.4.1
 % file    : flag.pl
 
 
-file_name('/home/diaz/GP/src/src/BipsPl/flag.pl').
+file_name('/home/kim/Source/gprolog-1.4.1/src/BipsPl/flag.pl').
 
 
 predicate('$use_flag'/0,42,static,private,monofile,built_in,[

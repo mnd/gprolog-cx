@@ -110,6 +110,8 @@ typedef struct			/* Atom information               */
 {				/* ------------------------------ */
   char *name;			/* key is <name> (the string)     */
   AtomProp prop;		/* associated properties          */
+  char **modules;		/* module predicate tables        */
+				/* (indexed with the arity)       */
 }
 AtomInf;
 

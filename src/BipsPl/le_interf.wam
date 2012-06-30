@@ -1,8 +1,8 @@
-% compiler: GNU Prolog 1.4.1
+% compiler: GNU Prolog/CX 1.4.1
 % file    : le_interf.pl
 
 
-file_name('/home/diaz/GP/src/src/BipsPl/le_interf.pl').
+file_name('/home/kim/Source/gprolog-1.4.1/src/BipsPl/le_interf.pl').
 
 
 predicate('$use_le_interf'/0,42,static,private,monofile,built_in,[

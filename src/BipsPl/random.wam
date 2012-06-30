@@ -1,8 +1,8 @@
-% compiler: GNU Prolog 1.4.1
+% compiler: GNU Prolog/CX 1.4.1
 % file    : random.pl
 
 
-file_name('/home/diaz/GP/src/src/BipsPl/random.pl').
+file_name('/home/kim/Source/gprolog-1.4.1/src/BipsPl/random.pl').
 
 
 predicate('$use_random'/0,42,static,private,monofile,built_in,[

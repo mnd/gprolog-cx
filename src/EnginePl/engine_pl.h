@@ -54,3 +54,4 @@
 #include "obj_chain.h"
 #include "wam_inst.h"
 #include "if_no_fd.h"
+#include "context.h"
