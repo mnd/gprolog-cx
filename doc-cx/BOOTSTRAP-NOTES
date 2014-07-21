@@ -1,0 +1,8 @@
+when bootstrap system first necessary in `src/BipsPl/assert.pl' replace all
+>        ( context([UF|_]) -> functor(UF, U, _) ; U=[] ),
+to
+>        ( fail -> functor(UF, U, _) ; U=[] ),
+becouse context/1 defined as `context(X) :- context(X)'. After creating new
+`pl2wam' with `cxt_rewrite_term' necessary return old strings in `assert.pl' and
+recompile `pl2wam' (after recompilation `assert.pl' and `libbips_pl.a') with new
+`pl2wam'

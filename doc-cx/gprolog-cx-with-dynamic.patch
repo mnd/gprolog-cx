@@ -1,0 +1,5322 @@
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/BipsPl/all_solut_c.c gprolog-cx/base/src/BipsPl/all_solut_c.c
+--- gprolog-1.2.18/src/BipsPl/all_solut_c.c	2004-06-04 22:04:58.000000000 +0600
++++ gprolog-cx/base/src/BipsPl/all_solut_c.c	2003-05-27 04:14:08.000000000 +0600
+@@ -433,7 +433,7 @@
+ 
+   DEREF(start_word, word, tag_mask);
+   adr = UnTag_STC(word);
+-  Treat_Vars_Of_Term(Arg(adr, 0), TRUE, Link_Key_Var);
++  Treat_Vars_Of_Term(Arg(adr, 0), FALSE, Link_Key_Var);
+ }
+ 
+ 
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/BipsPl/assert.pl gprolog-cx/base/src/BipsPl/assert.pl
+--- gprolog-1.2.18/src/BipsPl/assert.pl	2004-03-15 19:58:52.000000000 +0500
++++ gprolog-cx/base/src/BipsPl/assert.pl	2003-04-08 17:19:55.000000000 +0600
+@@ -31,25 +31,30 @@
+ 
+ asserta(C) :-
+ 	set_bip_name(asserta, 1),
+-	'$assert'(C, 1, 1).
++	( context([UF|_]) -> functor(UF, U, _) ; U=[] ),
++	'$assert'(C, 1, 1, U).
+ 
+ 
+ 
+ 
+ assertz(C) :-
+ 	set_bip_name(assertz, 1),
+-	'$assert'(C, 0, 1).
++	( context([UF|_]) -> functor(UF, U, _) ; U=[] ),
++	'$assert'(C, 0, 1, U).
+ 
+ 
+ 
+ 
+-'$assert'(C, Asserta, CheckPerm) :-
++'$assert'(C, AZ, CP) :- '$assert'(C, AZ, CP, []).
++
++'$assert'(C, Asserta, CheckPerm, Unit) :-
+ 	'$get_head_and_body'(C, H, B),
+ 	'$term_to_goal'(B, none, B1),
++%	'$call_c'('Assert_5'(H, B1, Asserta, CheckPerm, Unit)),
+ 	'$call_c'('Assert_4'(H, B1, Asserta, CheckPerm)),
+ 	fail.
+ 
+-'$assert'(_, _, _).
++'$assert'(_, _, _, _).
+ 
+ 
+ 
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/BipsPl/atom_c.c gprolog-cx/base/src/BipsPl/atom_c.c
+--- gprolog-1.2.18/src/BipsPl/atom_c.c	2004-06-04 22:04:58.000000000 +0600
++++ gprolog-cx/base/src/BipsPl/atom_c.c	2006-07-18 23:21:19.000000000 +0600
+@@ -590,6 +590,7 @@
+ {
+   WamWord word, tag_mask;
+   char *str;
++  char buffer[64];
+ 
+   DEREF(atom_word, word, tag_mask);
+   if (tag_mask == TAG_ATM_MASK)
+@@ -605,7 +606,7 @@
+       return Un_String_Check(glob_buff, atom_word);
+     }
+ 
+-  str = Float_To_String(Rd_Number_Check(word));
++  str = Float_To_String(Rd_Number_Check(word), buffer);
+   return Un_String_Check(str, atom_word);
+ }
+ 
+@@ -622,6 +623,7 @@
+   WamWord word, tag_mask;
+   WamWord *lst_adr, list_word;
+   char *str = glob_buff;
++  char buffer[64];
+   int atom;
+ 
+   list_word = chars_word;
+@@ -658,7 +660,7 @@
+ 
+   if (tag_mask != TAG_REF_MASK)
+     {
+-      str = Float_To_String(Rd_Number_Check(word));
++      str = Float_To_String(Rd_Number_Check(word), buffer);
+       return Un_Chars(str, chars_word);
+     }
+ 
+@@ -679,6 +681,7 @@
+   WamWord word, tag_mask;
+   WamWord *lst_adr, list_word;
+   char *str = glob_buff;
++  char buffer[64];
+   int c;
+ 
+   list_word = codes_word;
+@@ -715,7 +718,7 @@
+ 
+   if (tag_mask != TAG_REF_MASK)
+     {
+-      str = Float_To_String(Rd_Number_Check(word));
++      str = Float_To_String(Rd_Number_Check(word), buffer);
+       return Un_Codes(str, codes_word);
+     }
+ 
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/BipsPl/bc_supp.c gprolog-cx/base/src/BipsPl/bc_supp.c
+--- gprolog-1.2.18/src/BipsPl/bc_supp.c	2004-06-04 22:04:58.000000000 +0600
++++ gprolog-cx/base/src/BipsPl/bc_supp.c	2008-05-31 00:53:00.000000000 +0600
+@@ -115,7 +115,23 @@
+   FAIL,
+ 
+   CUT_X,
+-  CUT_Y
++  CUT_Y,
++
++  CXT_CALL_X,
++  CXT_CALL_Y,
++  CXT_EXECUTE_X,
++  CXT_EXECUTE_Y,
++  CXT_ASSIGN_K_X,
++  CXT_ASSIGN_K_Y,
++  CXT_UNIT_FOR_NEXT_CALL,
++  CXT_ARG_LOAD_XX,
++  CXT_ARG_LOAD_XY,
++  CXT_ARG_LOAD_YX,
++  CXT_ARG_LOAD_YY,
++  CXT_ARG_UNIFY_XX,		/* X X => +0 */
++  CXT_ARG_UNIFY_XY,		/* X Y => +1 */
++  CXT_ARG_UNIFY_YX,		/* Y X => +2 */
++  CXT_ARG_UNIFY_YY,		/* Y Y => +3 */
+ }
+ BCCodOp;
+ 
+@@ -326,6 +342,13 @@
+ 
+   Op_In_Tbl("cut", CUT_X);
+ 
++  Op_In_Tbl("cxt_call", CXT_CALL_X);
++  Op_In_Tbl("cxt_execute", CXT_EXECUTE_X);
++  Op_In_Tbl("cxt_assign_K", CXT_ASSIGN_K_X);
++  Op_In_Tbl("cxt_unit_for_next_call", CXT_UNIT_FOR_NEXT_CALL);
++  Op_In_Tbl("cxt_arg_load", CXT_ARG_LOAD_XX);
++  Op_In_Tbl("cxt_arg_unify", CXT_ARG_UNIFY_XX);
++
+   nb_op = p - op_tbl;
+ 
+   qsort(op_tbl, nb_op, sizeof(op_tbl[0]),
+@@ -570,7 +593,7 @@
+     case GET_STRUCTURE:
+     case PUT_STRUCTURE:
+       nb_word = 2;
+-      BC_Fun(w) = BC_Arg_Func_Arity(*arg_adr++, &w1);
++      BC_Fun(w) = BC_Arg_Func_Arity(*arg_adr++, (int *) &w1);
+       BC_X0(w) = Rd_Integer(*arg_adr);
+       break;
+ 
+@@ -602,7 +625,7 @@
+       break;
+ 
+     case UNIFY_STRUCTURE:
+-      BC_Fun(w) = BC_Arg_Func_Arity(*arg_adr++, &w1);
++      BC_Fun(w) = BC_Arg_Func_Arity(*arg_adr++, (int *) &w1);
+       BC_Ari(w) = w1;
+       break;
+ 
+@@ -636,6 +659,48 @@
+ 	  w1 = (unsigned) Functor_Arity(caller_func, caller_arity);
+ 	}
+       break;
++
++/** ------------------------------------------------------------------------ */
++/** -- Format for context-related operations ----------------------------------
++    --
++    -- cxt_call(FUNC/ARITY, CALL_CX_REG)
++    -- cxt_execute(FUNC/ARITY, CALL_CX_REG)
++    --    [0] -> [8]OP, [16]
++    ------------------------------------------------------------------------ */
++
++    case CXT_CALL_X:		/* unlike regular call and execute, we */
++    case CXT_EXECUTE_X:		/* can't resolve to predicate code address */
++      nb_word = 3;		/* before runtime. */
++      BC_Fun(w) = func = BC_Arg_Func_Arity(*arg_adr++, &arity);
++      BC_Ari(w) = arity;
++      w1 = (unsigned) BC_Arg_X_Or_Y (*arg_adr, &op);
++      w2 = (unsigned) Functor_Arity(caller_func, caller_arity);
++      break;
++
++    case CXT_ASSIGN_K_X:	/* arg: an X or a Y */
++      BC_XY(w) = BC_Arg_X_Or_Y (*arg_adr, &op);
++      break;
++
++    case CXT_ARG_LOAD_XX:	/* args: NUMBER, X or Y, X or Y */
++    case CXT_ARG_UNIFY_XX:
++      {
++	unsigned int op1 = 0;
++	unsigned int op2 = 0;
++	nb_word = 2;
++	BC_Ari(w) = Rd_Integer (*arg_adr++);
++	BC_XY(w)  = BC_Arg_X_Or_Y (*arg_adr++, (int *) &op1);
++	w1 = (unsigned) BC_Arg_X_Or_Y (*arg_adr, (int *) &op2);
++	op += (op1 << 1) | op2;
++      }
++      break;
++
++    case CXT_UNIT_FOR_NEXT_CALL: /* arg: FUNCTOR/ARITY; ignore for now */
++      BC_Fun(w) = func = BC_Arg_Func_Arity(*arg_adr++, &arity);
++      BC_Ari(w) = arity;
++      break;
++
++/** ------------------------------------------------------------------------ */
++
+     }
+ 
+   BC_Op(w) = op;
+@@ -890,6 +955,7 @@
+   BCWord w;
+   int x0, x, y;
+   int w1;
++  WamWord term, subterm;
+   WamCont codep;
+   int func, arity;
+   PredInf *pred;
+@@ -1227,6 +1293,111 @@
+       y = BC_XY(w);
+       Cut(Y(E, y));
+       goto bc_loop;
++
++/** ------------------------------------------------------------------------ */
++
++    case CXT_CALL_X:		/* OK? */
++      BCI = (WamWord) (bc + 2) | debug_call;	/* use low bit of adr */
++      CP = Adjust_CP(Prolog_Predicate(BC_EMULATE_CONT, 0));
++    case CXT_EXECUTE_X:		/* OK? */
++      w1 = X(bc->word);		/* fetch call context */
++      goto CXT_EXECUTE_COMMON;
++      
++    case CXT_CALL_Y:		/* OK? */
++      BCI = (WamWord) (bc + 2) | debug_call;	/* use low bit of adr */
++      CP = Adjust_CP(Prolog_Predicate(BC_EMULATE_CONT, 0));
++    case CXT_EXECUTE_Y:		/* OK? */
++      w1 = Y(E, bc->word);	/* fetch call context */
++      goto CXT_EXECUTE_COMMON;
++
++    CXT_EXECUTE_COMMON:		/* TBD */
++      func = BC_Fun (w);
++      arity = BC_Ari (w);
++
++      if (debug_call_code != NULL && debug_call &&
++	  Detect_If_Aux_Name(func) == NULL)
++	{
++	  w1 = bc->word;
++	  caller_func = Functor_Of(w1);
++	  caller_arity = Arity_Of(w1);
++	  Prep_Debug_Call(func, arity, caller_func, caller_arity);
++	  return debug_call_code;
++	}
++
++      if ((pred = Cxt_Lookup_Pred(Functor_Arity (func, arity))) == NULL)
++	{
++	  w1 = bc->word;
++	  caller_func = Functor_Of(w1);
++	  caller_arity = Arity_Of(w1);
++	  Set_Bip_Name_2(Tag_ATM(caller_func),
++			 Tag_INT(caller_arity));
++	  Unknown_Pred_Error(func, arity);
++	  goto fail;
++	}
++
++/** -- side effect: context has already been altered when we get here ------ */
++
++#if 0
++      bc++;			/* useless since CP already set */
++#endif
++      glob_func = func;
++      glob_dyn = (DynPInf *) (pred->dyn);
++      return NULL;		/* to then call BC_Emulate_Pred */
++
++      goto bc_loop;
++
++    case CXT_ASSIGN_K_X:	/* OK */
++      x = BC_XY(w);
++      Cxt_Assign_K (X(x));
++      goto bc_loop;
++
++    case CXT_ASSIGN_K_Y:	/* OK */
++      y = BC_XY(w);
++      Cxt_Assign_K (Y(E, y));
++      goto bc_loop;
++
++    case CXT_ARG_LOAD_XX:	/* OK? */
++    case CXT_ARG_UNIFY_XX:	/* OK? */
++      term = X(BC_XY(w));
++      subterm = X(bc->word);
++      goto CXT_ARG_COMMON;
++
++    case CXT_ARG_LOAD_XY:	/* OK? */
++    case CXT_ARG_UNIFY_XY:
++      term = X(BC_XY(w));
++      subterm = Y(E, bc->word);
++      goto CXT_ARG_COMMON;
++
++    case CXT_ARG_LOAD_YX:	/* OK? */
++    case CXT_ARG_UNIFY_YX:
++      term = Y(E, BC_XY(w));
++      subterm = X(bc->word);
++      goto CXT_ARG_COMMON;
++
++    case CXT_ARG_LOAD_YY:	/* OK? */
++    case CXT_ARG_UNIFY_YY:
++      term = Y(E, BC_XY(w));
++      subterm = Y(E, bc->word);
++      goto CXT_ARG_COMMON;
++
++    CXT_ARG_COMMON:
++      ++bc;
++      if (BC_Op(w) < CXT_ARG_UNIFY_XX) {
++	if (!Cxt_Arg_Load (BC_Ari(w), term, subterm)) /* FIXME: subterm should be ww* */
++	  goto fail;
++      }
++      else {
++	if (!Cxt_Arg_Unify (BC_Ari(w), term, subterm))
++	  goto fail;
++      }
++      goto bc_loop;
++
++
++    case CXT_UNIT_FOR_NEXT_CALL: /* ignore? */
++      goto bc_loop;
++
++/** ------------------------------------------------------------------------ */
++
+     }
+ 
+ fail:
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/BipsPl/b_params.h gprolog-cx/base/src/BipsPl/b_params.h
+--- gprolog-1.2.18/src/BipsPl/b_params.h	2004-06-04 22:04:58.000000000 +0600
++++ gprolog-cx/base/src/BipsPl/b_params.h	2006-01-02 16:23:51.000000000 +0500
+@@ -26,6 +26,6 @@
+ 
+ #define MAX_VAR_NAME_LENGTH        256
+ 
+-#define MAX_VAR_IN_TERM            2048
++#define MAX_VAR_IN_TERM            16384
+ 
+ #define MAX_SYS_VARS               256
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/BipsPl/BYTE_CODE gprolog-cx/base/src/BipsPl/BYTE_CODE
+--- gprolog-1.2.18/src/BipsPl/BYTE_CODE	1998-07-31 23:13:00.000000000 +0600
++++ gprolog-cx/base/src/BipsPl/BYTE_CODE	2006-01-03 04:35:29.000000000 +0500
+@@ -53,3 +53,16 @@
+      				 		     
+      CUT_X			| x       | -- | op |
+      CUT_Y			| y       | -- | op |
++
++     CXT_CALL_X			| fun16	  | ar8| op | context | f/n of caller |
++     CXT_CALL_Y			| fun16	  | ar8| op | context | f/n of caller |
++     CXT_EXECUTE_X		| fun16	  | ar8| op | context | f/n of caller |
++     CXT_EXECUTE_Y		| fun16	  | ar8| op | context | f/n of caller |
++
++     CXT_ASSIGN_K_X		| x	  | -- | op |
++     CXT_ASSIGN_K_Y		| y	  | -- | op |
++
++     CXT_ARG_LOAD_XX		| x1	  | n  | op | | x2 |
++     CXT_ARG_LOAD_XY		| x	  | n  | op | | y  |
++     CXT_ARG_LOAD_YX		| y	  | n  | op | | x  |
++     CXT_ARG_LOAD_YY		| y1	  | n  | op | | y2 |
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/BipsPl/callinf_supp.c gprolog-cx/base/src/BipsPl/callinf_supp.c
+--- gprolog-1.2.18/src/BipsPl/callinf_supp.c	2004-06-04 22:04:58.000000000 +0600
++++ gprolog-cx/base/src/BipsPl/callinf_supp.c	2003-04-08 17:19:55.000000000 +0600
+@@ -107,3 +107,24 @@
+ 
+   Set_Bip_Name_2(Tag_ATM(func), Tag_INT(arity));
+ }
++
++
++/*-------------------------------------------------------------------------*
++ * CURRENT_UNIT_2                                                          *
++ *                                                                         *
++ *-------------------------------------------------------------------------*/
++Bool
++Current_Unit_2(WamWord unit_atom_word, WamWord unit_args_word)
++{
++  int unit_atom = Rd_Atom(unit_atom_word);
++  int unit_args = Rd_Integer(unit_args_word);
++
++  if (atom_tbl[unit_atom].modules &&
++      0 <= unit_args && unit_args <= 255 &&
++      atom_tbl[unit_atom].modules[unit_args])
++    return TRUE;
++  else
++    return FALSE;
++}
++
++
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/BipsPl/call.pl gprolog-cx/base/src/BipsPl/call.pl
+--- gprolog-1.2.18/src/BipsPl/call.pl	2004-03-15 19:58:53.000000000 +0500
++++ gprolog-cx/base/src/BipsPl/call.pl	2003-09-17 19:22:58.000000000 +0600
+@@ -148,3 +148,47 @@
+ 
+ '$call_from_debugger'(Goal, CallInfo) :-
+ 	'$call_c_jump'('BC_Call_Terminal_Pred_3'(Goal, CallInfo, 0)).
++
++
++
++% --- Contexts ------------------------------------------------------------ %
++
++:- op(600, xfx, [:<]).		% useless if boot-strapped but useful
++:- op(600, xfy, [:>]).		% if compiled with standard GNU-Prolog
++:- op(600, xfy, [::]).		% ...
++:- op(600, fy, [:<, :^, :#, :>]). % ...
++
++context(X) :- context(X).	% current context
++ccontext(X) :- ccontext(X).	% calling context (for lazy call)
++
++% -----------------------------------------------------------------------------
++% FIXME: in the following metacalls, G should be '$call'(G, OP, OPA, true)
++
++U :> G :- U :> G.
++C :< G :- C :< G.
++U :: G :- context(C), '$cxt_locate'(C, U, X), !, X :< G.
++:< C :- context(C).
++:> C :- ccontext(C).
++:^ G :- context([_|C]), C :< G.
++:# G :- ccontext(C), C :< G.	% calling context
++
++
++'$cxt_locate'(CX, LU, CX) :- CX=[LU|_], !.
++'$cxt_locate'(CX, LU, CX) :- atom(LU), CX=[U|_], functor(U, LU, _), !.
++'$cxt_locate'([_|US], LU, CX) :- '$cxt_locate'(US, LU, CX).
++
++
++current_unit(ATOM, NARGS) :-
++	set_bip_name(current_unit, 2),
++	current_atom(ATOM),
++	for(NARGS, 0, 255),
++	'$call_c_test'('Current_Unit_2'(ATOM, NARGS)).
++
++context_valid :- :< C, context_valid(C).
++
++context_valid([]).
++context_valid([UT|UTs]) :-
++	functor(UT, U, A),
++	( '$call_c_test'('Current_Unit_2'(U, A)) -> context_valid(UTs)
++	;   throw(unknown_unit_in_context(U/A)) ).
++	    
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/BipsPl/format_c.c gprolog-cx/base/src/BipsPl/format_c.c
+--- gprolog-1.2.18/src/BipsPl/format_c.c	2004-06-04 22:04:59.000000000 +0600
++++ gprolog-cx/base/src/BipsPl/format_c.c	2006-01-02 16:23:51.000000000 +0500
+@@ -74,7 +74,7 @@
+   int stm;
+   StmInf *pstm;
+   char *str;
+-  char buff[2048];
++  char *buff;			/* increased from 2K */
+ 
+ 
+   stm = (sora_word == NOT_A_WAM_WORD)
+@@ -90,6 +90,7 @@
+     str = atom_tbl[UnTag_ATM(word)].name;
+   else
+     {
++      buff = alloca (1+strlen (Rd_Codes_Check (format_word)));
+       strcpy(buff, Rd_Codes_Check(format_word));
+       str = buff;
+     }
+@@ -134,8 +135,10 @@
+   int i, k;
+   char *format_stack[256];
+   char **top_stack = format_stack;
+-  char buff[2048];
++  char *buff;
++  int nbytes = 32*2048;		/* increased from 2K */
+ 
++  buff = alloca (nbytes);
+ 
+   *top_stack++ = format;
+   do
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/BipsPl/Makefile.in gprolog-cx/base/src/BipsPl/Makefile.in
+--- gprolog-1.2.18/src/BipsPl/Makefile.in	2002-04-08 23:47:36.000000000 +0600
++++ gprolog-cx/base/src/BipsPl/Makefile.in	2008-04-30 00:46:00.000000000 +0600
+@@ -84,7 +84,14 @@
+ 	$(GPLC) -c $*.wam
+ 
+ .c@OBJ_SUFFIX@:
+-	$(GPLC) -c -C '$(CFLAGS) $(CFLAGS_UNSIGNED_CHAR)' $*.c 
++	@echo $(GPLC) -c -C '$(CFLAGS) $(CFLAGS_UNSIGNED_CHAR)' $*.c
++	@if [ @host_cpu@ = x86_64 ]; then				    \
++	 $(GPLC) -c -C '-S $(CFLAGS) $(CFLAGS_UNSIGNED_CHAR)' $*.c -o $*.s; \
++	 cat $*.s | sed -e 's/movaps/movups/' | as -o $*@OBJ_SUFFIX@;	    \
++	 rm $*.s;							    \
++	else								    \
++	 $(GPLC) -c -C '$(CFLAGS) $(CFLAGS_UNSIGNED_CHAR)' $*.c;	    \
++	fi
+ 
+ $(LIBNAME): $(OBJLIB) no_sockets.wam sockets.wam \
+                       no_le_interf.wam le_interf.wam
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/BipsPl/pred_c.c gprolog-cx/base/src/BipsPl/pred_c.c
+--- gprolog-1.2.18/src/BipsPl/pred_c.c	2004-06-04 22:04:59.000000000 +0600
++++ gprolog-cx/base/src/BipsPl/pred_c.c	2006-02-03 17:50:19.000000000 +0500
+@@ -116,8 +116,9 @@
+   A(3) = (WamWord) scan.endt;
+   A(4) = (WamWord) scan.cur_t;
+   A(5) = (WamWord) scan.cur_p;
++  A(6) = (WamWord) X(255);	/* start with current context! */
+   Create_Choice_Point((CodePtr) Prolog_Predicate(CURRENT_PREDICATE_ALT, 0),
+-		      6);
++		      7);
+   return Get_Atom(Functor_Of(pred->f_n), name_word) &&
+     Get_Integer(Arity_Of(pred->f_n), arity_word);
+   /*
+@@ -142,6 +143,7 @@
+   int which_preds;
+   int func, arity;
+   int func1, arity1;
++  WamWord cxt;
+   Bool all;
+ 
+   Update_Choice_Point((CodePtr) Prolog_Predicate(CURRENT_PREDICATE_ALT, 0),
+@@ -153,6 +155,7 @@
+   scan.endt = (char *) AB(B, 3);
+   scan.cur_t = (char *) AB(B, 4);
+   scan.cur_p = (char *) AB(B, 5);
++  cxt = AB(B, 6);
+ 
+   func = Tag_Mask_Of(name_word) == TAG_REF_MASK ? -1 : UnTag_ATM(name_word);
+   arity = Tag_Mask_Of(arity_word) == TAG_REF_MASK ? -1 : UnTag_INT(arity_word);
+@@ -163,12 +166,50 @@
+   for (;;)
+     {
+       pred = (PredInf *) Hash_Next(&scan);
+-      if (pred == NULL)
+-	{
++      if (pred == NULL) {
++	WamWord word, tag_mask;
++	int atom, arity;
++	
++	/* select the predicate table on top of the (saved) context */
++	/* and update (pop) that context */
++      DOWN_IN_CXT:
++	DEREF(cxt, word, tag_mask);
++
++	if (tag_mask == TAG_LST_MASK) { /* only acceptable modality */
++	  WamWord *lst_adr = UnTag_LST(word);
++	  DEREF(Car(lst_adr), word, tag_mask);
++	  
++	  if (tag_mask == TAG_ATM_MASK) {
++	    atom = UnTag_ATM(word);
++	    arity = 0;
++	  }
++	  else if (tag_mask == TAG_STC_MASK) {
++	    atom = Functor(UnTag_STC(word));
++	    arity = Arity(UnTag_STC(word));
++	  }
++	  else {
+ 	  Delete_Last_Choice_Point();
+ 	  return FALSE;
+ 	}
+ 
++	  if (lst_adr)
++	    cxt = Cdr (lst_adr); /* pop context, in all cases */
++
++	  if (atom_tbl[atom].modules &&
++	      atom_tbl[atom].modules[arity]) { /* found? */
++	    pred = (PredInf *)
++	      Hash_First (atom_tbl[atom].modules[arity], &scan);
++	  }
++	  else {		/* nope. empty unit: go to next one. */
++	    goto DOWN_IN_CXT;
++	  }
++
++	} else {
++	  Delete_Last_Choice_Point();
++	  return FALSE;
++	}
++      }
++
+       func1 = Functor_Of(pred->f_n);
+       arity1 = Arity_Of(pred->f_n);
+ 
+@@ -183,10 +224,11 @@
+   AB(B, 0) = name_word;
+   AB(B, 1) = arity_word;
+   AB(B, 2) = which_preds;
+-  AB(B, 3) = (WamWord) scan.endt;
+ #endif
++  AB(B, 3) = (WamWord) scan.endt;
+   AB(B, 4) = (WamWord) scan.cur_t;
+   AB(B, 5) = (WamWord) scan.cur_p;
++  AB(B, 6) = (WamWord) cxt;
+ 
+   return Get_Atom(Functor_Of(pred->f_n), name_word) &&
+     Get_Integer(Arity_Of(pred->f_n), arity_word);
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/BipsPl/pretty_c.c gprolog-cx/base/src/BipsPl/pretty_c.c
+--- gprolog-1.2.18/src/BipsPl/pretty_c.c	2004-06-04 22:04:59.000000000 +0600
++++ gprolog-cx/base/src/BipsPl/pretty_c.c	2006-01-02 16:23:51.000000000 +0500
+@@ -675,7 +675,7 @@
+ Bind_Variable(WamWord *adr, WamWord word)
+ {
+   int i, j;
+-  char buff[16];
++  char buff[256];		/* FIXME: up from 16 */
+ 
+   while (glob_dico_var[nb_to_try] && nb_to_try < MAX_VAR_IN_TERM)
+     nb_to_try++;
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/BipsPl/scan_supp.h gprolog-cx/base/src/BipsPl/scan_supp.h
+--- gprolog-1.2.18/src/BipsPl/scan_supp.h	2004-06-04 22:04:59.000000000 +0600
++++ gprolog-cx/base/src/BipsPl/scan_supp.h	2003-09-17 19:22:58.000000000 +0600
+@@ -28,7 +28,7 @@
+  * Constants                       *
+  *---------------------------------*/
+ 
+-#define SCAN_BIG_BUFFER            10240
++#define SCAN_BIG_BUFFER            (1024*1024)
+ 
+ 
+ 
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/BipsPl/stream_supp.c gprolog-cx/base/src/BipsPl/stream_supp.c
+--- gprolog-1.2.18/src/BipsPl/stream_supp.c	2004-06-04 22:04:59.000000000 +0600
++++ gprolog-cx/base/src/BipsPl/stream_supp.c	2006-07-18 23:21:19.000000000 +0600
+@@ -1484,13 +1484,27 @@
+ Stream_Printf(StmInf *pstm, char *format, ...)
+ {
+   va_list arg_ptr;
+-  static char str[BIG_BUFFER];
++  int strmax = 128*1024;	/* FIXME: up(?) from BIG_BUFFER */
++  char *str = alloca (strmax);
++  int nchars;
+   char *p;
+   int c;
+ 
+ 
+   va_start(arg_ptr, format);
+-  vsprintf(str, format, arg_ptr);
++  for (;;) {
++    nchars = vsnprintf(str, strmax, format, arg_ptr);
++    if (nchars < 0) {		/* doesn't fit & old vsnprintf */
++      strmax *= 2;		/* just returns -1: */
++      str = alloca (strmax);	/* grab more space (double it) and retry */
++    }
++    else if (nchars >= strmax) { /* doesn't fit & new vsnprintf */
++      strmax = nchars+1;	/* nchars is needed size (minus 1) */
++      str = alloca (strmax);	/* grab all that's needed and retry */
++    }
++    else
++      break;			/* it fits: leave it at that */
++  }
+   va_end(arg_ptr);
+ 
+   for (p = str; *p; p++)
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/BipsPl/term_supp.c gprolog-cx/base/src/BipsPl/term_supp.c
+--- gprolog-1.2.18/src/BipsPl/term_supp.c	2004-06-04 22:04:59.000000000 +0600
++++ gprolog-cx/base/src/BipsPl/term_supp.c	2003-09-17 19:22:58.000000000 +0600
+@@ -126,7 +126,7 @@
+ 	  v_tag == FLT)
+ 	return 1;
+ 
+-      return (v_tag != INT) ? -1 : UnTag_INT(u_word) - UnTag_INT(v_word);
++      return (v_tag != INT) ? -1 : u_word - v_word;
+ 
+     case ATM:
+       if (v_tag == REF ||
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/BipsPl/write_supp.c gprolog-cx/base/src/BipsPl/write_supp.c
+--- gprolog-1.2.18/src/BipsPl/write_supp.c	2004-06-04 22:05:00.000000000 +0600
++++ gprolog-cx/base/src/BipsPl/write_supp.c	2006-07-18 23:21:19.000000000 +0600
+@@ -26,6 +26,10 @@
+ 
+ #include <string.h>
+ #include <ctype.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <stdarg.h>
++#include <alloca.h>
+ 
+ #define OBJ_INIT Write_Supp_Initializer
+ 
+@@ -297,13 +301,29 @@
+  * FLOAT_TO_STRING                                                         *
+  *                                                                         *
+  *-------------------------------------------------------------------------*/
++
++static char fts_buffer[64];
++
++static void
++xsprintf (char *buff, const char *fmt, ...)
++{
++  va_list ap __attribute__ ((aligned (16)));
++  va_start (ap, fmt);
++  vsprintf (buff, fmt, ap);
++  va_end (ap);
++}
++
+ char *
+-Float_To_String(double d)
++Float_To_String(double d, char *buffer)
+ {
+   char *p, *q, *e;
+-  static char buff[32];
++  char *buff = buffer? buffer: fts_buffer;
+ 
+-  sprintf(buff, "%#.17g", d);	/* a . with 16 significant digits */
++#if 0
++  vsprintf(buff, "%#.17g", d);	/* a . with 16 significant digits */
++#else
++  xsprintf(buff, "%#.17g", d);	/* a . with 16 significant digits */
++#endif
+ 
+   p = buff;			/* skip leading blanks */
+   while (*p == ' ')
+@@ -391,8 +411,9 @@
+       Show_Integer(UnTag_INT(word));
+       break;
+ 
+-    case FLT:
+-      Show_Float(Obtain_Float(UnTag_FLT(word)));
++    case FLT: {
++      double d = Obtain_Float(UnTag_FLT(word));
++      Show_Float(d); }
+       break;
+ 
+     case LST:
+@@ -562,7 +583,7 @@
+ static void
+ Show_Fd_Variable(WamWord *fdv_adr)
+ {
+-  char str[32];
++  char str[4096];
+ 
+   sprintf(str, "_#%d(", (int) Cstr_Offset(fdv_adr));
+   Out_String(str);
+@@ -583,7 +604,9 @@
+ static void
+ Show_Float(double x)
+ {
+-  Out_String(Float_To_String(x));
++  char buffer[64];
++
++  Out_String(Float_To_String(x, buffer));
+ 
+   last_writing = W_NUMBER;
+ }
+@@ -659,7 +682,8 @@
+       if (Try_Portray(word))
+ 	return;
+ 
+-      Show_Float(Obtain_Float(UnTag_FLT(word)));
++      { double d = Obtain_Float(UnTag_FLT(word));
++        Show_Float(d); }
+       break;
+ 
+     case LST:
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/BipsPl/write_supp.h gprolog-cx/base/src/BipsPl/write_supp.h
+--- gprolog-1.2.18/src/BipsPl/write_supp.h	2004-06-04 22:05:00.000000000 +0600
++++ gprolog-cx/base/src/BipsPl/write_supp.h	2006-07-18 23:21:19.000000000 +0600
+@@ -70,6 +70,6 @@
+ 
+ void Write_A_Char(StmInf *pstm, int c);
+ 
+-char *Float_To_String(double d);
++char *Float_To_String(double d, char *buffer);
+ 
+ int Get_Print_Stm(void);
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/configure.in gprolog-cx/base/src/configure.in
+--- gprolog-1.2.18/src/configure.in	2004-06-07 18:43:59.000000000 +0600
++++ gprolog-cx/base/src/configure.in	2006-01-03 05:18:14.000000000 +0500
+@@ -8,17 +8,33 @@
+ AC_PREREQ(2.52)
+ # AC_CONFIG_AUX_DIR(ConfUtils) to do...
+ AC_CONFIG_SRCDIR(SETVARS)
++AC_CONFIG_HEADER(EnginePl/gp_config.h)
++AC_CONFIG_FILES(Makefile
++		TopComp/Makefile
++		Pl2Wam/Makefile
++		Wam2Ma/Makefile
++		Ma2Asm/Makefile
++		Fd2C/Makefile
++		Linedit/Makefile
++		W32GUICons/Makefile
++		EnginePl/Makefile
++		BipsPl/Makefile
++		EngineFD/Makefile
++		BipsFD/Makefile
++		$OTHER_MAKEFILES)
++
+ 
+ 
+ # ***************************
+ # * initial variable values *
+ # ***************************
+ 
+-PROLOG_NAME='GNU Prolog'
++PROLOG_NAME='GNU Prolog/CX'
+ PROLOG_NAME1='gprolog'
++PROLOG_VARIANT='-cx'
+ PROLOG_VERSION='1.2.18'
+-PROLOG_DATE='Jan 29 2004'
+-PROLOG_COPYRIGHT='Copyright (C) 1999-2004 Daniel Diaz'
++PROLOG_DATE='Jan 02 2006'
++PROLOG_COPYRIGHT='Copyright (C) 1999-2006 Daniel Diaz'
+ 
+ TOP_LEVEL=$PROLOG_NAME1
+ GPLC=gplc
+@@ -47,6 +63,11 @@
+ AC_SUBST(PROLOG_VERSION)
+ AC_SUBST(PROLOG_DATE)
+ AC_SUBST(PROLOG_COPYRIGHT)
++AC_SUBST(PROLOG_VARIANT)
++
++AC_SUBST(PROLOG_BINDIR)
++AC_SUBST(PROLOG_LIBDIR)
++AC_SUBST(PROLOG_INCDIR)
+ 
+ AC_SUBST(TOP_LEVEL)
+ AC_SUBST(GPLC)
+@@ -58,7 +79,6 @@
+ AC_SUBST(CFLAGS_MACHINE)
+ AC_SUBST(CFLAGS_UNSIGNED_CHAR)
+ AC_SUBST(LDLIBS)
+-AC_SUBST(LDGUILIBS)
+ 
+ AC_SUBST(ASM_SUFFIX)
+ AC_SUBST(OBJ_SUFFIX)
+@@ -71,11 +91,8 @@
+ AC_SUBST(STRIP)
+ 
+ AC_SUBST(RC)
+-AC_SUBST(RCFLAGS)
+-AC_SUBST(RC_OUT_NAME_OPT)
+ AC_SUBST(LD)
+ AC_SUBST(LD_OUT_NAME_OPT)
+-AC_SUBST(LD_DLL_NAME_OPT)
+ 
+ AC_SUBST(ROOT_DIR)
+ AC_SUBST(ROOT_DIR1)
+@@ -86,9 +103,6 @@
+ AC_SUBST(HTML_DIR)
+ AC_SUBST(EXAMPLES_DIR)
+ 
+-AC_SUBST(WIN_TMP_DIR)
+-AC_SUBST(WIN_CONF_OPT)
+-
+ AC_SUBST(TXT_FILES)
+ AC_SUBST(BIN_FILES)
+ AC_SUBST(OBJ_FILES)
+@@ -126,6 +140,9 @@
+ AC_ARG_WITH(links-dir,   [  --with-links-dir=DIR    specify LINKS_DIR],
+                 [WITH_LINKS_DIR="$withval"])
+ 
++AC_ARG_WITH(exec-prefix, [  --with-exec-prefix=DIR  specify GP_EXE_DIR],
++		[WITH_GP_EXE_DIR="$withval"])
++
+ AC_ARG_WITH(doc-dir,     [  --with-doc-dir=DIR      specify DOC_DIR],
+                 [WITH_DOC_DIR="$withval"])
+ 
+@@ -193,6 +210,18 @@
+                    *)  ;;
+                esac])
+ 
++AC_ARG_ENABLE(watermark, [  --enable-watermark      call foreign destructors upon choice-point removal],
++             [case "$enableval" in
++                  yes) AC_DEFINE(USE_WATERMARK) USE_WATERMARK=yes;;
++                  *)   USE_WATERMARK=no;;
++              esac])
++
++AC_ARG_ENABLE(dynamic, [  --enable-dynamic          create dynamically-loadable objects],
++             [case "$enableval" in
++                  yes) AC_DEFINE(USE_DYNAMIC) USE_DYNAMIC=yes;;
++                  *)   USE_DYNAMIC=no;;
++              esac])
++
+ if test "$USE_EBP" = no; then
+         AC_DEFINE(NO_USE_EBP)
+ fi
+@@ -206,7 +235,6 @@
+ if test "$WITH_MSVC" != no; then
+     echo "using MSVC++ as C compiler"
+     CC=cl
+-    WIN_CONF_OPT=--with-msvc
+ fi
+ 
+ # should be always done to correctly set EXEEXT (CC is set to cl for MSVC)
+@@ -219,23 +247,20 @@
+     ASM_SUFFIX='.asm'
+     OBJ_SUFFIX='.obj'
+     LIB_SUFFIX='.lib'
+-    CC_OBJ_NAME_OPT='-Fo'
+-    CC_EXE_NAME_OPT='-Fe'
++	CC_OBJ_NAME_OPT='/Fo'
++	CC_EXE_NAME_OPT='/Fe'
+     AC_CHECK_PROGS(NASM,nasmw nasm,no)
+     if test "$NASM" = no; then
+         AC_MSG_ERROR([nasm is required under win32])
+     fi
+     AS="$NASM -f win32"
+-    AR_RC='lib -nologo -out:'
++        AR_RC='lib /nologo /out:'
+     AR_SEP=''
+     STRIP=:
+     RANLIB=:
+     RC=rc
+-    RCFLAGS=''
+-    RC_OUT_NAME_OPT='-fo'
+     LD=link
+-    LD_OUT_NAME_OPT='-out:'
+-    LD_DLL_NAME_OPT='-dll'
++	LD_OUT_NAME_OPT='/out:'
+ else
+     if test "$GCC" != yes; then
+         AC_MSG_ERROR([gcc is required (or MSVC++ under win32)])
+@@ -248,17 +273,17 @@
+     LIB_SUFFIX='.a'
+     CC_OBJ_NAME_OPT='-o '
+     CC_EXE_NAME_OPT='-o '
+-    RC='windres'
+-    RCFLAGS='-O coff'
+-    RC_OUT_NAME_OPT='-o '
+-    LD=gcc
+-    LD_OUT_NAME_OPT='-o '
+-    LD_DLL_NAME_OPT='-shared'
+     AR_RC='ar rc '
+     AR_SEP=' '
+     STRIP=strip
+ fi
+ 
++
++# for old versions of autoconf which had not AC_EXEEXT
++# EXEEXT=
++# the following is useless in 2.52
++# AC_EXEEXT
++
+ EXE_SUFFIX=$EXEEXT
+ AC_PROG_MAKE_SET
+ AC_PROG_INSTALL
+@@ -278,25 +303,14 @@
+ # *******************************
+ 
+ AC_CANONICAL_HOST
+-
+-# determine windows path associated to posix path /tmp
+-
+-case "$host_os" in
+-    cygwin*)  WIN_TMP_DIR=`cygpath -d -a /tmp`;;
+-    mingw*)   WIN_TMP_DIR=`cd /tmp;pwd -W|sed -e 's:/:\\\:g'`;;
+-esac
+-
+ if test "$WITH_MSVC" != no; then
+-    
+     AC_DEFINE(M_ix86)
+     AC_DEFINE(M_win32)
+     AC_DEFINE(M_ix86_win32)
+     host_vendor=Microsoft
+     host_os=win32
+     WIN32=yes
+-
+ else
+-    
+     WIN32=no
+     case "$host_cpu" in
+         mips)           AC_DEFINE(M_mips);;
+@@ -314,7 +328,6 @@
+         solaris*)       AC_DEFINE(M_solaris);;
+         linux*)         AC_DEFINE(M_linux);;
+         cygwin*)        AC_DEFINE(M_cygwin);;
+-        mingw*)         AC_DEFINE(M_mingw) MINGW=yes; WIN32=yes;;
+         *sco*)          AC_DEFINE(M_sco);;
+         *bsd*)          AC_DEFINE(M_bsd);;
+         *darwin*)       AC_DEFINE(M_bsd);;
+@@ -324,7 +337,6 @@
+         mips*irix*)      AC_DEFINE(M_mips_irix);;
+         sparc*sunos*)    AC_DEFINE(M_sparc_sunos);;
+         sparc*solaris*)  AC_DEFINE(M_sparc_solaris);;
+-        sparc*bsd*)      AC_DEFINE(M_sparc_bsd);;
+         alpha*osf*)      AC_DEFINE(M_alpha_osf);;
+         alpha*linux*)    AC_DEFINE(M_alpha_linux);;
+         i*86*linux*)     AC_DEFINE(M_ix86_linux);;
+@@ -333,21 +345,17 @@
+         i*86*bsd*)       AC_DEFINE(M_ix86_bsd);;
+         powerpc*linux*)  AC_DEFINE(M_powerpc_linux);;
+         powerpc*darwin*) AC_DEFINE(M_powerpc_darwin);;
+-        powerpc*bsd*)    AC_DEFINE(M_powerpc_bsd);;
+         *86*cygwin*)     AC_DEFINE(M_ix86_cygwin);;
+-        *86*mingw*)      AC_DEFINE(M_ix86_mingw);;
+         x86_64*linux*)   AC_DEFINE(M_x86_64_linux);;
+         *)               AC_MSG_ERROR(unsupported architecture)
+     esac
+ 
+ fi
+ 
+-
+-
+ AC_CHECK_SIZEOF(long)
+ AC_CHECK_HEADERS(sys/ioctl_compat.h termios.h malloc.h)
+ AC_FUNC_MMAP 
+-AC_CHECK_FUNCS(mprotect mallopt fgetc)
++AC_CHECK_FUNCS(mallopt fgetc)
+ 
+ 
+ # ********************
+@@ -360,19 +368,17 @@
+ AC_C_INLINE
+ 
+ if test "$WITH_MSVC" != no; then
+-    
+     case "$WITH_C_FLAGS" in
+-        debug) CFLAGS='-W3 -ZI -GX';;
++		debug) CFLAGS='/W3 /ZI /GX';;
+         no)    CFLAGS='';;
+-        yes)   CFLAGS='-O2 -GX';;
++		yes)   CFLAGS='/O2 /GX';;
+         *)     CFLAGS="$WITH_C_FLAGS";;
+     esac
+     
+-    CFLAGS_UNSIGNED_CHAR='-J'
+-    CFLAGS_MACHINE='-nologo'
++	CFLAGS_UNSIGNED_CHAR='/J'
++	CFLAGS_MACHINE='/nologo'
+ 
+ else
+-    
+     case "$WITH_C_FLAGS" in
+         debug) CFLAGS='-g -Wall';;
+         no)    CFLAGS='';;
+@@ -380,22 +386,17 @@
+         *)     CFLAGS="$WITH_C_FLAGS";;
+     esac
+ 
+-# -fomit-frame-pointer does not work on MinGW (tested with gcc 3.3.3)
+-    if test "$MINGW-$WITH_C_FLAGS" = yes-yes; then
+-	CFLAGS='-O3'
+-    fi
+-    
+     CFLAGS_PREFIX_REG='-ffixed-%s'
+     CFLAGS_UNSIGNED_CHAR='-funsigned-char'
+     
+     CFLAGS_MACHINE=
+     case "$host" in
+-        mips*irix*)        CFLAGS_MACHINE='-march=4000';;
++		mips*irix*)        CFLAGS_MACHINE='-mcpu=4000';;
+         *sparc*sunos4.1.3) CFLAGS_MACHINE='-msupersparc';;
+         *sparc*solaris)    CFLAGS_MACHINE='-msupersparc';;
+-        i686*)             CFLAGS_MACHINE='-march=pentiumpro';;
+-        i586*)             CFLAGS_MACHINE='-march=pentium';;
+-        i*86*)             CFLAGS_MACHINE='-march=i486';;
++dnl		i686*)             CFLAGS_MACHINE='-mcpu=pentiumpro';;
++dnl		i586*)             CFLAGS_MACHINE='-mcpu=pentium';;
++dnl		i*86*)             CFLAGS_MACHINE='-mcpu=i486';;
+         powerpc*darwin*)   CFLAGS_MACHINE='-mpowerpc -no-cpp-precomp';;
+     esac
+     
+@@ -433,46 +434,28 @@
+ # * libraries to add *
+ # ********************
+ 
+-if test "$WITH_MSVC" != no; then
+-    LDFLAGS='-nologo -F8000000'
+-fi
+ 
+-make_lib_list()
+-{
+-    list=''
+-    if test $CC = cl -o $CC = lc; then
+-        for i; do list="$list $i.lib"; done
++if test "$WITH_MSVC" != no; then
++	LDFLAGS='/nologo'
++	LDLIBS='advapi32.lib user32.lib'
+     else
+-        for i; do list="$list -l$i"; done
++	LDLIBS='-lm'
+     fi
+-    echo $list
+-}
+ 
+-if test $WIN32 = yes; then
+-    LIB='advapi32 user32'
+-    GUILIB='kernel32 user32 gdi32 comdlg32 advapi32 comctl32 shell32 ole32 htmlhelp'
+-# other libs: winspool.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib
+     if test "$USE_SOCKETS" = yes; then
+-        LIB="$LIB ws2_32"
+-    fi
++	if test "$WITH_MSVC" != no; then
++		LDLIBS="$LDLIBS ws2_32.lib"
+ else
+-    LIB='m'
+-    GUILIB=''
+-    if test "$USE_SOCKETS" = yes; then
+         AC_CHECK_FUNC(socket,[],
+-                AC_CHECK_LIB(socket,socket,LIB="$LIB socket",
++                      AC_CHECK_LIB(socket,socket,LDLIBS="$LDLIBS -lsocket",
+                            AC_MSG_ERROR(cannot find socket library)))
+     
+         AC_CHECK_FUNC(gethostbyname,[],
+-                AC_CHECK_LIB(nsl,gethostbyname,LIB="$LIB nsl"))
++                      AC_CHECK_LIB(nsl,gethostbyname,LDLIBS="$LDLIBS -lnsl"))
+     # (No error here; just assume gethostbyname is in -lsocket.)
+     fi
+ fi
+ 
+-LDLIBS=`make_lib_list $LIB`
+-LDGUILIBS=`make_lib_list $GUILIB`
+-
+-
+ 
+ 
+ # ***********************
+@@ -482,9 +465,14 @@
+ AC_DEFINE_UNQUOTED(PROLOG_NAME,      "$PROLOG_NAME")
+ AC_DEFINE_UNQUOTED(PROLOG_NAME1,     "$PROLOG_NAME1")
+ AC_DEFINE_UNQUOTED(PROLOG_VERSION,   "$PROLOG_VERSION")
++AC_DEFINE_UNQUOTED(PROLOG_VARIANT,   "$PROLOG_VARIANT")
+ AC_DEFINE_UNQUOTED(PROLOG_DATE,      "$PROLOG_DATE")
+ AC_DEFINE_UNQUOTED(PROLOG_COPYRIGHT, "$PROLOG_COPYRIGHT")
+ 
++AC_DEFINE_UNQUOTED(PROLOG_BINDIR,    "$bindir")
++AC_DEFINE_UNQUOTED(PROLOG_LIBDIR,    "$libdir")
++AC_DEFINE_UNQUOTED(PROLOG_INCDIR,    "$includedir")
++
+ AC_DEFINE_UNQUOTED(TOP_LEVEL,        "$TOP_LEVEL")
+ AC_DEFINE_UNQUOTED(GPLC,             "$GPLC")
+ AC_DEFINE_UNQUOTED(HEXGPLC,          "$HEXGPLC")
+@@ -542,7 +530,7 @@
+ test "$prefix"      = NONE && prefix=/usr/local
+ test "$exec_prefix" = NONE && exec_prefix=$prefix
+ 
+-PKG_NAME=$PROLOG_NAME1-$PROLOG_VERSION
++PKG_NAME=$PROLOG_NAME1$PROLOG_VARIANT-$PROLOG_VERSION
+ 
+ # *-------------*
+ # * INSTALL_DIR *
+@@ -679,8 +667,8 @@
+ if test "$USE_GUI_CONSOLE" = yes; then
+     TOP_LEVEL_FLAGS=--gui-console
+     MAKE_W32GC_DIRS='$(W32GC_DIRS)'
++        L="$L $DLL_W32GUICONS"
+     O="$O w32gc_interf"
+-    BIN_FILES="$DLL_W32GUICONS"
+ else
+     TOP_LEVEL_FLAGS=
+     MAKE_W32GC_DIRS=
+@@ -719,21 +707,14 @@
+ 
+ echo "$PKG_NAME" >VERSION
+ echo "$PKG_NAME" >../VERSION
+-
+-echo "$PROLOG_VERSION" >/tmp/version_no.tex
+-if diff /tmp/version_no.tex ../doc/version_no.tex >/dev/null 2>&1; then
+-    rm /tmp/version_no.tex
++echo "$PROLOG_VERSION" >version_no.tex
++if diff version_no.tex ../doc/version_no.tex >/dev/null 2>&1; then
++	rm version_no.tex
+ else
+-    mv /tmp/version_no.tex ../doc/version_no.tex
+-fi
++	mv version_no.tex ../doc/version_no.tex
+ 
+-echo "$PROLOG_COPYRIGHT" >/tmp/copyright.tex
+-if diff /tmp/copyright.tex ../doc/copyright.tex >/dev/null 2>&1; then
+-    rm /tmp/copyright.tex
+-else
+-    mv /tmp/copyright.tex ../doc/copyright.tex
+ fi
+-
++echo "$PROLOG_COPYRIGHT" >../doc/copyright.tex
+ 
+ 
+ # ********************
+@@ -741,28 +722,11 @@
+ # ********************
+ 
+ OTHER_MAKEFILES=
+-for i in TestsPl/Makefile DevUtils/Makefile Ma2Asm/FromC/Makefile Win32/Makefile Win32/gp-setup.iss
++for i in TestsPl/Makefile DevUtils/Makefile Ma2Asm/FromC/Makefile
+ do
+     if test -f $i.in; then
+         OTHER_MAKEFILES="$OTHER_MAKEFILES $i"
+     fi
+ done
+ 
+-AC_CONFIG_HEADER(EnginePl/gp_config.h)
+-AC_CONFIG_FILES(Makefile
+-                TopComp/Makefile
+-                Pl2Wam/Makefile
+-                Wam2Ma/Makefile
+-                Ma2Asm/Makefile
+-                Fd2C/Makefile
+-                Linedit/Makefile
+-                W32GUICons/Makefile
+-                EnginePl/Makefile
+-                BipsPl/Makefile
+-                EngineFD/Makefile
+-                BipsFD/Makefile
+-                $OTHER_MAKEFILES)
+ AC_OUTPUT
+-
+-
+-
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/EnginePl/atom.c gprolog-cx/base/src/EnginePl/atom.c
+--- gprolog-1.2.18/src/EnginePl/atom.c	2004-06-07 19:21:21.000000000 +0600
++++ gprolog-cx/base/src/EnginePl/atom.c	2006-07-18 23:21:20.000000000 +0600
+@@ -275,6 +275,7 @@
+   nb_atom++;
+ 
+   patom->name = name;
++  patom->modules = NULL;	/* first time around it's got no units */
+   prop.needs_scan = FALSE;
+ 
+   identifier = graphic = (*name != '\0');
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/EnginePl/atom.h gprolog-cx/base/src/EnginePl/atom.h
+--- gprolog-1.2.18/src/EnginePl/atom.h	2004-06-07 17:11:44.000000000 +0600
++++ gprolog-cx/base/src/EnginePl/atom.h	2006-07-18 23:21:20.000000000 +0600
+@@ -97,6 +97,8 @@
+ {				/* ------------------------------ */
+   char *name;			/* key is <name> (the string)     */
+   AtomProp prop;		/* associated properties          */
++  char **modules;		/* module predicate tables        */
++				/* (indexed with the arity)       */
+ }
+ AtomInf;
+ 
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/EnginePl/context.h gprolog-cx/base/src/EnginePl/context.h
+--- gprolog-1.2.18/src/EnginePl/context.h	1970-01-01 05:00:00.000000000 +0500
++++ gprolog-cx/base/src/EnginePl/context.h	2006-07-18 23:21:20.000000000 +0600
+@@ -0,0 +1,33 @@
++/*-------------------------------------------------------------------------*
++ * GNU Prolog                                                              *
++ *                                                                         *
++ * Part  : Prolog engine                                                   *
++ * File  : context.h                                                       *
++ * Descr.: context function declarations header file                       *
++ * Author: Daniel Diaz                                                     *
++ *                                                                         *
++ * Copyright (C) 2003 Salvador Abreu                                       *
++ *                                                                         *
++ * GNU Prolog is free software; you can redistribute it and/or modify it   *
++ * under the terms of the GNU General Public License as published by the   *
++ * Free Software Foundation; either version 2, or any later version.       *
++ *                                                                         *
++ * GNU Prolog is distributed in the hope that it will be useful, but       *
++ * WITHOUT ANY WARRANTY; without even the implied warranty of              *
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU        *
++ * General Public License for more details.                                *
++ *                                                                         *
++ * You should have received a copy of the GNU General Public License along *
++ * with this program; if not, write to the Free Software Foundation, Inc.  *
++ * 59 Temple Place - Suite 330, Boston, MA 02111, USA.                     *
++ *-------------------------------------------------------------------------*/
++
++/* $Id: context.h,v 1.2 2006/07/15 19:59:35 spa Exp $ */
++
++extern PredInf *Cxt_Lookup_Pred_With_K (long key, WamWord cxt_call_K) FC;
++extern PredInf *Cxt_Lookup_Pred (long key) FC;
++extern WamCont Cxt_Call_Tagged(WamWord key, WamWord call_K) FC;
++extern WamCont Cxt_Call(int func, int arity, WamWord call_K) FC;
++extern void Cxt_Assign_K(WamWord new_K) FC;
++extern Bool Cxt_Arg_Load(int arg_no, WamWord t_word, WamWord *st_word) FC;
++extern Bool Cxt_Arg_Unify(int arg_no, WamWord t_word, WamWord st_word) FC;
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/EnginePl/engine.c gprolog-cx/base/src/EnginePl/engine.c
+--- gprolog-1.2.18/src/EnginePl/engine.c	2004-06-04 22:05:00.000000000 +0600
++++ gprolog-cx/base/src/EnginePl/engine.c	2006-07-18 23:21:20.000000000 +0600
+@@ -212,6 +212,12 @@
+   Create_Choice_Point(Call_Prolog_Fail, 0);	/* 1st choice point */
+ 
+   Fd_Reset_Solver();
++
++  {
++    void Cxt_Init(void) FC;
++
++    Cxt_Init();
++  }
+ }
+ 
+ 
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/EnginePl/engine_pl.h gprolog-cx/base/src/EnginePl/engine_pl.h
+--- gprolog-1.2.18/src/EnginePl/engine_pl.h	2004-06-04 22:05:00.000000000 +0600
++++ gprolog-cx/base/src/EnginePl/engine_pl.h	2006-01-03 04:35:29.000000000 +0500
+@@ -40,3 +40,4 @@
+ #include "obj_chain.h"
+ #include "wam_inst.h"
+ #include "if_no_fd.h"
++#include "context.h"
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/EnginePl/gp_config.h.in gprolog-cx/base/src/EnginePl/gp_config.h.in
+--- gprolog-1.2.18/src/EnginePl/gp_config.h.in	2004-02-29 10:03:09.000000000 +0500
++++ gprolog-cx/base/src/EnginePl/gp_config.h.in	2006-01-03 05:18:14.000000000 +0500
+@@ -31,21 +31,18 @@
+ /* Define if you have termios.h */
+ #undef HAVE_TERMIOS_H
+ 
+-/* Define if you have termio.h */
+-#undef HAVE_TERMIO_H
+-
+-/* Define if you have malloc.h */
++/* Define if you have termios.h */
+ #undef HAVE_MALLOC_H
+ 
+-/* Define if you have a working mmap system call */
++/* Define if you have a working `mmap' system call */
+ #undef HAVE_MMAP
+ 
+-/* Define if you have a working mprotect system call */
+-#undef HAVE_MPROTECT
+-
+ /* Define if you have a mallopt function */
+ #undef HAVE_MALLOPT
+ 
++/* Define if you have a mkstemp function */
++#undef HAVE_MKSTEMP
++
+ /* Define inline keyword */
+ #undef inline
+ 
+@@ -73,7 +70,11 @@
+ /* Define if you don't want to include the FD constraint solver */
+ #undef NO_USE_FD_SOLVER
+ 
++/* Define if you want to use the foreign destructor in choicepoint functions */
++#undef USE_WATERMARK
+ 
++/* Define if you want to use dynamically-loadable objects */
++#undef USE_DYNAMIC
+ 
+ 
+ /* Define if the cpu is a mips */
+@@ -144,9 +145,6 @@
+ /* Define if the system is a ix86/cygwin */
+ #undef M_ix86_cygwin
+ 
+-/* Define if the system is a ix86/mingw */
+-#undef M_ix86_mingw
+-
+ /* Define if the system is a ix86/win32 */
+ #undef M_ix86_win32
+ 
+@@ -159,17 +157,11 @@
+ /* Define if the system is a sparc/sunos */
+ #undef M_sparc_sunos
+ 
+-/* Define if the system is a sparc/bsd */
+-#undef M_sparc_bsd
+-
+ /* Define if the system is a powerpc/linux */
+ #undef M_powerpc_linux
+ 
+-/* Define if the system is a powerpc/darwin */
+-#undef M_powerpc_darwin
+-
+ /* Define if the system is a powerpc/bsd */
+-#undef M_powerpc_bsd
++#undef M_powerpc_darwin
+ 
+ /* Define if the system is a x86-64/linux */
+ #undef M_x86_64_linux
+@@ -181,9 +173,14 @@
+ #define PROLOG_NAME1               any
+ #define PROLOG_NAME                any
+ #define PROLOG_VERSION             any
++#define PROLOG_VARIANT             any
+ #define PROLOG_DATE                any
+ #define PROLOG_COPYRIGHT           any
+ 
++#define PROLOG_BINDIR		   any
++#define PROLOG_LIBDIR		   any
++#define PROLOG_INCDIR		   any
++
+ #define TOP_LEVEL                  any
+ #define GPLC                       any
+ #define HEXGPLC                    any
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/EnginePl/machine.c gprolog-cx/base/src/EnginePl/machine.c
+--- gprolog-1.2.18/src/EnginePl/machine.c	2004-06-04 22:05:00.000000000 +0600
++++ gprolog-cx/base/src/EnginePl/machine.c	2008-04-16 04:31:20.000000000 +0600
+@@ -83,8 +80,8 @@
+  * Constants                       *
+  *---------------------------------*/
+ 
+-#define M_MAGIC1                   0x12345678
+-#define M_MAGIC2                   0xdeadbeef
++#define M_SECURITY_MARGIN          128	/* in WamWords */
++#define M_MAGIC                    0x12345678
+ 
+ #define UNKOWN_SYS_ERRNO           "Unknown error (%d)"
+ 
+@@ -125,8 +121,21 @@
+ 
+ static int cur_seed = 1;
+ 
++static char cur_work_dir[MAXPATHLEN];
++
++
++#ifdef M_USE_MAGIC_NB_TO_DETECT_STACK_NAME
++
++static WamWord *check_adr[NB_OF_STACKS];
++
++#endif
++
++#ifdef M_USE_MMAP
++
+ static int page_size;
+ 
++#endif
++
+ 
+ 
+ 
+@@ -134,9 +143,19 @@
+  * Function Prototypes             *
+  *---------------------------------*/
+ 
++#ifdef M_USE_MAGIC_NB_TO_DETECT_STACK_NAME
++
++static void Fill_Magic_Adr_Table(void);
++
++#endif
++
++#ifndef M_ix86_win32
++
+ static void SIGSEGV_Handler();
+ 
+-static char *Stack_Overflow_Err_Msg(int stk_nb);
++#endif
++
++static void Stack_Overflow(int stk_nb);
+ 
+ #ifdef INET_MANAGEMENT
+ 
+@@ -166,6 +185,8 @@
+   start_system_time = M_System_Time();
+   start_real_time = M_Real_Time();
+ 
++  getcwd(cur_work_dir, sizeof(cur_work_dir) - 1);
++
+ #if defined(HAVE_MALLOPT) && defined(M_MMAP_MAX)
+   mallopt(M_MMAP_MAX, 0);
+ #endif
+@@ -175,26 +196,47 @@
+ 
+ 
+ 
+-#if defined(_WIN32) && !defined(__CYGWIN__)
++
++#ifdef M_USE_MALLOC
+ 
+ /*-------------------------------------------------------------------------*
+- * GETPAGESIZE                                                             *
++ * M_ALLOCATE_STACKS                                                       *
+  *                                                                         *
+  *-------------------------------------------------------------------------*/
+-int
+-getpagesize(void)
++void
++M_Allocate_Stacks(void)
+ {
+-  SYSTEM_INFO si;
++  unsigned len = 0;
++  WamWord *addr;
++  int i;
+ 
+-  GetSystemInfo(&si);
+-  return si.dwPageSize;
++  for (i = 0; i < NB_OF_STACKS; i++)
++    len += stk_tbl[i].size;
++
++  addr = (WamWord *) Calloc(len, sizeof(WamWord));
++
++  if (addr == NULL)
++    Fatal_Error(ERR_STACKS_ALLOCATION);
++
++  for (i = 0; i < NB_OF_STACKS; i++)
++    {
++      stk_tbl[i].stack = addr;
++      addr += stk_tbl[i].size;
+ }
+ 
++#ifdef M_USE_MAGIC_NB_TO_DETECT_STACK_NAME
++  Fill_Magic_Adr_Table();
+ #endif
++}
+ 
++#endif
+ 
+ 
+-#if HAVE_MMAP && !defined(_WIN32) && !defined(__CYGWIN__)
++
++
++#ifdef M_USE_MMAP
++
++#ifndef M_ix86_win32
+ #include <sys/mman.h>
+ 
+ #if !defined(MAP_ANON) && defined(MAP_ANONYMOUS)
+@@ -203,30 +245,51 @@
+ #endif
+ 
+ /*-------------------------------------------------------------------------*
+- * VIRTUAL_MEM_ALLOC                                                       *
++ * M_ALLOCATE_STACKS                                                       *
+  *                                                                         *
+  *-------------------------------------------------------------------------*/
+-static WamWord *
+-Virtual_Mem_Alloc(WamWord *addr, int length)
++void
++M_Allocate_Stacks(void)
+ {
+-#if defined(_WIN32) || defined(__CYGWIN__)
+-
+-  addr = (WamWord *) VirtualAlloc(addr, length,
+-				  MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+-
+-#elif defined(HAVE_MMAP)
++  unsigned len = 0;
++  WamWord *addr;
++  int i;
+ 
+-#ifndef MAP_ANON
+-  static int fd = -1;
++#if !defined(M_ix86_win32) && !defined(MAP_ANON)
++  int fd;
+ 
+-  if (fd == -1)
+     fd = open("/dev/zero", 0);
+ 
+   if (fd == -1)
+     Fatal_Error(ERR_CANNOT_OPEN_DEV0, M_Sys_Err_String(errno));
+-#endif /* !MAP_ANON */
+ 
+-  addr = (WamWord *) mmap((void *) addr, length, PROT_READ | PROT_WRITE,
++#endif
++
++  page_size = getpagesize() / sizeof(WamWord);
++
++  for (i = 0; i < NB_OF_STACKS; i++)
++    {
++      stk_tbl[i].size = Round_Up(stk_tbl[i].size, page_size);
++      len += stk_tbl[i].size + page_size;
++    }
++
++  addr = (WamWord *) M_MMAP_HIGH_ADR;
++  len *= sizeof(WamWord);
++
++#if !defined(M_ix86_win32) && defined(M_MMAP_HIGH_ADR_ALT)
++  i = 0;
++ try_mmap:
++#endif
++#ifdef DEBUG
++  DBGPRINTF("trying at high addr:%lx\n", (long) addr);
++#endif
++  addr = (WamWord *) Round_Down((long) addr, getpagesize());
++  addr -= len;
++#ifdef M_ix86_win32
++  addr = (WamWord *) VirtualAlloc(addr, len,
++				  MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
++#else
++  addr = (WamWord *) mmap((caddr_t) addr, len, PROT_READ | PROT_WRITE,
+ 			  MAP_PRIVATE
+ #ifdef MMAP_NEEDS_FIXED
+ 			  | MAP_FIXED
+@@ -235,200 +298,153 @@
+ 			  | MAP_ANON, -1,
+ #else
+ 			  , fd,
+-#endif /* !MAP_ANON */
++#endif
+ 			  0);
+-
+-  if (addr == (WamWord *) -1)
+-    addr = NULL;
+-
+-#else
+-
+-  addr = (WamWord *) Calloc(length, 1);
+-
+ #endif
+ 
+-  return addr;
+-}
+-
+-
+-
+-
+-/*-------------------------------------------------------------------------*
+- * VIRTUAL_MEM_FREE                                                        *
+- *                                                                         *
+- *-------------------------------------------------------------------------*/
+-static void
+-Virtual_Mem_Free(WamWord *addr, int length)
+-{
+-#if defined(_WIN32) || defined(__CYGWIN__)
+-
+-  if (!VirtualFree(addr, 0, MEM_RELEASE))
+-    Fatal_Error(ERR_CANNOT_FREE, GetLastError());
+-
+-#elif defined(HAVE_MMAP)
+ 
+-  if (munmap((void *) addr, length) == -1)
+-    Fatal_Error(ERR_CANNOT_UNMAP, M_Sys_Err_String(errno));
++#ifdef DEBUG
++  DBGPRINTF("start addr:%lx   size:%d\n", (long) addr, len);
++#endif
+ 
++#ifdef M_ix86_win32
++  if (addr == NULL
+ #else 
+-
+-  Free(addr);
+-  
++  if ((long) addr == -1
+ #endif
++#if TAG_SIZE_HIGH > 0
++      || (((unsigned long) (addr) + len) >> (WORD_SIZE - TAG_SIZE_HIGH)) != 0
++#endif
++      )
++    {
++#if !defined(M_ix86_win32) && defined(M_MMAP_HIGH_ADR_ALT)
++      if (i == 0)
++	{
++	  i = 1;
++	  if ((long) addr >= 0)
++	    munmap(addr, len);
++	  addr = (WamWord *) M_MMAP_HIGH_ADR_ALT;
++	  goto try_mmap;
+ }
++#endif
+ 
++      Fatal_Error(ERR_STACKS_ALLOCATION);
++    }
+ 
+-
+-
+-/*-------------------------------------------------------------------------*
+- * VIRTUAL_MEM_PROTECT                                                     *
+- *                                                                         *
+- *-------------------------------------------------------------------------*/
+-static void
+-Virtual_Mem_Protect(WamWord *addr, int length)
++  for (i = 0; i < NB_OF_STACKS; i++)
++    {
++      stk_tbl[i].stack = addr;
++      addr += stk_tbl[i].size;
++#ifdef M_ix86_win32
+ {
+-#if defined(_WIN32) || defined(__CYGWIN__)
+   DWORD old_prot;
+ 
+-  if (!VirtualProtect(addr, length, PAGE_NOACCESS, &old_prot))
++	if (!VirtualProtect(addr, page_size, PAGE_NOACCESS, &old_prot))
+     Fatal_Error(ERR_CANNOT_PROTECT, GetLastError());
++      }
++#else
++      if (munmap((caddr_t) addr, page_size) == -1)
++	Fatal_Error(ERR_CANNOT_UNMAP, M_Sys_Err_String(errno));
++#endif
+ 
+-#elif defined(HAVE_MMAP)
++      addr += page_size;
++    }
+ 
+-#ifdef HAVE_MPROTECT
+-  if (mprotect((void *) addr, length, PROT_NONE) == -1)
++#ifdef M_USE_MAGIC_NB_TO_DETECT_STACK_NAME
++  Fill_Magic_Adr_Table();
+ #endif
+-    if (munmap((void *) addr, length) == -1)
+-      Fatal_Error(ERR_CANNOT_UNMAP, M_Sys_Err_String(errno));
+ 
+-#else
++#if defined(M_sparc_solaris) || defined(M_ix86_solaris) || \
++    defined(M_ix86_sco) || defined(M_x86_64_linux)
++  {
++    struct sigaction act;
+ 
+-  addr[0] = M_MAGIC1;
+-  addr[1] = M_MAGIC2;		/* and rest (addr[1...]) should be 0 */
++    act.sa_handler = NULL;
++    act.sa_sigaction = (void (*)()) SIGSEGV_Handler;
++    sigemptyset(&act.sa_mask);
++    act.sa_flags = SA_SIGINFO;
+ 
++    sigaction(SIGSEGV, &act, NULL);
++  }
++
++#elif !defined(M_ix86_win32)
++  signal(SIGSEGV, (void (*)()) SIGSEGV_Handler);
+ #endif
+ }
+ 
++#endif /* M_USE_MMAP */
++
+ 
+ 
+ 
++#ifdef M_USE_MAGIC_NB_TO_DETECT_STACK_NAME
++
+ /*-------------------------------------------------------------------------*
+- * M_ALLOCATE_STACKS                                                       *
++ * FILL_MAGIC_ADR_TABLE                                                    *
+  *                                                                         *
+  *-------------------------------------------------------------------------*/
+-void
+-M_Allocate_Stacks(void)
++static void
++Fill_Magic_Adr_Table(void)
+ {
+-  unsigned length = 0;
+-  WamWord *addr;
+   int i;
+-  WamWord *addr_to_try[] = { NULL, 
+-#ifdef M_MMAP_HIGH_ADR1
+-			     (WamWord *) M_MMAP_HIGH_ADR1,
+-#endif
+-#ifdef M_MMAP_HIGH_ADR2
+-			     (WamWord *) M_MMAP_HIGH_ADR2,
+-#endif
+-#ifdef M_MMAP_HIGH_ADR3
+-			     (WamWord *) M_MMAP_HIGH_ADR3,
+-#endif
+-			     (WamWord *) -1 };
+-
+-  page_size = getpagesize() / sizeof(WamWord);
+ 
+   for (i = 0; i < NB_OF_STACKS; i++)
+     {
+-      stk_tbl[i].size = Round_Up(stk_tbl[i].size, page_size);
+-      length += stk_tbl[i].size + page_size;
+-    }
+-  length *= sizeof(WamWord);
+-
+-  addr = NULL;
+-  for(i = 0; addr == NULL && addr_to_try[i] != (WamWord *) -1; i++)
+-    {
+-      addr = addr_to_try[i];
+-#ifdef DEBUG
+-      DBGPRINTF("trying at high addr: %p --> ", addr);
+-#endif
+-      if (addr)
++      if (stk_tbl[i].size == 0)
++	check_adr[i] = (WamWord *) NULL;
++      else
+ 	{
+-	  addr = (WamWord *) Round_Down((long) addr, getpagesize());
+-	  addr -= length;
++	  check_adr[i] = stk_tbl[i].stack + stk_tbl[i].size -
++	    M_SECURITY_MARGIN;
++      *check_adr[i] = M_MAGIC;
+ 	}
+-#ifdef DEBUG
+-      DBGPRINTF("base: %p length: %d\n", addr, length);
+-#endif
+-      addr = Virtual_Mem_Alloc(addr, length);
+-#ifdef DEBUG
+-      DBGPRINTF("obtaining: %p\n", addr);
+-#endif
+-#if TAG_SIZE_HIGH > 0
+-      if (addr && (((unsigned long) (addr) + length) >> (WORD_SIZE - TAG_SIZE_HIGH)) != 0)
+-	{
+-#ifdef DEBUG
+-	  DBGPRINTF("  -> invalid high bits addr\n");
+-#endif
+-	  Virtual_Mem_Free(addr, length);
+-	  addr = NULL;
+ 	}
+-#endif /* TAG_SIZE_HIGH > 0 */
+     }
+ 
+-  if (addr == NULL)
+-    Fatal_Error(ERR_STACKS_ALLOCATION);
++#endif
+ 
+-  for (i = 0; i < NB_OF_STACKS; i++)
+-    {
+-      stk_tbl[i].stack = addr;
+-      addr += stk_tbl[i].size;
+-      Virtual_Mem_Protect(addr, page_size);
+-      addr += page_size;
+-    }
+ 
+-#if defined(M_sparc_solaris) || defined(M_ix86_solaris) || \
+-    defined(M_ix86_sco) || defined(M_x86_64_linux)
+-  {
+-    struct sigaction act;
+ 
+-    act.sa_sigaction = (void (*)()) SIGSEGV_Handler;
+-    sigemptyset(&act.sa_mask);
+-    act.sa_flags = SA_SIGINFO;
++#ifdef M_ix86_win32
+ 
+-    sigaction(SIGSEGV, &act, NULL);
+-  }
++/*-------------------------------------------------------------------------*
++ * GETPAGESIZE                                                             *
++ *                                                                         *
++ *-------------------------------------------------------------------------*/
++int
++getpagesize(void)
++{
++  SYSTEM_INFO si;
+ 
+-#elif !defined(_WIN32) && !defined(__CYGWIN__)
+-  signal(SIGSEGV, (void (*)()) SIGSEGV_Handler);
+-#endif
++  GetSystemInfo(&si);
++  return si.dwPageSize;
+ }
+ 
+ 
+ 
+ 
+-#if defined(_WIN32) || defined(__CYGWIN__)
++static long *fault_addr;
+ 
+ /*-------------------------------------------------------------------------*
+- * WIN32_SEH_HANDLER                                                       *
++ * IS_WIN32_SEGV                                                           *
+  *                                                                         *
+  *-------------------------------------------------------------------------*/
+-EXCEPT_DISPOSITION
+-Win32_SEH_Handler(EXCEPTION_RECORD *excp_rec, void *establisher_frame, 
+-		  CONTEXT *context_rec, void *dispatcher_cxt)
++int
++Is_Win32_SEGV(void *exp)
+ {
+-  WamWord *addr;
++  LPEXCEPTION_POINTERS err = (LPEXCEPTION_POINTERS) exp;
++  PEXCEPTION_RECORD per = err->ExceptionRecord;
+   
+-  if (excp_rec->ExceptionFlags)
+-    return ExceptContinueSearch; /* unwind and others */
++  if (per->ExceptionCode != EXCEPTION_ACCESS_VIOLATION)
++    return EXCEPTION_CONTINUE_SEARCH;
+ 
+-  if (excp_rec->ExceptionCode != EXCEPTION_ACCESS_VIOLATION)
+-    return ExceptContinueSearch;
+-  
+-  addr = (WamWord *) excp_rec->ExceptionInformation[1];
+-  SIGSEGV_Handler(addr);
+-  return ExceptContinueExecution;
++  fault_addr = (long *) (per->ExceptionInformation[1]);
++  return EXCEPTION_EXECUTE_HANDLER;
+ }
+ 
+-#endif
++#endif /* M_ix86_win32 */
++
++
+ 
+ 
+ /*-------------------------------------------------------------------------*
+@@ -436,20 +452,19 @@
+  *                                                                         *
+  *-------------------------------------------------------------------------*/
+ #if defined(M_sparc_sunos)
++
+ static void
+ SIGSEGV_Handler(int sig, int code, int scp, WamWord *addr)
+-
+ #elif defined(M_sparc_solaris) || defined(M_ix86_solaris)
++
+ void
+ SIGSEGV_Handler(int sig, siginfo_t * sip)
+-
+ #elif defined(M_alpha_osf)
++
+ static void
+ SIGSEGV_Handler(int sig, int code, struct sigcontext *scp)
+-
+-#elif defined(M_ix86_linux) || defined(M_powerpc_linux) || \
+-      defined(M_alpha_linux)
+-#include <asm/sigcontext.h>
++#elif defined(M_ix86_linux) || defined(M_powerpc_linux) || defined(M_alpha_linux)
++//#include <asm/sigcontext.h>
+ 
+ #if 0				/* old linux */
+ static void
+@@ -458,36 +473,43 @@
+ static void
+ SIGSEGV_Handler(int sig, struct sigcontext scp)
+ #endif
+-
+ #elif defined(M_ix86_sco)
+ #define _XOPEN_SOURCE_EXTENDED
+ #include <signal.h>
+ #include <sys/siginfo.h>
++
+ static void
+ SIGSEGV_Handler(int sig, siginfo_t * si)
++#elif defined(M_ix86_bsd)
+ 
+-#elif defined(M_ix86_bsd) || defined(M_powerpc_bsd) || defined(M_sparc_bsd)
+ static void
+ SIGSEGV_Handler(int sig, int code, struct sigcontext *scp)
++#elif defined(M_ix86_win32)
+ 
+-#elif defined(_WIN32) || defined(__CYGWIN__)
+ void
+-SIGSEGV_Handler(WamWord *addr)
+-
++SIGSEGV_Handler(void)
+ #elif defined(M_mips_irix)
++
+ #include <signal.h>
++
+ void
+ SIGSEGV_Handler(int sig, int code, struct sigcontext *scp)
+-
+ #elif defined(M_x86_64_linux)
++
+ void
+ SIGSEGV_Handler(int sig, siginfo_t *sip, void *scp)
+-
+ #else
++
+ static void
+ SIGSEGV_Handler(int sig)
+ #endif
+ {
++#ifdef M_USE_MAGIC_NB_TO_DETECT_STACK_NAME
++
++  M_Check_Magic_Words();
++
++#else
++
+ #if defined(M_alpha_osf)
+ 
+   WamWord *addr = (WamWord *) (scp->sc_traparg_a0);
+@@ -526,28 +548,17 @@
+ 
+   WamWord *addr = scp->sc_regs[16];
+ 
+-#elif defined(_WIN32)
+-				/* addr passed as argument */
+-#else
+-				/* cannot detect fault addr */
+-#warning SIGSEGV_Handler does not know how to detect fault addr - use magic numbers
++#elif defined(M_ix86_win32)
+ 
+-#define M_USE_MAGIC_NB_TO_DETECT_STACK_NAME
++  WamWord *addr = (WamWord *) fault_addr;
+ 
+ #endif
+ 
+-
+-#ifdef M_USE_MAGIC_NB_TO_DETECT_STACK_NAME
+-
+-  M_Check_Magic_Words();
+-
+-#else  /* !M_USE_MAGIC_NB_TO_DETECT_STACK_NAME */
+-
+   int i;
+ 
+ #ifdef DEBUG
+   DBGPRINTF("BAD ADDRESS:%lx\n", (long) addr);
+-#endif
++#endif /* DEBUG */
+ 
+   i = NB_OF_STACKS - 1;
+   if (addr < stk_tbl[i].stack + stk_tbl[i].size + page_size)
+@@ -558,13 +569,12 @@
+ 		  i, (long) (stk_tbl[i].stack + stk_tbl[i].size));
+ #endif
+ 	if (addr >= stk_tbl[i].stack + stk_tbl[i].size)
+-	  Fatal_Error(Stack_Overflow_Err_Msg(i));
++	  Stack_Overflow(i);
+ 	i--;
+       }
+-#endif /* !M_USE_MAGIC_NB_TO_DETECT_STACK_NAME */
++#endif
+ 
+   Fatal_Error("Segmentation Violation");
+-
+ }
+ 
+ 
+@@ -572,10 +582,6 @@
+ 
+ #ifdef M_USE_MAGIC_NB_TO_DETECT_STACK_NAME
+ 
+-#ifndef NO_USE_LINEDIT
+-#include "../Linedit/linedit.h"
+-#endif
+-
+ /*-------------------------------------------------------------------------*
+  * M_CHECK_MAGIC_WORDS                                                     *
+  *                                                                         *
+@@ -583,52 +589,28 @@
+ void
+ M_Check_Magic_Words(void)
+ {
+-  int i, err = 0;
+-  WamWord *end, *top;
+-  char *msg;
++  int i;
+ 
+   for (i = 0; i < NB_OF_STACKS; i++)
+-    {
+-      if (stk_tbl[i].size == 0)
+-	continue;
+-
+-      end = stk_tbl[i].stack + stk_tbl[i].size;
+-#ifdef DEBUG
+-      DBGPRINTF("stack: %s start: %p  end: %p  top: %p\n", stk_tbl[i].name, 
+-		stk_tbl[i].stack, end, Stack_Top(i));
+-#endif
+-      if ((end[0] != M_MAGIC1 || end[1] != M_MAGIC2 || end[8] != 0)
+-	  || (top = Stack_Top(i)) >= end)
+-	{
+-	  err++;
+-	  msg = Stack_Overflow_Err_Msg(i);
+-#ifndef NO_USE_LINEDIT
+-	  if (le_hook_message_box)
+-	    (*le_hook_message_box)("Possible Error", msg, 0);
+-	  else
+-#endif
+-	    fprintf(stderr, "Possible Error: %s\n", msg);
+-	}
+-    }
+-  if (err)
+-    Exit_With_Value(1);
++    if (check_adr[i] && *check_adr[i] != M_MAGIC)
++      Stack_Overflow(i);
+ }
+ 
+ #endif
+ 
+ 
+ 
++
+ /*-------------------------------------------------------------------------*
+- * STACK_OVERFLOW_ERR_MSG                                                  *
++ * STACK_OVERFLOW                                                          *
+  *                                                                         *
+  *-------------------------------------------------------------------------*/
+-static char *
+-Stack_Overflow_Err_Msg(int stk_nb)
++static void
++Stack_Overflow(int stk_nb)
+ {
+   InfStack *s = stk_tbl + stk_nb;
+   char *var = s->env_var_name;
+   int size = s->size;
+-  static char msg[256];
+ 
+   if (s->stack == Global_Stack)
+     size += REG_BANK_SIZE;	/* see Init_Engine */
+@@ -636,11 +618,9 @@
+   size = Wam_Words_To_KBytes(size);
+ 
+   if (fixed_sizes || var[0] == '\0')
+-    sprintf(msg, ERR_STACK_OVERFLOW_NO_ENV, s->name, size);
+-  else
+-    sprintf(msg, ERR_STACK_OVERFLOW_ENV, s->name, size, var);
++    Fatal_Error(ERR_STACK_OVERFLOW_NO_ENV, s->name, size);
+ 
+-  return msg;
++  Fatal_Error(ERR_STACK_OVERFLOW_ENV, s->name, size, var);
+ }
+ 
+ 
+@@ -677,7 +657,7 @@
+ 
+ 
+ 
+-#if 0
++#ifdef __CIGWIN__
+ #define ULL unsigned long long
+ #else
+ #define ULL unsigned __int64
+@@ -814,7 +794,7 @@
+ void
+ M_Randomize(void)
+ {
+-#if defined(_WIN32) || defined(__CYGWIN__)
++#ifdef M_ix86_win32
+   int seed = GetTickCount();
+ #else
+   struct timeval tv;
+@@ -896,18 +876,20 @@
+ {
+   static char buff[4096];
+ 
++#ifdef M_ix86_win32
++  long length = sizeof(buff);
++#endif
+ #ifdef INET_MANAGEMENT
+   struct hostent *host_entry;
+ #endif
+ 
+   if (host_name == NULL)
+     {
+-      long length = sizeof(buff);
+       host_name = buff;
+-#if defined(_WIN32) && !defined(__CYGWIN__) && defined(NO_USE_SOCKETS)
++#if defined(M_ix86_win32) && defined(NO_USE_SOCKETS)
+       if (GetComputerName(buff, &length) == 0)
+ #else
+-      if (gethostname(buff, length))
++      if (gethostname(buff, sizeof(buff)))
+ #endif
+ 	{
+ 	  strcpy(buff, "unknown host name");
+@@ -948,7 +930,7 @@
+ 
+ #if defined(M_sparc_sunos) || defined(M_sparc_solaris) || \
+     defined(M_ix86_cygwin) || defined(M_ix86_solaris)  || \
+-    defined(_WIN32)
++    defined(M_ix86_win32)
+   if ((iadr.s_addr = inet_addr(host_address)) == -1)
+ #else
+   if (inet_aton(host_address, &iadr) == 0)
+@@ -1006,7 +988,13 @@
+ {
+   char *new_path = M_Absolute_Path_Name(path);
+ 
+-  return (new_path != NULL && chdir(new_path) == 0);
++  if (new_path != NULL && chdir(new_path) == 0)
++    {
++      strcpy(cur_work_dir, new_path);
++      return TRUE;
++    }
++
++  return FALSE;
+ }
+ 
+ 
+@@ -1019,9 +1007,6 @@
+ char *
+ M_Get_Working_Dir(void)
+ {
+-  static char cur_work_dir[MAXPATHLEN];
+-
+-  getcwd(cur_work_dir, sizeof(cur_work_dir) - 1);
+   return cur_work_dir;
+ }
+ 
+@@ -1040,14 +1025,20 @@
+   int res = 0;
+   char *dst;
+   char *p, *q;
++
++#ifdef M_ix86_win32
+   char c;
++#endif
++
+ 
+   dst = buff[res];
+-  while ((*dst++ = *src))	/* expand $VARNAME and %VARNAME% (Win32) */
++  while ((*dst++ = *src))	/* expand $VARNAME */
+     {
+-      c = *src++;
+-      if (c == '$'
+-#if defined(_WIN32) || defined(__CYGWIN__)
++#ifdef M_ix86_win32
++      c = *src;
++#endif
++      if (*src++ == '$'
++#ifdef M_ix86_win32
+ 	  || c == '%'
+ #endif
+ 	)
+@@ -1055,7 +1046,7 @@
+ 	  p = dst;
+ 	  while (isalnum(*src))
+ 	    *dst++ = *src++;
+-#if defined(_WIN32) || defined(__CYGWIN__)
++#ifdef M_ix86_win32
+ 	  if (c == '%' && *src != '%')
+ 	    continue;
+ #endif
+@@ -1066,12 +1057,12 @@
+ 	      p--;
+ 	      strcpy(p, q);
+ 	      dst = p + strlen(p);
+-#if defined(_WIN32) || defined(__CYGWIN__)
++#ifdef M_ix86_win32
+ 	      if (c == '%')
+ 		src++;
+ #endif
+ 	    }
+-#if defined(_WIN32) || defined(__CYGWIN__)
++#ifdef M_ix86_win32
+ 	  else if (c == '%')
+ 	    *dst++ = *src++;
+ #endif
+@@ -1079,11 +1070,21 @@
+     }
+   *dst = '\0';
+ 
++#if defined(_WIN32) || defined(__CYGWIN__)
++  for (src = buff[res]; *src; src++)	/* \ becomes / */
++    if (*src == '\\')
++      *src = '/';
++#endif
++
++  if (strcmp(buff[res], "user") == 0)	/* prolog special file 'user' */
++    return buff[res];
++
++
+   if (buff[res][0] == '~')
+     {
+       if (buff[res][1] == DIR_SEP_C || buff[res][1] == '\0')	/* ~/... cf $HOME */
+ 	{
+-	  if ((p = getenv("HOME")) == NULL && (p = getenv("HOMEPATH")) == NULL)
++	  if ((p = getenv("HOME")) == NULL)
+ 	    return NULL;
+ 
+ 	  sprintf(buff[1 - res], "%s/%s", p, buff[res] + 1);
+@@ -1111,34 +1112,25 @@
+ #endif
+     }
+ 
+-  if (strcmp(buff[res], "user") == 0)	/* prolog special file 'user' */
+-    return buff[res];
+-
+ #ifdef __CYGWIN__
+   cygwin_conv_to_full_posix_path(buff[res], buff[1 - res]);
+   res = 1 - res;
+ #endif
+ 
+-#if defined(_WIN32) || defined(__CYGWIN__)
+-  for (src = buff[res]; *src; src++)	/* \ becomes / */
+-    if (*src == '\\')
+-      *src = '/';
+-#endif
+-
+-#if defined(_WIN32) && !defined(__CYGWIN__)
++#ifdef M_ix86_win32
+   if (_fullpath(buff[1 - res], buff[res], MAXPATHLEN) == NULL)
+     return NULL;
+   res = 1 - res;
+-#else /* unix */
+-  if (buff[res][0] != DIR_SEP_C)	/* add current directory */
++#else
++  if (buff[res][0] != DIR_SEP_C)	/* add cur_work_dir */
+     {
+-      sprintf(buff[1 - res], "%s/%s", M_Get_Working_Dir(), buff[res]);
++      sprintf(buff[1 - res], "%s/%s", cur_work_dir, buff[res]);
+       res = 1 - res;
+     }
+ #endif
+ 
+-  src = buff[res];
+   res = 1 - res;
++  src = buff[1 - res];
+   dst = buff[res];
+ 
+   while ((*dst++ = *src))
+@@ -1147,9 +1139,10 @@
+ 	continue;
+ 
+     collapse:
++#ifndef __CYGWIN__		/* CYGWIN uses //<drive>/<path> for <drive>:\<path> */
+       while (*src == DIR_SEP_C)	/* collapse /////... as / */
+ 	src++;
+-
++#endif
+       if (*src != '.')
+ 	continue;
+ 
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/EnginePl/machine.h gprolog-cx/base/src/EnginePl/machine.h
+--- gprolog-1.2.18/src/EnginePl/machine.h	2004-06-04 22:05:00.000000000 +0600
++++ gprolog-cx/base/src/EnginePl/machine.h	2003-09-17 19:23:04.000000000 +0600
+@@ -78,13 +78,15 @@
+ 
+ char *M_Absolute_Path_Name(char *src);
+ 
+-#if defined(_WIN32) && !defined(__CYGWIN__)
++#ifdef M_ix86_win32
+ 
+ int getpagesize(void);
+ 
+-#endif
++int Is_Win32_SEGV(void *exp);
++
++void SIGSEGV_Handler(void);
+ 
+-void M_Check_Magic_Words(void); /* not compiled if not needed */
++#endif
+ 
+ 
+ 
+@@ -149,22 +155,45 @@
+  * Stacks Management               *
+  *---------------------------------*/
+ 
+-#if WORD_SIZE == 32
+-
+-#   define M_MMAP_HIGH_ADR1        0x0ffffff0
+-#   define M_MMAP_HIGH_ADR2        0x3ffffff0
+-#   define M_MMAP_HIGH_ADR3        0x7ffffff0
++#if defined(M_sparc_sunos) || defined(M_sparc_solaris)  || \
++    defined(M_ix86_linux)  || defined(M_powerpc_linux)  || \
++    defined(M_ix86_sco)    || defined(M_ix86_solaris)   || \
++    defined(M_mips_irix)   || defined(M_powerpc_darwin) ||\
++    defined(M_ix86_win32)
++
++#   define M_USE_MMAP
++#   define M_MMAP_HIGH_ADR         0x0ffffff0
++#   define M_MMAP_HIGH_ADR_ALT     0x3ffffff0
++#   define M_Check_Stacks()
+ 
+ #elif defined(M_alpha_osf) || defined(M_alpha_linux)
+ 
+-#   define M_MMAP_HIGH_ADR1        0x3f800000000ULL
++#   define M_USE_MMAP
++#   define M_MMAP_HIGH_ADR         0x3f800000000ULL
++#   define M_Check_Stacks()
+ 
+ #elif defined(M_x86_64_linux)
+ 
+-#   define M_MMAP_HIGH_ADR1        0x4000000000ULL
++#   define M_USE_MMAP
++#   define M_MMAP_HIGH_ADR         0x4000000000ULL
++#   define M_Check_Stacks()
++
++#else
++
++#   define M_USE_MALLOC
++#   define M_Check_Stacks()        M_Check_Magic_Words()
+ 
+ #endif
+ 
+ #if defined(M_sunos) || defined(M_solaris)
+ #   define MMAP_NEEDS_FIXED
+ #endif
++
++
++
++#if defined(M_USE_MALLOC) || defined(M_powerpc_darwin)
++
++#define M_USE_MAGIC_NB_TO_DETECT_STACK_NAME
++void M_Check_Magic_Words(void);
++
++#endif
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/EnginePl/misc.c gprolog-cx/base/src/EnginePl/misc.c
+--- gprolog-1.2.18/src/EnginePl/misc.c	2004-06-04 22:05:00.000000000 +0600
++++ gprolog-cx/base/src/EnginePl/misc.c	2006-01-02 16:23:51.000000000 +0500
+@@ -195,10 +195,24 @@
+ Fatal_Error(char *format, ...)
+ {
+   va_list arg_ptr;
+-  char buff[1024];
++  int strmax = 128*1024;       /* FIXME: up(?) from BIG_BUFFER */
++  char *buff = alloca (strmax);
++  int nchars;
+ 
+   va_start(arg_ptr, format);
+-  vsprintf(buff, format, arg_ptr);
++  for (;;) {
++    nchars = vsnprintf(buff, strmax, format, arg_ptr);
++    if (nchars < 0) {		/* doesn't fit & old vsnprintf */
++      strmax *= 2;		/* just returns -1: */
++      buff = alloca (strmax); /* grab more space (double it) and retry */
++    }
++    else if (nchars > strmax) {	/* doesn't fit & new vsnprintf */
++      strmax = nchars+1;	/* nchars is needed size (minus 1) */
++      buff = alloca (strmax);   /* grab all that's needed and retry */
++    }
++    else
++      break;			/* it fits: leave it at that */
++  }
+   va_end(arg_ptr);
+ 
+ #ifndef NO_USE_LINEDIT
+@@ -208,5 +222,5 @@
+ #endif
+     fprintf(stderr, "\nFatal Error: %s\n", buff);
+ 
+-  Exit_With_Value(1);
++  exit(1);
+ }
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/EnginePl/oper.c gprolog-cx/base/src/EnginePl/oper.c
+--- gprolog-1.2.18/src/EnginePl/oper.c	2004-06-04 22:05:01.000000000 +0600
++++ gprolog-cx/base/src/EnginePl/oper.c	2003-09-17 19:23:04.000000000 +0600
+@@ -114,6 +114,15 @@
+ 
+   ADD_OPER(600, XFY, ":");
+ 
++  /* context operators */
++  ADD_OPER(600, XFX, ":<");
++  ADD_OPER(600, XFY, ":>");
++  ADD_OPER(600, XFY, "::");
++  ADD_OPER(600, FY, ":<");
++  ADD_OPER(600, FY, ":>");
++  ADD_OPER(600, FY, ":^");
++  ADD_OPER(600, FY, ":#");
++
+   ADD_OPER(500, YFX, "+");
+   ADD_OPER(500, YFX, "-");
+   ADD_OPER(500, YFX, "/\\");
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/EnginePl/pl_params.h gprolog-cx/base/src/EnginePl/pl_params.h
+--- gprolog-1.2.18/src/EnginePl/pl_params.h	2004-06-04 22:05:01.000000000 +0600
++++ gprolog-cx/base/src/EnginePl/pl_params.h	2006-07-18 23:21:20.000000000 +0600
+@@ -22,15 +22,17 @@
+  * 59 Temple Place - Suite 330, Boston, MA 02111, USA.                     *
+  *-------------------------------------------------------------------------*/
+ 
+-/* $Id: pl_params.h,v 1.7 2004/01/16 16:01:00 diaz Exp $ */
++/* $Id: pl_params.h,v 1.4 2006/07/17 18:19:20 spa Exp $ */
+ 
+-#define MAX_OBJECT                 1024
++#define MAX_OBJECT                 10240
+ 
+ #define START_PRED_TBL_SIZE        4096
+ 
++#define START_MODULE_PRED_TBL_SIZE 128
++
+ #define START_OPER_TBL_SIZE        1024
+ 
+-#define ATOM_SIZE                  16
++#define ATOM_SIZE                  24
+ #define MAX_ATOM                   (1 << ATOM_SIZE) /* number of elements */
+ 
+ #define NB_OF_X_REGS               256
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/EnginePl/pred.c gprolog-cx/base/src/EnginePl/pred.c
+--- gprolog-1.2.18/src/EnginePl/pred.c	2004-06-07 19:21:21.000000000 +0600
++++ gprolog-cx/base/src/EnginePl/pred.c	2006-07-18 23:21:20.000000000 +0600
+@@ -74,19 +74,43 @@
+  * byte-code support.                                                      *
+  *-------------------------------------------------------------------------*/
+ PredInf * FC
+-Create_Pred(int func, int arity, int pl_file, int pl_line, int prop,
+-	    long *codep)
++Create_Pred_Module(int module, int marity,
++		   int func, int arity, int pl_file, int pl_line,
++		   int prop, long *codep)
+ {
+   PredInf pred_info;
+   PredInf *pred;
++  AtomInf *atom_module;
++  char **p_tbl;
+   long key = Functor_Arity(func, arity);
+ 
+-
+ #ifdef DEBUG
+-  DBGPRINTF("Create pred: %s/%d  prop: %x\n", atom_tbl[func].name, arity,
++  DBGPRINTF("Create pred: %s/%d  unit: %s/%d  prop: %x\n",
++	    atom_tbl[func].name, arity,
++	    module>0? (atom_tbl[module].name): "<NONE>", marity,
+ 	    prop);
+ #endif
+ 
++  if (module < 0 || module == ATOM_NIL || module == atom_void)
++    p_tbl = &pred_tbl;
++  else
++    {				/* lookup or create a module pred table */
++      atom_module = atom_tbl + module;
++      
++      if (atom_module->modules == NULL) /* no units yet */
++	atom_module->modules = (void *) Calloc (256, (sizeof (void *)));
++
++#if 0				/* cannot happen because of max_arity */
++      if (marity > 255)
++	Fatal_Error("Fatal error: attemted unit with arity %d!", marity);
++#endif
++
++      if (atom_module->modules[marity] == NULL)
++	atom_module->modules[marity] =
++	  Hash_Alloc_Table(START_MODULE_PRED_TBL_SIZE, sizeof(PredInf));
++      p_tbl = &atom_module->modules[marity];
++    }
++
+   pred_info.f_n = key;
+   pred_info.prop = prop;
+   pred_info.pl_file = pl_file;
+@@ -94,8 +118,8 @@
+   pred_info.codep = codep;
+   pred_info.dyn = NULL;
+ 
+-  Extend_Table_If_Needed(&pred_tbl);
+-  pred = (PredInf *) Hash_Insert(pred_tbl, (char *) &pred_info, FALSE);
++  Extend_Table_If_Needed(p_tbl);
++  pred = (PredInf *) Hash_Insert(*p_tbl, (char *) &pred_info, FALSE);
+ 
+   return pred;
+ }
+@@ -104,6 +128,31 @@
+ 
+ 
+ /*-------------------------------------------------------------------------*
++ * CREATE_PRED                                                             *
++ *                                                                         *
++ * Called by compiled prolog code, by dynamic predicate support and by     *
++ * byte-code support.                                                      *
++ *-------------------------------------------------------------------------*/
++PredInf * FC
++Create_Pred(int func, int arity, int pl_file, int pl_line, int prop,
++	    long *codep)
++{
++  return Create_Pred_Module(-1, 0, func, arity, pl_file, pl_line, prop, codep);
++}
++
++
++/* --- TO DO: Lookup_Pred_Module and Delete_Pred_Module --- */
++
++PredInf * FC
++Lookup_Pred_in_Cxt(int func, int arity, WamWord cxt)
++{
++  long key = Functor_Arity(func, arity);
++  extern PredInf *Cxt_Lookup_Pred_With_K(WamWord, WamWord) FC;
++
++  return (PredInf *) Cxt_Lookup_Pred_With_K(key, cxt);
++}
++
++/*-------------------------------------------------------------------------*
+  * LOOKUP_PRED                                                             *
+  *                                                                         *
+  *-------------------------------------------------------------------------*/
+@@ -111,8 +160,14 @@
+ Lookup_Pred(int func, int arity)
+ {
+   long key = Functor_Arity(func, arity);
++  PredInf *p = (PredInf *) Hash_Find(pred_tbl, key);
+ 
+-  return (PredInf *) Hash_Find(pred_tbl, key);
++  if (p)
++    return p;
++  else {
++    X(254) = X(255);
++    return (PredInf *) Lookup_Pred_in_Cxt (func, arity, X(255));
++  }
+ }
+ 
+ 
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/EnginePl/pred.h gprolog-cx/base/src/EnginePl/pred.h
+--- gprolog-1.2.18/src/EnginePl/pred.h	2004-06-07 17:11:44.000000000 +0600
++++ gprolog-cx/base/src/EnginePl/pred.h	2003-04-08 17:20:22.000000000 +0600
+@@ -69,9 +69,13 @@
+ 
+ void Init_Pred(void);
+ 
+-PredInf * FC Create_Pred(int func, int arity, int pl_file, int pl_line,
+-		     int prop, long *codep);
++PredInf *Create_Pred_Module(int module, int marity,
++			    int func, int arity, int pl_file,
++			    int pl_line, int prop, long *codep) FC;
+ 
+-PredInf * FC Lookup_Pred(int func, int arity);
++PredInf *Create_Pred(int func, int arity, int pl_file,
++		     int pl_line, int prop, long *codep) FC;
+ 
+-void FC Delete_Pred(int func, int arity);
++PredInf *Lookup_Pred(int func, int arity) FC;
++
++void Delete_Pred(int func, int arity) FC;
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/EnginePl/wam_inst.c gprolog-cx/base/src/EnginePl/wam_inst.c
+--- gprolog-1.2.18/src/EnginePl/wam_inst.c	2004-06-07 19:21:21.000000000 +0600
++++ gprolog-cx/base/src/EnginePl/wam_inst.c	2006-07-18 23:21:20.000000000 +0600
+@@ -26,6 +26,7 @@
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <string.h>
+ 
+ #include "engine_pl.h"
+ 
+@@ -1142,6 +1143,46 @@
+ 
+ 
+ 
++#ifdef USE_WATERMARK
++
++/*-------------------------------------------------------------------------*/
++/* CREATE_WATER_MARK                                                       */
++/*                                                                         */
++/* Request warning if backtracking is not complete.                        */
++/*-------------------------------------------------------------------------*/
++
++int        wmark_count = 0;            /* number of active watermarks */
++Watermark  wmark[MAXWMARK];            /* The stack of watermarks */
++WatermarkP wmp = wmark-1;              /* Top of watermark stack */
++
++void FC
++Create_Water_Mark (void (*fun)(), void *par)
++{
++  if (++wmark_count >= MAXWMARK) {
++    Fatal_Error ("Watermark stack size (%d) exceeded! - aborting", MAXWMARK);
++  }
++  ++wmp;
++  wmp->Bvalue     = B;
++  wmp->destructor = fun;
++  wmp->parameter  = par;
++}
++
++void FC
++Update_Water_Mark (void (*fun)(), void *par)
++{
++  if (wmark_count > 0) {
++    wmp->destructor = fun;
++    wmp->parameter  = par;
++  }
++  else {
++    fprintf(stderr, "warning: Update_Water_Mark called with empty stack!\n");
++  }
++}
++
++#endif /* USE_WATERMARK */
++
++
++
+ /*-------------------------------------------------------------------------*
+  * LOAD_CUT_LEVEL                                                          *
+  *                                                                         *
+@@ -1536,3 +1577,348 @@
+ #define OCCURS_CHECK
+ 
+ #include "unify.c"
++
++
++
++/* --- Contexts --- */
++
++
++#define cur_K X(255)
++#define cur_CK X(254)
++static WamWord stamp_K;
++static WamWord stamp_CK;
++
++WamCont Cxt_Call_Tagged(WamWord key, WamWord call_K) FC;
++
++WamCont Cxt_Call(int func, int arity, WamWord call_K) FC;
++
++void Cxt_Assign_K(WamWord new_K) FC;
++
++Bool Cxt_Arg_Load(int arg_no, WamWord term_word, WamWord *sub_term_word) FC;
++
++Bool Cxt_Arg_Unify(int arg_no, WamWord term_word, WamWord sub_term_word) FC;
++
++
++
++
++/*-------------------------------------------------------------------------*
++ * CXT_INIT                                                                *
++ *                                                                         *
++ *-------------------------------------------------------------------------*/
++void FC
++Cxt_Init(void)
++{
++  cur_K = NIL_WORD;
++  cur_CK = NIL_WORD;
++  stamp_K = 0;
++  stamp_CK = 0;
++}
++
++
++
++
++/*-------------------------------------------------------------------------*
++ * CXT_ASSIGN_K                                                            *
++ *                                                                         *
++ *-------------------------------------------------------------------------*/
++void FC
++Cxt_Assign_K(WamWord new_K)
++{
++  if (stamp_K != STAMP)
++    {
++      if (new_K == cur_K)
++	return;
++
++      Trail_OV(&cur_K);
++      Trail_OV(&stamp_K);
++      stamp_K = STAMP;
++    }
++  cur_K = new_K;
++}
++
++
++
++
++/*-------------------------------------------------------------------------*
++ * CXT_ASSIGN_CK                                                           *
++ *                                                                         *
++ *-------------------------------------------------------------------------*/
++void FC
++Cxt_Assign_CK(WamWord new_CK)
++{
++  if (stamp_CK != STAMP)
++    {
++      if (new_CK == cur_CK)
++	return;
++
++      Trail_OV(&cur_CK);
++      Trail_OV(&stamp_CK);
++      stamp_CK = STAMP;
++    }
++  cur_CK = new_CK;
++}
++
++
++
++
++/*-------------------------------------------------------------------------*
++ * CXT_LOOKUP_PRED_WITH_K                                                  *
++ *                                                                         *
++ *-------------------------------------------------------------------------*/
++PredInf * FC
++Cxt_Lookup_Pred_With_K(long key, WamWord cxt_call_K)
++{
++  WamWord call_K = cxt_call_K;
++  WamWord word, tag_mask;
++  WamWord *lst_adr;
++  int atom, arity;
++  char *ctable;
++  PredInf *pred;
++
++  Cxt_Assign_CK(cxt_call_K);
++
++#if 1
++
++  for (;;)
++    {
++      DEREF(call_K, word, tag_mask);
++
++      if (tag_mask == TAG_STC_MASK) { /* non-list context */
++	atom = Functor(UnTag_STC(word));
++	arity = Arity(UnTag_STC(word));
++	lst_adr = NULL;
++      }
++      else if (tag_mask != TAG_LST_MASK)
++	break;
++      else {
++	lst_adr = UnTag_LST(word);
++	DEREF(Car(lst_adr), word, tag_mask);
++
++	if (tag_mask == TAG_ATM_MASK) {
++	  atom = UnTag_ATM(word);
++	  arity = 0;
++	}
++	else if (tag_mask == TAG_STC_MASK) {
++	  atom = Functor(UnTag_STC(word));
++	  arity = Arity(UnTag_STC(word));
++	}
++	else
++	  goto next;		/* or display an error ? */
++      }
++
++      if (atom_tbl[atom].modules &&
++	  (ctable = atom_tbl[atom].modules[arity]) &&
++	  (pred = (PredInf *) Hash_Find(ctable, key)))
++	{
++	  Cxt_Assign_K(call_K);
++	  return pred;
++	}
++    next:
++      if (lst_adr)
++	call_K = Cdr(lst_adr);
++      else
++	break;
++    }
++				/* IS IT CORRECT ??? */
++  Cxt_Assign_K(cxt_call_K);
++  return (PredInf *) Hash_Find(pred_tbl, key);
++
++#else  /* FIXME: TRY THIS (lookup in global first) LATER... */
++
++  if ((pred = (PredInf *) Hash_Find(pred_tbl, key))) {
++    printf ("Cxt_Lookup_Pred_With_K(%s/%d): found global\n",
++	    atom_tbl[Functor_Of(key)].name,
++	    Arity_Of(key));
++    return pred;
++  }
++
++  for (;;) {
++    DEREF(call_K, word, tag_mask);
++
++    if (tag_mask != TAG_LST_MASK)
++      break;
++
++    lst_adr = UnTag_LST(word);
++    DEREF(Car(lst_adr), word, tag_mask);
++
++    if (tag_mask == TAG_STC_MASK) { /* non-atomic: regular case */
++      atom = Functor(UnTag_STC(word));
++      arity = Arity(UnTag_STC(word));
++    }
++    else if (tag_mask == TAG_ATM_MASK) { /* atomic: like ATOM/0 */
++      atom = UnTag_ATM(word);
++      arity = 0;
++    }
++    else
++      goto next;		/* or display an error ? */
++
++    if (atom_tbl[atom].modules &&
++	(ctable = atom_tbl[atom].modules[arity]) &&
++	(pred = (PredInf *) Hash_Find(ctable, key)))
++      {			/* found it */
++	Cxt_Assign_K(call_K);
++	printf ("Cxt_Lookup_Pred_With_K(%s/%d): found in %s/%d\n",
++		atom_tbl[Functor_Of(key)].name,
++		Arity_Of(key),
++		atom_tbl[atom].name,
++		arity);
++	return pred;
++      }
++  next:
++    call_K = Cdr(lst_adr);
++  }
++				/* IS IT CORRECT ??? */
++  Cxt_Assign_K(cxt_call_K);
++  return (PredInf *) Hash_Find(pred_tbl, key);
++
++#endif
++}
++
++
++
++
++/*-------------------------------------------------------------------------*
++ * CXT_LOOKUP_PRED                                                         *
++ *                                                                         *
++ * Called by compiled prolog code.                                         *
++ *-------------------------------------------------------------------------*/
++PredInf * FC
++Cxt_Lookup_Pred(long key)
++{
++  return Cxt_Lookup_Pred_With_K(key, cur_K);
++}
++
++#include "../BipsPl/error_supp.h"
++
++
++/*-------------------------------------------------------------------------*
++ * CXT_CALL_TAGGED                                                         *
++ *                                                                         *
++ * Called by compiled prolog code.                                         *
++ *-------------------------------------------------------------------------*/
++WamCont FC
++Cxt_Call_Tagged(WamWord key, WamWord cxt_call_K)
++{
++  PredInf *pred = Cxt_Lookup_Pred_With_K(key, cxt_call_K);
++  WamCont BC_Emulate_Pred(int, void *);
++
++  if (pred == NULL)
++    {
++      WamWord call_K = cxt_call_K;
++      static char pseudo_bip_name[512];
++      char *p = pseudo_bip_name;
++//    int n = 0;
++//    int l = sizeof (pseudo_bip_name);
++      char *sep = "";
++      WamWord *lst_adr;
++      WamWord word, tag_mask;
++
++      strcpy(pseudo_bip_name, "context([");
++      p += strlen(p);
++      for (;;) {
++	DEREF(call_K, word, tag_mask);
++
++	if (tag_mask != TAG_LST_MASK)
++	  break;
++
++	lst_adr = UnTag_LST(word);
++	DEREF(Car(lst_adr), word, tag_mask);
++
++	if (tag_mask == TAG_ATM_MASK)
++	  sprintf (p, "%s%s/%d", sep, atom_tbl[UnTag_ATM(word)].name, 0);
++	else if (tag_mask == TAG_STC_MASK)
++	  sprintf (p, "%s%s/%ld", sep,
++		   atom_tbl[Functor(UnTag_STC(word))].name,
++		   Arity(UnTag_STC(word)));
++	else
++	  goto next;		/* or display an error ? */
++
++	p += strlen(p);
++	sep = ", ";
++
++      next:
++	call_K = Cdr(lst_adr);
++      }
++      sprintf (p, "])");
++      
++      Set_C_Bip_Name(pseudo_bip_name, -1); /* FIXME: properly dump context */
++      Unknown_Pred_Error(Functor_Of(key), Arity_Of(key));
++
++      return ALTB(B);		/* i.e. fail */
++    }
++
++  if (pred->codep)
++    return (WamCont) pred->codep;
++  else if (pred->dyn)
++    return BC_Emulate_Pred ((int) key, pred->dyn);
++  else
++    return ALTB(B);		/* fail for dynamic w/o any clauses */
++}
++
++
++
++
++/*-------------------------------------------------------------------------*
++ * CXT_CALL                                                                *
++ *                                                                         *
++ * Called by compiled prolog code.                                         *
++ *-------------------------------------------------------------------------*/
++WamCont FC
++Cxt_Call(int func, int arity, WamWord cxt_call_K)
++{
++  return Cxt_Call_Tagged(Functor_Arity(func, arity), cxt_call_K);
++}
++
++
++
++
++/*-------------------------------------------------------------------------*
++ * CXT_ARG_LOAD                                                            *
++ *                                                                         *
++ *-------------------------------------------------------------------------*/
++Bool FC
++Cxt_Arg_Load(int arg_no, WamWord term_word, WamWord *sub_term_adr)
++{
++  WamWord word, tag_mask;
++  WamWord *adr;
++
++  DEREF(term_word, word, tag_mask);
++
++  if (tag_mask == TAG_STC_MASK)
++    {
++      adr = UnTag_STC(word);
++      if ((unsigned) arg_no >= (unsigned) Arity(adr))
++	return FALSE;
++      *sub_term_adr = Arg(adr, arg_no);
++      return TRUE;
++    }
++
++  if (tag_mask == TAG_LST_MASK)
++    {
++      adr = UnTag_LST(word);
++      if ((unsigned) arg_no >= 2)
++	return FALSE;
++      *sub_term_adr = (arg_no == 0) ? Car(adr) : Cdr(adr);
++      return TRUE;
++    }
++
++  return FALSE;
++}
++
++
++
++
++/*-------------------------------------------------------------------------*
++ * CXT_ARG_UNIFY                                                           *
++ *                                                                         *
++ *-------------------------------------------------------------------------*/
++Bool FC
++Cxt_Arg_Unify(int arg_no, WamWord term_word, WamWord sub_term_word)
++{
++  WamWord word;
++
++  if (!Cxt_Arg_Load(arg_no, term_word, &word))
++    return FALSE;
++
++  return Unify(sub_term_word, word);
++}
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/EnginePl/wam_inst.h gprolog-cx/base/src/EnginePl/wam_inst.h
+--- gprolog-1.2.18/src/EnginePl/wam_inst.h	2004-06-07 17:40:03.000000000 +0600
++++ gprolog-cx/base/src/EnginePl/wam_inst.h	2006-07-18 23:21:20.000000000 +0600
+@@ -514,10 +514,80 @@
+   while (0)
+ 
+ 
++/* -- context support ------------------------------------------------------ */
++
++#ifdef UnTag_ATM
++
++static inline PredInf * FC
++Cxt_Lookup_Pred_In (int key, WamWord unit, int arity)
++{
++  int unit_atom = UnTag_ATM (unit);
++  void *ptable = pred_tbl;
++
++  if (unit_atom && unit_atom != ATOM_NIL &&
++      atom_tbl[unit_atom].modules && atom_tbl[unit_atom].modules[arity])
++    ptable = atom_tbl[unit_atom].modules[arity];
++  else
++    ptable = pred_tbl;
++
++  return (PredInf *) Hash_Find (ptable, key);
++}
++
++#endif
++
++/* ------------------------------------------------------------------------- */
++
++
++#ifndef FRAMES_ONLY
++#ifndef USE_WATERMARK
++
++/* -- regular GNU Prolog w/o watermark code -------------------------------- */
+ 
++#define Call_CP_Destructors(b)     0
++#define Create_Water_Mark(a,b)
++#define Update_Water_Mark(a,b)
+ 
+ #define Assign_B(newB)              (B = (newB), HB1 = HB(B))
+ 
++#else
++
++/* -- support for watermarks ----------------------------------------------- */
++
++#define Assign_B(newB)      (B = (newB), HB1 = HB(B), Call_CP_Destructors(B))
++
++#ifndef MAXWMARK                       /* Number of active watermarks */
++#define MAXWMARK 10240                 /* ie. pending destructors */
++#endif
++
++typedef struct Watermark {             /* A watermark on the stack: */
++  WamWord *Bvalue;                     /* Choice-point */
++  void (*destructor) ();               /* Function to call */
++  void *parameter;                     /* parameter to above */
++} Watermark, *WatermarkP;
++
++extern int        wmark_count;         /* number of active watermarks */
++extern Watermark  wmark[];             /* The stack of watermarks */
++extern WatermarkP wmp;                 /* Top of watermark stack */
++
++static inline WamWord *Call_CP_Destructors (WamWord *TargetB)
++{
++  while ((wmark_count > 0) && (TargetB < wmp->Bvalue)) {
++    (*wmp->destructor) (wmp->parameter);
++
++    --wmp;
++    --wmark_count;
++  }
++  return TargetB;
++}
++
++void Create_Water_Mark (void (*fun)(), void *par) FC;
++void Update_Water_Mark (void (*fun)(), void *par) FC;
++
++/* ------------------------------------------------------------------------- */
++#endif /* USE_WATERMARK */
++#endif /* FRAMES_ONLY */
++
++
+ #define Delete_Last_Choice_Point()  Assign_B(BB(B))
+ 
+ 
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/Ma2Asm/ma2asm.c gprolog-cx/base/src/Ma2Asm/ma2asm.c
+--- gprolog-1.2.18/src/Ma2Asm/ma2asm.c	2004-06-04 22:05:01.000000000 +0600
++++ gprolog-cx/base/src/Ma2Asm/ma2asm.c	2006-01-03 04:04:20.000000000 +0500
+@@ -80,6 +80,7 @@
+ char *file_name_out;
+ int inline_asm;
+ int comment;
++int dynamic;
+ 
+ FILE *file_out;
+ 
+@@ -625,6 +626,7 @@
+ 
+   file_name_in = file_name_out = NULL;
+   inline_asm = 0;
++  dynamic = 0;
+   comment = 0;
+ 
+   for (i = 1; i < argc; i++)
+@@ -656,6 +658,12 @@
+ 	      continue;
+ 	    }
+ 
++	  if (Check_Arg(i, "--dynamic"))
++	    {
++	      dynamic = 1;
++	      continue;
++	    }
++
+ 	  if (Check_Arg(i, "--comment"))
+ 	    {
+ 	      comment = 1;
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/Ma2Asm/x86-64/test.c gprolog-cx/base/src/Ma2Asm/x86-64/test.c
+--- gprolog-1.2.18/src/Ma2Asm/x86-64/test.c	1970-01-01 05:00:00.000000000 +0500
++++ gprolog-cx/base/src/Ma2Asm/x86-64/test.c	2007-03-09 13:12:36.000000000 +0500
+@@ -0,0 +1,35 @@
++typedef unsigned long cell;
++
++const int cell_size = sizeof (cell) * 8;
++const int tag_size = 3;
++
++#define data_mask ((1UL << (cell_size - tag_size)) - 1)
++
++typedef enum {			/* 3 available bits */
++  tag_ref = 0,			/* reference */
++  tag_str = 1,			/* structure */
++  tag_atm = 2,			/* atom */
++  tag_int = 3,			/* integer */
++  tag_flt = 4,			/* float */
++  tag_xxx = 7,			/* whatever */
++} tag;
++
++inline cell tagof (cell word) {
++  return word >> (cell_size - tag_size);
++}
++
++inline cell dataof (cell word) {
++  return word & data_mask;
++}
++
++void * deref (cell addr)
++{
++  register cell v = dataof (addr);
++  register tag t = tagof (v);
++
++  while (t == tag_ref && v != addr) {
++    addr = v;
++    v = dataof (addr);
++    t = tagof (v);
++  }
++}
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/Pl2Wam/bip_list.pl gprolog-cx/base/src/Pl2Wam/bip_list.pl
+--- gprolog-1.2.18/src/Pl2Wam/bip_list.pl	2004-02-10 06:12:30.000000000 +0500
++++ gprolog-cx/base/src/Pl2Wam/bip_list.pl	2003-09-17 19:23:18.000000000 +0600
+@@ -45,13 +45,25 @@
+ bip(atom_hash,2).
+ bip(sub_atom,5).
+ 
+-% defined in /home/diaz/GP/src/src/BipsPl/call.pl
++% defined in /home/spa/work/maint/gprolog-cx/base/src/BipsPl/call.pl
+ 
++bip(context,1).
++bip(:>,2).
++bip(:>,1).
++bip(:#,1).
++bip(ccontext,1).
+ bip(call,2).
++bip(context_valid,0).
++bip(context_valid,1).
++bip(:^,1).
+ bip(once,1).
+ bip(\+,1).
++bip(current_unit,2).
++bip(::,2).
++bip(:<,2).
++bip(:<,1).
+ 
+-% defined in /home/diaz/GP/src/src/BipsPl/call_args.pl
++% defined in /home/spa/work/maint/gprolog-cx/base/src/BipsPl/call_args.pl
+ 
+ bip(call_with_args,1).
+ bip(call_with_args,2).
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/Pl2Wam/boot_cp gprolog-cx/base/src/Pl2Wam/boot_cp
+--- gprolog-1.2.18/src/Pl2Wam/boot_cp	2002-03-22 15:30:38.000000000 +0500
++++ gprolog-cx/base/src/Pl2Wam/boot_cp	2003-04-08 15:42:53.000000000 +0600
+@@ -1,5 +1,5 @@
+ #!/bin/sh
+-pl_files='pl2wam read_file bip_list syn_sugar internal code_gen reg_alloc inst_codif first_arg indexing wam_emit'
++pl_files='pl2wam read_file bip_list context syn_sugar internal code_gen reg_alloc inst_codif first_arg indexing wam_emit'
+ 
+ 
+ files=${*:-$pl_files}
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/Pl2Wam/check_boot gprolog-cx/base/src/Pl2Wam/check_boot
+--- gprolog-1.2.18/src/Pl2Wam/check_boot	2002-06-12 17:43:16.000000000 +0600
++++ gprolog-cx/base/src/Pl2Wam/check_boot	2003-04-08 15:42:53.000000000 +0600
+@@ -3,16 +3,12 @@
+     diff --ignore-space-change -I '% date' -I '% compiler' -I '% time' $1 $2
+ }
+ 
+-pl_files='pl2wam read_file bip_list syn_sugar internal code_gen reg_alloc inst_codif first_arg indexing wam_emit'
++pl_files='pl2wam read_file bip_list context syn_sugar internal code_gen reg_alloc inst_codif first_arg indexing wam_emit'
+ 
+ 
+-if [ $# = 2 ]; then
+-    do_diff $1 $2
+-else
+-    for i in $pl_files; do
++files=${*:-$pl_files}
++for i in $files; do
+ 	do_diff $i.wam $i.wam1
+     done
+-fi
+-
+ 
+ 
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/Pl2Wam/code_gen.pl gprolog-cx/base/src/Pl2Wam/code_gen.pl
+--- gprolog-1.2.18/src/Pl2Wam/code_gen.pl	2004-03-15 19:58:55.000000000 +0500
++++ gprolog-cx/base/src/Pl2Wam/code_gen.pl	2003-09-17 19:23:18.000000000 +0600
+@@ -26,6 +26,7 @@
+ 
+ code_generation(Head, Body, NbChunk, NbY, WamHead) :-
+ 	g_assign(last_pred, f),
++	g_assign(cxt_for_call, none),
+ 	generate_head(Head, NbChunk, NbY, WamBody, WamHead),
+ 	generate_body(Body, NbChunk, WamBody).
+ 
+@@ -98,6 +99,11 @@
+ generate_body1(Pred, N, LArg, NoPred, Body, NbChunk, WamPred) :-
+ 	inline_predicate(Pred, N),
+ 	!,
++	g_read(cxt_for_call, CxtVarName),
++	(   CxtVarName = none ->
++	    WamPred0 = WamPred
++	;   WamPred0 = [put_value(CxtVarName, 255)|WamPred],
++	    g_assign(cxt_for_call, none)),
+ 	gen_inline_pred(Pred, N, LArg, WamBody, WamPred), !,
+ 	(   Body = [] ->
+ 	    (   NoPred > 1 ->
+@@ -115,14 +121,31 @@
+ 	    LReg1 = LReg
+ 	),
+ 	gen_load_arg_lst(LArg1, LReg1, WamCallExecute, WamLArg),
+-	(   Body = [] ->
++	g_read(cxt_for_call, CxtVarName),
++	generate_body2(Body, CxtVarName, Pred, N, NoPred, NbChunk, WamCallExecute).
++
++
++generate_body2([], none, Pred, N, NoPred, _, WamCode) :-
++	!,
+ 	    (   NoPred > 1 ->
+-	        WamCallExecute = [deallocate, execute(Pred / N)]
+-	    ;   WamCallExecute = [execute(Pred / N)]
+-	    )
+-	;   WamCallExecute = [call(Pred / N)|WamBody],
+-	    generate_body(Body, NbChunk, WamBody)
+-	).
++	    WamCode = [deallocate, execute(Pred / N)]
++	;   WamCode = [execute(Pred / N)]).
++
++generate_body2([], CxtVar, Pred, N, NoPred, _, WamCode) :-
++	!,
++	(   NoPred > 1 ->
++	    WamCode = [put_value(CxtVar, X),
++		       deallocate,
++		       cxt_execute(Pred / N, x(X))]
++	;   WamCode = [cxt_execute(Pred / N, CxtVar)]).
++
++generate_body2(Body, CxtVar, Pred, N, _, NbChunk, WamCode) :-
++	(   CxtVar = none -> 
++	    C = call(Pred / N)
++	;   C = cxt_call(Pred / N, CxtVar)),
++	WamCode = [C|WamBody],
++	g_assign(cxt_for_call, none),
++	generate_body(Body, NbChunk, WamBody).
+ 
+ 
+ 
+@@ -383,7 +406,7 @@
+ 
+ dummy_instruction(get_variable(x(X), X), f).
+ dummy_instruction(put_value(x(X), X), f).
+-
++dummy_instruction(cxt_assign_K(x(255)), f).
+ 
+ 
+ 
+@@ -758,3 +781,45 @@
+ c_fct_name(g_reset_bit, 2, 'Blt_G_Reset_Bit', void).
+ c_fct_name(g_test_set_bit, 2, 'Blt_G_Test_Set_Bit', bool).
+ c_fct_name(g_test_reset_bit, 2, 'Blt_G_Test_Reset_Bit', bool).
++
++
++
++/* --- Contexts -----------------------------------------------------------*/
++
++gen_inline_pred('$cxt_get_K', 1, [Arg], WamNext, WamArg) :-
++	gen_unif_arg(Arg, 255, WamNext, WamArg).
++
++gen_inline_pred('$cxt_get_CK', 1, [Arg], WamNext, WamArg) :-
++	gen_unif_arg(Arg, 254, WamNext, WamArg).
++
++/* would work if x(255) saved in choice-points and not when modified */
++%gen_inline_pred('$cxt_put_K', 1, [Arg], WamNext, WamArg) :-
++%	gen_load_arg(Arg, 255, WamNext, WamArg).
++
++gen_inline_pred('$cxt_put_K', 1, [V], WamNext, WamInst) :-
++	V = var(VarName, _),
++	gen_load_arg(V, _, _, _), % to update Info field of this var
++	WamInst = [cxt_assign_K(VarName)|WamNext].
++
++gen_inline_pred('$cxt_for_call', 1, [var(VarName, _)], WamNext, WamNext) :-
++	g_link(cxt_for_call, VarName).
++
++gen_inline_pred('$cxt_unit_for_next_call', 1, WHAT, WamNext, WamInst) :-
++	WHAT = [stc(/,2,[atm(UF),int(UA)])],
++	WamInst = [cxt_unit_for_next_call(UF/UA)|WamNext].
++
++gen_inline_pred('$cxt_unit_for_next_call', 1, WHAT, WamNext, WamInst) :-
++	WHAT = [atm(UF)], UA=0,
++	WamInst = [cxt_unit_for_next_call(UF/UA)|WamNext].
++
++gen_inline_pred('$cxt_arg', 3, [int(I), V1, V2], WamNext, WamInst) :-
++	V1 = var(VarName1, _),
++	V2 = var(VarName2, Info2),
++	(   var(Info2) ->
++	    Inst = cxt_arg_load(I, VarName1, VarName2)
++	;
++	    Inst = cxt_arg_unify(I, VarName1, VarName2)
++	),
++	gen_load_arg(V1, _, _, _), % to update Info field of this var
++	gen_load_arg(V2, _, _, _), % to update Info field of this var
++	WamInst = [Inst|WamNext].
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/Pl2Wam/context.pl gprolog-cx/base/src/Pl2Wam/context.pl
+--- gprolog-1.2.18/src/Pl2Wam/context.pl	1970-01-01 05:00:00.000000000 +0500
++++ gprolog-cx/base/src/Pl2Wam/context.pl	2006-01-03 05:18:15.000000000 +0500
+@@ -0,0 +1,536 @@
++/*-------------------------------------------------------------------------*
++ * GNU Prolog                                                              *
++ *                                                                         *
++ * Part  : Prolog to WAM compiler                                          *
++ * File  : context.pl                                                      *
++ * Descr.: contextual LP management                                        *
++ * Author: Daniel Diaz                                                     *
++ *                                                                         *
++ * Copyright (C) 1999-2002 Daniel Diaz                                     *
++ *                                                                         *
++ * GNU Prolog is free software; you can redistribute it and/or modify it   *
++ * under the terms of the GNU General Public License as published by the   *
++ * Free Software Foundation; either version 2, or any later version.       *
++ *                                                                         *
++ * GNU Prolog is distributed in the hope that it will be useful, but       *
++ * WITHOUT ANY WARRANTY; without even the implied warranty of              *
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU        *
++ * General Public License for more details.                                *
++ *                                                                         *
++ * You should have received a copy of the GNU General Public License along *
++ * with this program; if not, write to the Free Software Foundation, Inc.  *
++ * 59 Temple Place - Suite 330, Boston, MA 02111, USA.                     *
++ *-------------------------------------------------------------------------*/
++
++/* $Id: context.pl,v 1.6 2006/01/03 00:15:33 spa Exp $  */
++
++/*-------------------------------------------------------------------------*
++ * This file implements a support for contextual LP. It is a prototype and *
++ * should be considered as an alpha version. One main requierement was to  *
++ * modify the existing compiler code as few as possible and to group here  *
++ * all context-specific code in order to obtain a little diff vs derived   *
++ * gprolog version. This imposed some limitation to context support in the *
++ * compiler. Mainly, the compiler expects at most 1 unit/1 declaration per *
++ * source at the beginning of file. However several units are allowed, but *
++ * the following restrictions apply then (among others not yet known...):  *
++ *                                                                         *
++ *   2 predicates with same func/arity in different units are not accepted *
++ *   discontiguous predicates are not well compiled                        *
++ *   a dynamic predicate is associated to the last unit encountered        *
++ *                                                                         *
++ * To compile with context support, the user should set an environment     *
++ * variable: GPROLOG_CXT which can contain the following sub-strings:      *
++ *                                                                         *
++ *    off: turn off context support                                        *
++ *                                                                         *
++ *    minimal: context calls for predicates outside the current unit.      *
++ *    recursive: context calls for any predicate except if bip or recursive*
++ *    medium: context call for any predicate except bips.                  *
++ *    full: context call for all predicate (including bips).               *
++ *                                                                         *
++ *    debug: display how clauses are rewritten for context support         *
++ *                                                                         *
++ * Default: recursive                                                      *
++ *                                                                         *
++ * NB: if you use full you should ensure the needed built-in are linked    *
++ * (e.g. do not use --min-pl-bips / --min-fd-bips / --min-bips,...)        *
++ * If you want to recompile pl2wam itself with 'full', replace in the      *
++ * Makefile --min-bips by --no-top-level.                                  *
++ * ------------------------------------------------------------------------*/
++
++:- op(600, xfx, [:<]).		% useless if boot-strapped but useful
++:- op(600, xfy, [:>]).		% when compiled with regular GNU-Prolog
++:- op(600, xfy, [::]).		% ...
++:- op(600, fy, [:<, :^, :#, :>]). % ...
++				
++
++'$cxt_for_call'(_).		% FIXME: should never be needed!!!
++ 
++% --- First pass - keep info about defined predicates --- %
++
++cxt_first_pass(_) :-
++	cxt_parse_env_variable,
++	g_read(cxt_support, f),
++	!.
++
++cxt_first_pass(PlFile) :-
++	g_assign(cxt_unit, []),
++	retractall(cxt_def(_, _, _)),
++	sr_open(PlFile, D, [include(hide), op(hide), restart(true),
++			    write_error(false), undo_directives(true)]),
++	repeat,
++	sr_read_term(D, T, [], SRError),
++	SRError = sr_ok,
++	nonvar(T),
++	(   T = end_of_file -> !
++	;
++	    expand_term(T, T1),
++	    cxt_treat_term(T1),
++	    fail
++	),
++	g_assign(cxt_unit, []),
++	g_assign(cxt_unit_args, []),
++	sr_close(D).
++
++
++cxt_treat_term((:- D)) :-
++	(   D = unit(Unit),
++	    callable(D) ->
++	    functor(Unit, U, Arity),
++	    g_assign(cxt_unit, U),
++	    g_assign(cxt_unit_arity, Arity)
++	;
++	    true
++	), !.
++
++cxt_treat_term((H :- _)) :-
++	!,
++	functor(H, F, N),
++	cxt_add_def(F, N).
++
++cxt_treat_term(H) :-
++	functor(H, F, N),
++	cxt_add_def(F, N).
++
++
++
++cxt_add_def(F, N) :-
++	g_read(cxt_unit, UP),
++	g_read(cxt_unit_arity, A),
++	cxt_add_def(F, N, UP/A).
++
++cxt_add_def(F, N, U) :-
++	cxt_test_def(F, N, U),
++	!.
++
++cxt_add_def(F, N, U) :-
++	( g_read(cxt_env_debug, 1) -> format('% adding ~w\n', [cxt_def(F,N,U)]) ; true ),
++	assertz(cxt_def(F, N, U)).
++
++cxt_test_def(F, N, U) :-
++	clause(cxt_def(F, N, U), _),
++	!.
++
++
++% --- environment variable parsing --- %
++
++cxt_parse_env_variable :-
++	g_assign(cxt_support, f),
++	g_assign(cxt_env_call, 0),
++	g_assign(cxt_env_debug, f),
++	( environ('GPROLOG_CXT', V) -> true ; V='' ),
++	\+ sub_atom(V, _, _, _, off),
++	g_assign(cxt_support, t),
++	(   sub_atom(V, _, _, _, recursive),
++	    g_assign(cxt_env_call, 1),
++	    Call = recursive
++	;   sub_atom(V, _, _, _, medium),
++	    g_assign(cxt_env_call, 2),
++	    Call = medium
++	;   sub_atom(V, _, _, _, full),
++	    g_assign(cxt_env_call, 3),
++	    Call = full
++	;   sub_atom(V, _, _, _, minimal),
++	    Call = minimal
++	;   g_assign(cxt_env_call, 1), % defaults to "recursive",
++	    Call = recursive	% which is quite safe.
++	),
++	(   sub_atom(V, _, _, _, debug),
++	    g_assign(cxt_env_debug, t),
++	    Debug = on
++	;   Debug = off
++	), !,
++	(   Debug = on ->
++	    format('Context support with call: ~w  debug: ~w~n',
++		   [Call, Debug])
++	;   true
++	).
++
++cxt_parse_env_variable.
++
++
++
++% --- term rewriting --- %
++
++cxt_rewrite_term(Cl, SingNames, _, Cl, SingNames) :-
++	g_read(cxt_support, f), !.
++
++cxt_rewrite_term(Cl, SingNames, _, Cl, SingNames) :-
++	var(Cl), !.
++
++cxt_rewrite_term(Cl, SingNames, _, Cl, SingNames) :-
++	Cl = end_of_file,
++	!.
++
++cxt_rewrite_term((:- D), SingNames, VN, Cl, SingNames1) :-
++	cxt_handle_directive(D, SingNames, VN, Cl, SingNames1), !.
++
++cxt_rewrite_term(Cl, SingNames, VN, Cl1, SingNames1) :-
++	cxt_rewrite_clause(Cl, SingNames, VN, Cl1, SingNames1).
++
++
++
++
++% --- directive handling --- %
++
++cxt_handle_directive(unit(Unit), _, VN, '$$cxt_unit$$'(U/Arity), []) :-
++	callable(Unit),
++	Unit =.. [U|LVar],
++	functor(Unit, U, Arity),
++	cxt_mk_unit_args(LVar, VN, LUnitArg), !,
++	g_assign(cxt_unit, U),
++	g_assign(cxt_unit_arity, Arity),
++	g_assign(cxt_unit_args, LUnitArg).
++
++cxt_handle_directive(D, _, _, _, _) :-
++	D = unit(_), !,
++	error('invalid directive ~q', [D]).
++
++cxt_handle_directive(initialization(I), SingNames, VN, (:- initialization(I1)), SingNames1) :-
++	!,
++	cxt_rewrite_clause(('$cxt' :- I), SingNames, VN, ('$cxt' :- I1), SingNames1).
++
++cxt_handle_directive(D, SingNames, _, (:- D), SingNames).
++
++
++
++
++cxt_mk_unit_args([], _, []).
++
++cxt_mk_unit_args([Var|LVar], VN, [Name=Pos|LUnitArg]) :-
++	cxt_find_var(VN, Name, Var, 1, Pos),
++	cxt_mk_unit_args(LVar, VN, LUnitArg).
++
++
++
++
++% cxt_find_var(L, N, V, P1, P2) :-
++% 	SELF=cxt_find_var(L, N, V, P1, P2),
++% 	format("[in: ~w]\n", [SELF]),
++% 	cxt_find_var1(L, N, V, P1, P2),
++% 	format("[out: ~w]\n", [SELF]).
++% cxt_find_var(L, N, V, P1, P2) :-
++% 	SELF=cxt_find_var(L, N, V, P1, P2),
++% 	format("[fail: ~w]\n", [SELF]),
++% 	fail.
++
++cxt_find_var(VARARGLIST, _, _, _, _) :-
++	var(VARARGLIST), !,
++	format("[internal error: variable unit argument list!\n", []),
++	fail.
++
++cxt_find_var([Name=Var|_], Name, Var1, Pos, Pos) :-
++	Var == Var1, !.
++
++cxt_find_var([Name=Var|_], Name1, Var, Pos, Pos) :- % for reverse usage
++	Name == Name1, !.
++
++cxt_find_var([_|VN], Name, Var, Pos, Pos2) :-
++	Pos1 is Pos + 1,
++	cxt_find_var(VN, Name, Var, Pos1, Pos2).
++
++
++
++
++% --- clause rewriting --- %
++
++cxt_rewrite_clause(Cl, SingNames, VN, (Head :- Body3), SingNames1) :-
++	g_link(cxt_var_names, VN),
++	g_read(cxt_unit_args, LUnitArgs),
++	g_link(cxt_unit_args_ln, LUnitArgs),
++	cxt_unit_args_in_term(Cl, SingNames, LUsed, SingNames1),
++	(   Cl = (Head :- Body)
++	;   Cl = Head, Body = true), !,
++	nonvar(Head),
++	functor(Head, F, N),
++	g_assign(cxt_cur_func, F),
++	g_assign(cxt_cur_arity, N),
++	(   cxt_test_def(F, N, U) -> % '$cxt' :- ... from initialization/1
++	    g_assign(cxt_owner_unit, U)
++	;   g_assign(cxt_owner_unit, _)	% any to be unified
++	),
++	g_link(cxt_var, CxtVar),
++	g_link(cxt_calling_var, CxtCallingVar),
++	g_assign(cxt_force_cxt_call, f),
++	cxt_rewrite_body(Body, Body1),
++	(   LUsed = [] ->	% close end var
++	    Body2 = Body1
++	;   cxt_body_of_unit_args(LUsed, CxtVarCar, BodyUnitArgs),
++	    cxt_mk_arg3_call(1, CxtVar, CxtVarCar, P),
++	    Body2 = (P, BodyUnitArgs, Body1)
++	),
++	Body3 = ('$cxt_get_K'(CxtVar), '$cxt_get_CK'(CxtCallingVar), Body2),
++	cxt_debug_displ_clause((Head :- Body3)).
++
++cxt_rewrite_clause(Head, SingNames, VN, Cl, SingNames1) :-
++	cxt_rewrite_clause((Head :- true), SingNames, VN, Cl, SingNames1).
++
++
++
++
++cxt_unit_args_in_term(T, SingNames, LUsed, SingNames1) :-
++	var(T),
++	T = Var,
++	g_read(cxt_var_names, VN),
++	cxt_find_var(VN, Name, Var, 1, _),
++	g_read(cxt_unit_args_ln, LUnitArgs),
++	cxt_find_var(LUnitArgs, Name, Pos, 1, _), !,
++	member(Var=Pos, LUsed), !, % find or add with end var
++	delete(SingNames, Name=Var, SingNames1). %succeeds if does not belong
++
++cxt_unit_args_in_term(T, SingNames, LUsed, SingNames1) :-
++	compound(T), !,
++	functor(T, _, N),
++	cxt_unit_args_in_subterm(0, N, T, SingNames, LUsed, SingNames1).
++
++cxt_unit_args_in_term(_, SingNames, _, SingNames).
++
++
++
++
++cxt_unit_args_in_subterm(N, N, _, SingNames, _, SingNames) :- !.
++
++cxt_unit_args_in_subterm(I, N, T, SingNames, LUsed, SingNames2) :-
++	I1 is I + 1,
++	arg(I1, T, Arg),
++	cxt_unit_args_in_term(Arg, SingNames, LUsed, SingNames1),
++	cxt_unit_args_in_subterm(I1, N, T, SingNames1, LUsed, SingNames2).
++
++
++	
++
++cxt_body_of_unit_args([], _, true):- !. % close end variable
++
++cxt_body_of_unit_args([Var=Pos|LUsed], CxtVarCar, (P, Body)) :-
++	cxt_mk_arg3_call(Pos, CxtVarCar, Var, P),
++	cxt_body_of_unit_args(LUsed, CxtVarCar, Body).
++
++
++
++cxt_mk_arg3_call(ArgNo, Term, SubTerm, P) :-
++%	P = arg(ArgNo, Term, SubTerm).
++%	P = '$call_c'('Cxt_Arg_3'(ArgNo, Term, SubTerm), [fast_call, boolean, by_value]).
++
++	P = '$cxt_arg'(ArgNo, Term, SubTerm).
++
++
++% -----------------------------------------------------------------------------
++
++cxt_rewrite_body(Body, Body1) :-
++	var(Body), !,
++	cxt_rewrite_simple(Body, Body1).
++
++cxt_rewrite_body((P, Q), (P1, Q1)) :-
++	cxt_rewrite_body(P, P1),
++	cxt_rewrite_body(Q, Q1).
++
++cxt_rewrite_body((P ; Q), R) :-
++	cxt_rewrite_body(P, P1),
++	cxt_rewrite_body(Q, Q1),
++	T = (P1 ; Q1),
++	g_read(cxt_owner_unit, U), % because ; gives rise to an aux predicate
++	(   U = []/0 ->
++%%	    g_read(cxt_var, CxtVar),
++%%	    R = ('$cxt_put_K'(CxtVar), T)
++	    R = T
++	;
++	    R = ('$cxt_unit_for_next_call'(U), T)
++	).
++
++cxt_rewrite_body((P -> Q), (P1 -> Q1)) :-
++	cxt_rewrite_body(P, P1),
++	cxt_rewrite_body(Q, Q1).
++
++% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
++
++/* what to do with control constructs ???
++cxt_rewrite_body(call(P), _).
++
++cxt_rewrite_body(catch(G, C, R), _).
++
++cxt_rewrite_body(throw(B), _).
++*/
++
++cxt_rewrite_body(call(G), G1) :-
++	cxt_rewrite_body(G, G1).
++
++% cxt_rewrite_body(catch(G, C, R), catch(G1, C, R1)) :-
++% 	G1=foo(G),
++% 	R1=R.
++%	g_read(cxt_var, CxtVar),
++%	cxt_rewrite_body(CxtVar :< G, G1),
++%	cxt_rewrite_body(CxtVar :< R, R1).
++
++% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
++
++cxt_rewrite_body(C :> P, (CxtVarNew = CxtNew, P2)) :-
++	g_read(cxt_var, CxtVarOld),
++	CxtNew = [C|CxtVarOld],
++	g_link(cxt_var, CxtVarNew),
++	g_read(cxt_force_cxt_call, CxtForce),
++	g_assign(cxt_force_cxt_call, t),
++	cxt_rewrite_body(P, P1),
++	g_assign(cxt_force_cxt_call, CxtForce),
++	g_link(cxt_var, CxtVarOld),
++	P2 = P1.
++
++cxt_rewrite_body(C :< P, (CxtVarNew = CxtNew, P2)) :-
++	g_read(cxt_var, CxtVarOld),
++	CxtNew = C,
++	g_link(cxt_var, CxtVarNew),
++	g_read(cxt_force_cxt_call, CxtForce),
++	g_assign(cxt_force_cxt_call, t),
++	cxt_rewrite_body(P, P1),
++	g_assign(cxt_force_cxt_call, CxtForce),
++	g_link(cxt_var, CxtVarOld),
++	P2 = P1.
++
++cxt_rewrite_body(U :: P, ('$cxt_locate'(CxtVarOld, U, C), P2)) :-
++	g_read(cxt_var, CxtVarOld),
++	g_link(cxt_var, C),
++	g_read(cxt_force_cxt_call, CxtForce),
++	g_assign(cxt_force_cxt_call, t),
++	cxt_rewrite_body(C :< P, P1),
++	g_assign(cxt_force_cxt_call, CxtForce),
++	g_link(cxt_var, CxtVarOld),
++	P2 = P1.
++
++cxt_rewrite_body(:# P, P2) :-
++	g_read(cxt_var, CxtVarOld),
++	g_read(cxt_calling_var, C), % calling context (x254)
++	g_link(cxt_var, C),
++	g_read(cxt_force_cxt_call, CxtForce),
++	g_assign(cxt_force_cxt_call, t),
++	cxt_rewrite_body(P, P1),
++	g_assign(cxt_force_cxt_call, CxtForce),
++	g_link(cxt_var, CxtVarOld),
++	P2 = P1.
++
++cxt_rewrite_body(:^ P, (CxtVarOld = [_|C], P2)) :-
++	g_read(cxt_var, CxtVarOld),
++	g_link(cxt_var, C),
++	g_read(cxt_force_cxt_call, CxtForce),
++	g_assign(cxt_force_cxt_call, t),
++	cxt_rewrite_body(P, P1),
++	g_assign(cxt_force_cxt_call, CxtForce),
++	g_link(cxt_var, CxtVarOld),
++	P2 = P1.
++
++
++cxt_rewrite_body(P, P1) :-
++	cxt_rewrite_simple(P, P1).
++
++
++
++% -----------------------------------------------------------------------------
++
++cxt_rewrite_simple(P, C = CxtVar) :-
++	nonvar(P),
++	P = context(C), !,
++	g_read(cxt_var, CxtVar).
++
++cxt_rewrite_simple(P, C = CxtVar) :-
++	nonvar(P),
++	P = :< C, !,
++	g_read(cxt_var, CxtVar).
++
++cxt_rewrite_simple(P, C = CxtCallingVar) :-
++	nonvar(P),
++	P = ccontext(C), !,
++	g_read(cxt_calling_var, CxtCallingVar).
++
++cxt_rewrite_simple(P, C = CxtCallingVar) :-
++	nonvar(P),
++	P = :> C, !,
++	g_read(cxt_calling_var, CxtCallingVar).
++
++
++% cxt_rewrite_simple(P, g_read('$$hcontext$$', H)) :-
++% 	nonvar(P),
++% 	P = hcontext(H), !.
++
++cxt_rewrite_simple(P, P1) :-
++	nonvar(P),
++	functor(P, F, N),
++	cxt_useless_for_call(F, N), !,
++	g_read(cxt_var, CxtVar),
++	P1 = ('$cxt_put_K'(CxtVar), P).
++
++cxt_rewrite_simple(P, P2) :-
++	g_read(cxt_force_cxt_call, f),
++	nonvar(P),
++	functor(P, F, N),
++	(   g_read(cxt_env_call, 0)
++	;   g_read(cxt_env_call, 1), % recursive
++	    g_read(cxt_cur_func, F),
++	    g_read(cxt_cur_arity, N)
++	), !,
++	cxt_test_def(F, N, U),
++	g_read(cxt_owner_unit, U1),
++	(   U = []/0 ->
++	    P1 = P
++	;   U = U1,
++	    P1 = ('$cxt_unit_for_next_call'(U), P)
++	),
++	g_read(cxt_var, CxtVar),
++	P2 = ('$cxt_put_K'(CxtVar), P1).
++
++cxt_rewrite_simple(P, ('$cxt_for_call'(CxtVar), P)) :-
++	g_read(cxt_var, CxtVar).
++
++
++
++
++
++cxt_useless_for_call(F, N) :-
++        bip(F, N), !,		% built-in
++	g_read(cxt_env_call, C),
++	C < 3.
++
++cxt_useless_for_call(F, N) :-
++        control_construct(F, N), !. % control constructs
++
++cxt_useless_for_call(F, _) :-
++        sub_atom(F, 0, 1, _, $). % predicate starting with '$'
++
++
++
++
++cxt_debug_displ_clause(Cl) :-
++	g_read(cxt_env_debug, t),
++	g_read(cxt_var_names, VN),
++	name_query_vars(VN, _),
++	portray_clause(Cl), nl,
++	fail.			% to undo bindings
++
++cxt_debug_displ_clause(_).
++
++
++
++
++% --- code emission --- %
++
++				% should be in wam_emit.pl
++cxt_emit_unit_name(U) :-
++	g_read(streamwamfile, Stream),
++	format(Stream, '~n~nunit_name(~q).~n', [U]).
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/Pl2Wam/CXT_REMOVE.pl gprolog-cx/base/src/Pl2Wam/CXT_REMOVE.pl
+--- gprolog-1.2.18/src/Pl2Wam/CXT_REMOVE.pl	1970-01-01 05:00:00.000000000 +0500
++++ gprolog-cx/base/src/Pl2Wam/CXT_REMOVE.pl	2003-04-08 15:42:53.000000000 +0600
+@@ -0,0 +1,110 @@
++/*
++ * Try to remove all context specific code to obtain a .wam file which can 
++ * compared to the code produced without context support (using diff).
++ * The obtained code is NOT executable 
++ * Operation performed:
++ * - replace cxt_call (cxt_execute) by call (execute)
++ * - remove a get_variable(V, 255) storing V in a global var
++ *   if V is x(N) (y(N)) then all an instruction using x(N1) (y(N1))
++ *   is removed if N1 = N
++ *   is replaced by x(N1-1) (y(N1-1)) if N1 > N
++ *   if V is y(_) the previous allocate(N) becomes allocate(N-1)
++ */
++
++cxt_for_diff_emit(WamCode, WamCode1) :-
++	cxt_for_diff_init_clause,
++	cxt_for_diff(WamCode, WamCode1), !.
++	
++
++	
++
++cxt_for_diff_init_clause :-
++	g_assign(cxt_K_xy, '$cxt_null'),
++	g_assign(cxt_K_no, -1).
++
++
++
++
++cxt_for_diff([], []).
++
++cxt_for_diff([L1|L2], [DL1|DL2]) :-
++	cxt_for_diff(L1, DL1),
++	cxt_for_diff(L2, DL2).
++
++cxt_for_diff([cxt_call(PN,_)|L], [call(PN)|DL]) :-
++	cxt_for_diff(L, DL).
++
++cxt_for_diff([cxt_execute(PN,_)|L], [execute(PN)|DL]) :-
++	cxt_for_diff(L, DL).
++
++cxt_for_diff([get_variable(V, 255)|L], DL) :-
++	functor(V, XY, _),
++	arg(1, V, No),
++	g_assign(cxt_K_xy, XY),
++	g_assign(cxt_K_no, No),
++	(   XY = y ->
++	    g_read(cxt_allocate, A),
++	    A = allocate(N),
++	    N1 is N - 1,
++	    setarg(1, A, N1),
++	    g_assign(cxt_allocate, '$cxt_null')
++	;
++	    true
++	),
++	cxt_for_diff(L, DL).
++
++cxt_for_diff([A|L], [A|DL]) :-
++	A = allocate(_),
++	g_link(cxt_allocate, A),
++	cxt_for_diff(L, DL).
++
++cxt_for_diff([Lab|L], [Lab|DL]) :-
++	Lab = label(_),
++	cxt_for_diff_init_clause,
++	cxt_for_diff(L, DL).
++
++cxt_for_diff([I|L], R) :-
++	(   cxt_fix_vars(I, I1) ->
++	    R = [I1|DL]
++	;   R = DL
++	),
++	cxt_for_diff(L, DL).
++
++cxt_for_diff([I|L], [I|DL]) :-
++	cxt_for_diff(L, DL).
++
++
++
++
++cxt_fix_vars(I, I) :-
++	atomic(I), !.
++
++cxt_fix_vars(I, I1) :-
++	I =.. [XY, No1],
++	g_read(cxt_K_xy, XY),
++	g_read(cxt_K_no, No2),
++	!,
++	(   No1 = No2 ->
++	    fail
++	;   No1 > No2 ->
++	    NewNo is No1 - 1
++	;   NewNo = No1
++	),
++	I1 =.. [XY, NewNo].
++
++cxt_fix_vars(x(X), x(X)) :- !.
++
++cxt_fix_vars(y(Y), y(Y)) :- !.
++
++cxt_fix_vars(I, I1) :-
++	I =.. L,
++	cxt_fix_vars_lst(L, L1),
++	I1 =.. L1.
++
++
++cxt_fix_vars_lst([], []).
++
++cxt_fix_vars_lst([X|L], [X1|L1]) :-
++	cxt_fix_vars(X, X1),
++	cxt_fix_vars_lst(L, L1).
++
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/Pl2Wam/inst_codif.pl gprolog-cx/base/src/Pl2Wam/inst_codif.pl
+--- gprolog-1.2.18/src/Pl2Wam/inst_codif.pl	2004-03-15 19:58:56.000000000 +0500
++++ gprolog-cx/base/src/Pl2Wam/inst_codif.pl	2003-04-08 15:42:53.000000000 +0600
+@@ -30,6 +30,8 @@
+ 	functor(InstW, F, _),
+ 	(   F = call
+ 	;   F = execute
++        ;   F = cxt_call
++	;   F = cxt_execute
+         ;   F = call_c,
+ 	    arg(2, InstW, LCOpt),
+ 	    (memberchk(jump, LCOpt) ; memberchk(use_x_args, LCOpt))
+@@ -108,6 +110,40 @@
+ codif(execute(_ / N), LCode) :-
+ 	lst_r_for_call_execute(0, N, LCode).
+ 
++codif(cxt_call(_/N, V), LCode1) :-
++	lst_r_for_call_execute(0, N, LCode),
++	(   V = x(Tmp) ->
++	    LCode1 = [r(Tmp)|LCode]
++	;   LCode1 = LCode
++	).
++
++codif(cxt_execute(_/N, V), LCode1) :-
++	lst_r_for_call_execute(0, N, LCode),
++	(   V = x(Tmp) ->
++	    LCode1 = [r(Tmp)|LCode]
++	;   LCode1 = LCode
++	).
++
++codif(cxt_assign_K(x(Tmp)), [r(Tmp), w(255)]).
++
++codif(cxt_assign_K(y(_)), [w(255)]).
++
++codif(cxt_arg_unify(_, x(Tmp1), x(Tmp2)), [r(Tmp1), r(Tmp2)]).
++
++codif(cxt_arg_unify(_, x(Tmp1), _), [r(Tmp1)]).
++
++codif(cxt_arg_unify(_, _, x(Tmp2)), [r(Tmp2)]).
++
++codif(cxt_arg_unify(_, _, x(Tmp2)), [r(Tmp2)]).
++
++codif(cxt_arg_load(_, x(Tmp1), x(Tmp2)), [r(Tmp1), w(Tmp2)]).
++
++codif(cxt_arg_load(_, x(Tmp1), _), [r(Tmp1)]).
++
++codif(cxt_arg_load(_, _, x(Tmp2)), [w(Tmp2)]).
++
++codif(cxt_arg_load(_, _, x(Tmp2)), [w(Tmp2)]).
++
+ codif(load_cut_level(Tmp), [w(Tmp)]).
+ 
+ codif(cut(x(Tmp)), [r(Tmp)]).
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/Pl2Wam/internal.pl gprolog-cx/base/src/Pl2Wam/internal.pl
+--- gprolog-1.2.18/src/Pl2Wam/internal.pl	2004-03-15 19:58:56.000000000 +0500
++++ gprolog-cx/base/src/Pl2Wam/internal.pl	2003-04-08 17:20:34.000000000 +0600
+@@ -347,3 +347,18 @@
+ 
+ inline_predicate(g_test_reset_bit, 2, t).
+ 
++
++/* --- Contexts -----------------------------------------------------------*/
++
++inline_predicate('$cxt_get_K', 1, _).
++
++inline_predicate('$cxt_get_CK', 1, _).
++
++inline_predicate('$cxt_put_K', 1, _).
++
++inline_predicate('$cxt_for_call', 1, _).
++
++inline_predicate('$cxt_unit_for_next_call', 1, _).
++
++inline_predicate('$cxt_arg', 3, _).
++
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/Pl2Wam/Makefile.in gprolog-cx/base/src/Pl2Wam/Makefile.in
+--- gprolog-1.2.18/src/Pl2Wam/Makefile.in	2002-03-19 22:58:22.000000000 +0500
++++ gprolog-cx/base/src/Pl2Wam/Makefile.in	2003-04-08 15:42:53.000000000 +0600
+@@ -1,10 +1,12 @@
+ GPLC      = @GPLC@
+ GPLCFLAGS = --fast-math
+ OBJS      = pl2wam@OBJ_SUFFIX@ read_file@OBJ_SUFFIX@ bip_list@OBJ_SUFFIX@ \
++            context@OBJ_SUFFIX@ \
+             syn_sugar@OBJ_SUFFIX@ internal@OBJ_SUFFIX@ code_gen@OBJ_SUFFIX@ \
+             reg_alloc@OBJ_SUFFIX@ inst_codif@OBJ_SUFFIX@ \
+             first_arg@OBJ_SUFFIX@ indexing@OBJ_SUFFIX@ wam_emit@OBJ_SUFFIX@
+ PLS       = pl2wam.pl read_file.pl bip_list.pl syn_sugar.pl internal.pl \
++            context.pl \
+             code_gen.pl reg_alloc.pl inst_codif.pl first_arg.pl \
+             indexing.pl wam_emit.pl
+ 
+@@ -45,6 +47,7 @@
+ pl2wam.wam:     pl2wam.pl
+ read_file.wam:  read_file.pl
+ bip_list.wam:   bip_list.pl
++context.wam:    context.pl
+ syn_sugar.wam:  syn_sugar.pl
+ internal.wam:   internal.pl
+ code_gen.wam:   code_gen.pl
+Binary files gprolog-1.2.18/src/Pl2Wam/pl2wam0 and gprolog-cx/base/src/Pl2Wam/pl2wam0 differ
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/Pl2Wam/read_file.pl gprolog-cx/base/src/Pl2Wam/read_file.pl
+--- gprolog-1.2.18/src/Pl2Wam/read_file.pl	2004-03-15 19:58:56.000000000 +0500
++++ gprolog-cx/base/src/Pl2Wam/read_file.pl	2003-04-08 15:42:53.000000000 +0600
+@@ -123,6 +123,7 @@
+ 	g_assign(syn_error_nb, 0),
+ 	g_assign(in_lines, 0),
+ 	g_assign(in_bytes, 0),
++	cxt_first_pass(PlFile),
+ 	open_new_prolog_file(PlFile).
+ 
+ 
+@@ -175,6 +176,13 @@
+ 	repeat,
+ 	read_predicate1(Pred, N, LSrcCl),                % standard predicate
+ % !,
++	(   Pred = '$$cxt_unit$$' ->
++	    LSrcCl = [_ + '$$cxt_unit$$'(U)],
++	    cxt_emit_unit_name(U),
++	    fail
++	;
++	    true
++	),
+ 	(   g_read(reading_dyn_pred, f),
+ 	    g_read(native_code, t) ->
+ 	    read_predicate_next(Pred, N, LSrcCl)
+@@ -339,7 +347,7 @@
+ get_next_clause(Pred, N, SrcCl) :-
+ 	g_read(open_file_stack, OpenFileStack),
+ 	OpenFileStack = [_ * Stream|_],
+-	'$catch'(read_term(Stream, Cl, [singletons(SingNames)]), error(syntax_error(Err), _), after_syn_error, any, 0, false),
++	'$catch'(read_term(Stream, Cl, [variable_names(VN), singletons(SingNames)]), error(syntax_error(Err), _), after_syn_error, any, 0, false),
+ 	(   var(Err) ->
+ 	    last_read_start_line_column(L1, _),
+ 	    '$catch'(expand_term(Cl, Cl1), error(Err, _), dcg_error(Err), any, 0, false),
+@@ -350,7 +358,8 @@
+ 	    ),
+ 	    Where = OpenFileStack + (L1 - L2),
+ 	    g_assign(where, Where),
+-	    get_next_clause1(Cl1, Where, SingNames, Pred, N, SrcCl)
++	    cxt_rewrite_term(Cl1, SingNames, VN, Cl2, SingNames1),
++	    get_next_clause1(Cl2, Where, SingNames1, Pred, N, SrcCl)
+ 	;   get_next_clause(Pred, N, SrcCl)
+ 	), !.
+ 
+@@ -365,6 +374,7 @@
+ 	;   get_next_clause(Pred, N, SrcCl)
+ 	).
+ 
++
+ get_next_clause1((:- D), Where, SingNames, Pred, N, SrcCl) :-
+ 	display_singletons(SingNames, directive),
+ 	(   g_read(foreign_only, f)
+@@ -755,6 +765,8 @@
+ 
+ 
+ 
++define_predicate('$$cxt_unit$$', 1) :- !.
++
+ define_predicate(F, N) :-
+ 	set_pred_info(def, F, N),
+ 	test_pred_info(bpl, F, N), !.
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/Pl2Wam/whole.pl gprolog-cx/base/src/Pl2Wam/whole.pl
+--- gprolog-1.2.18/src/Pl2Wam/whole.pl	2004-02-10 06:12:32.000000000 +0500
++++ gprolog-cx/base/src/Pl2Wam/whole.pl	2003-04-08 15:42:53.000000000 +0600
+@@ -2,6 +2,7 @@
+ 
+ :-	include(read_file).
+ :-	include(bip_list).
++:-	include(context).
+ :-	include(syn_sugar).
+ :-	include(internal).
+ :-	include(code_gen).
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/TopComp/top_comp.c gprolog-cx/base/src/TopComp/top_comp.c
+--- gprolog-1.2.18/src/TopComp/top_comp.c	2004-06-04 22:05:02.000000000 +0600
++++ gprolog-cx/base/src/TopComp/top_comp.c	2006-01-03 05:18:15.000000000 +0500
+@@ -66,7 +66,7 @@
+  * Constants                       *
+  *---------------------------------*/
+ 
+-#define CMD_LINE_MAX_OPT           4096
++#define CMD_LINE_MAX_OPT           16384
+ #define CMD_LINE_LENGTH            (MAXPATHLEN + CMD_LINE_MAX_OPT + 1)
+ 
+ #define TEMP_FILE_PREFIX           GPLC
+@@ -182,6 +182,10 @@
+ int no_fd_lib = 0;
+ int strip = 0;
+ 
++#ifdef USE_DYNAMIC;
++int dynamic = 0;
++#endif
++
+ int no_decode_hex = 0;
+ 
+ char warn_str[1024] = "";
+@@ -193,6 +197,7 @@
+ CmdInf cmd_wam2ma = { EXE_FILE_WAM2MA, " ", "-o " };
+ CmdInf cmd_ma2asm = { EXE_FILE_MA2ASM, " ", "-o " };
+ CmdInf cmd_asm = { EXE_FILE_ASM, " ", "-o " };
++CmdInf cmd_asm2 = { EXE_FILE_LINK " -shared", " ", "-o " };
+ CmdInf cmd_fd2c = { EXE_FILE_FD2C, " ", "-o " };
+ CmdInf cmd_cc = { EXE_FILE_CC, " ", CC_OBJ_NAME_OPT };
+ CmdInf cmd_link = { EXE_FILE_LINK, " ", CC_EXE_NAME_OPT };
+@@ -459,6 +464,12 @@
+ 	      break;
+ 
+ 	    case FILE_ASM:
++#ifdef USE_DYNAMIC
++	      if (dynamic) {
++		New_Work_File (f, stage, stop_after);
++	      }
++	      else
++#endif
+ 	      Compile_Cmd(&cmd_asm, f);
+ 	      break;
+ 	    }
+@@ -936,6 +947,18 @@
+   int nb_file = 0;
+ 
+ 
++#ifdef USE_DYNAMIC
++  /* start by making executable dl-able */
++  f->name = f->work_name1 = "-rdynamic";
++  f->type = LINK_OPTION;
++  nb_file_lopt++;
++  f++;
++  f->name = f->work_name1 = "-ldl";
++  f->type = LINK_OPTION;
++  nb_file_lopt++;
++  f++;
++#endif
++
+   for (i = 1; i < argc; i++)
+     {
+       if (*argv[i] == '-' && argv[i][1] != '\0')
+@@ -1006,6 +1029,16 @@
+ 	      continue;
+ 	    }
+ 
++#ifdef USE_DYNAMIC
++	  if (Check_Arg(i, "--dynamic"))
++	    {
++	      dynamic = 1;
++	      Add_Last_Option(cmd_wam2ma.opt);
++	      Add_Last_Option(cmd_ma2asm.opt);
++	      continue;
++	    }
++#endif
++
+ 	  if (Check_Arg(i, "--temp-dir"))
+ 	    {
+ 	      if (++i >= argc)
+@@ -1352,6 +1385,9 @@
+   L("  --temp-dir PATH             use PATH as directory for temporary files");
+   L("  --no-del-temp-files          do not delete temporary files");
+   L("  --no-decode-hexa            do not decode hexadecimal predicate names");
++#ifdef USE_DYNAMIC
++  L("  --dynamic                   dynamically-loadable units and executables");
++#endif
+   L("  -v, --verbose               print executed commands");
+   L("  -h, --help                  print this help and exit");
+   L("  --version                   print version number and exit");
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/Wam2Ma/bt_string.h gprolog-cx/base/src/Wam2Ma/bt_string.h
+--- gprolog-1.2.18/src/Wam2Ma/bt_string.h	2004-06-04 22:05:02.000000000 +0600
++++ gprolog-cx/base/src/Wam2Ma/bt_string.h	2003-04-08 17:20:39.000000000 +0600
+@@ -38,6 +38,7 @@
+ {
+   char *str;
+   int no;
++  int arity;			/* FIXME: CROCK */
+   PBTNode left;
+   PBTNode right;
+ }
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/Wam2Ma/wam2ma.c gprolog-cx/base/src/Wam2Ma/wam2ma.c
+--- gprolog-1.2.18/src/Wam2Ma/wam2ma.c	2004-06-04 22:05:02.000000000 +0600
++++ gprolog-cx/base/src/Wam2Ma/wam2ma.c	2006-01-03 03:57:55.000000000 +0500
+@@ -70,7 +70,7 @@
+ #define DEFAULT_OUTPUT_SUFFIX      ".ma"
+ 
+ #define MAX_PRED_NAME_LENGTH       2048
+-#define MAX_HEXA_LENGTH            MAX_PRED_NAME_LENGTH * 2 + 2 + 16
++#define MAX_HEXA_LENGTH            (MAX_PRED_NAME_LENGTH * 2 + 2) * 2 + 16
+ #define MAX_LABEL_LENGTH           32
+ 
+ 
+@@ -145,6 +145,7 @@
+   int arity;
+   int line_no;
+   int prop;
++  BTNode *cxt_unit;
+   BTNode *pl_file;
+   int pl_line;
+   SwtTbl *swt_tbl[3];
+@@ -183,6 +184,12 @@
+ BTString bt_tagged_f_n;
+ 
+ 
++BTNode *cxt_cur_unit;
++char cxt_unit_for_next_call[MAX_LABEL_LENGTH];
++int cxt_arity_for_next_call = 0;
++
++int dynamic = 0;
++
+ BTNode *cur_pl_file;
+ 
+ char buff_hexa[MAX_HEXA_LENGTH];
+@@ -219,7 +226,9 @@
+ 
+ char *Compute_Hexa(unsigned char *str, char *hexa);
+ 
+-void Make_Native_Hexa_Symbol(Pred *p, char *buff);
++void Native_Hexa_Symbol(char *cxt_unit, int uarity,
++			char *functor, int arity,
++			char *buff);
+ 
+ void Emit_Obj_Initializer(void);
+ 
+@@ -241,6 +250,15 @@
+ 
+ 
+ 
++
++#define Native_Hexa_Symbol_For_Pred(p, buff)				\
++  Native_Hexa_Symbol((p->cxt_unit) ? p->cxt_unit->str : NULL,		\
++		     (p->cxt_unit) ? p->cxt_unit->arity : 0,		\
++		     p->functor->str, p->arity, buff)
++
++
++
++
+ #define Check_Arg(i, str)      (strncmp(argv[i], str, strlen(argv[i]))==0)
+ 
+ 
+@@ -256,6 +274,7 @@
+ #define DEF_FLOAT(n)          double n
+ 
+ #define DEF_X_Y(xy)           long xy; char c
++#define DEF_X_Y1(c, xy)	      long xy; char c
+ 
+ #define DEF_F_N_0(atom, n)    DEF_ATOM(atom); DEF_INTEGER(n)
+ #define DEF_F_N_1(atom, n)    DEF_STR(str_##atom); DEF_INTEGER(n); int f_n_no
+@@ -266,6 +285,8 @@
+ #define DEF_F_N(atom, n)      DEF_F_N_0(atom, n)
+ #endif
+ 
++#define DEF_STR_N(str, n)     DEF_STR(str); DEF_INTEGER(n);
++
+ #define DEF_P_N(hexa, n)      DEF_PRED(hexa); DEF_INTEGER(n)
+ 
+ #define DEF_LABEL(l)          char l[MAX_LABEL_LENGTH]; long val_##l
+@@ -295,6 +316,8 @@
+ 
+ #define LOAD_X_Y(xy)          Get_Arg(top, long, xy); \
+                               if (xy < 5000) c = 'X'; else xy -= 5000, c='Y'
++#define LOAD_X_Y1(c, xy)      Get_Arg(top, long, xy); \
++                              if (xy < 5000) c = 'X'; else xy -= 5000, c='Y'
+ 
+ #define LOAD_F_N_0(atom, n)   LOAD_ATOM_0(atom); LOAD_INTEGER(n)
+ #define LOAD_F_N_1(atom, n)   LOAD_STR(str_##atom); LOAD_INTEGER(n);\
+@@ -306,6 +329,8 @@
+ #define LOAD_F_N(atom, n)     LOAD_F_N_0(atom, n)
+ #endif
+ 
++#define LOAD_STR_N(str, n)    LOAD_STR(str); LOAD_INTEGER(n);
++
+ #define LOAD_P_N(hexa, n)     LOAD_PRED(hexa); LOAD_INTEGER(n)
+ 
+ #define LOAD_LABEL(l)         Get_Arg(top, long, val_##l); \
+@@ -437,14 +462,21 @@
+ 
+ 
+ /*-------------------------------------------------------------------------*
+- * MAKE_NATIVE_HEXA_SYMBOL                                                 *
++ * NATIVE_HEXA_SYMBOL                                                      *
+  *                                                                         *
+  *-------------------------------------------------------------------------*/
+ void
+-Make_Native_Hexa_Symbol(Pred *p, char *buff)
++Native_Hexa_Symbol(char *cxt_unit, int uarity,
++		   char *functor, int arity, char *buff)
++{
++  if (cxt_unit && cxt_unit[0])
+ {
+-  buff = Compute_Hexa(p->functor->str, buff);
+-  sprintf(buff, "_%d", p->arity);
++      buff = Compute_Hexa(cxt_unit, buff);
++      sprintf(buff, "_%d__", uarity);
++      buff += strlen(buff);
++    }
++  buff = Compute_Hexa(functor, buff);
++  sprintf(buff, "_%d", arity);
+ }
+ 
+ 
+@@ -479,7 +511,8 @@
+ 
+   Label_Printf("\n");
+ 
+-  Label_Printf("c_code  initializer Object_Initializer\n");
++  Label_Printf("c_code  %s Object_Initializer\n",
++	       dynamic? "global": "initializer");
+ 
+   Inst_Printf("call_c", "New_Object(&System_Directives,&User_Directives)");
+ 
+@@ -496,16 +529,25 @@
+ 	{
+ 	  q = buff_hexa;
+ 	  *q++ = '&';
+-	  Make_Native_Hexa_Symbol(p, q);
++	  Native_Hexa_Symbol_For_Pred(p, q);
+ 	}
+       else
+ 	strcpy(buff_hexa, "0");
+ 
++      if (p->cxt_unit)
++	Inst_Printf("call_c", FAST 
++		    "Create_Pred_Module(at(%d),%d,at(%d),%d,at(%d),%d,%d,%s)",
++		    p->cxt_unit->no,
++		    p->cxt_unit->arity,
++		    p->functor->no, p->arity, p->pl_file->no, p->pl_line,
++		    p->prop, buff_hexa);
++      else
+       Inst_Printf("call_c", FAST "Create_Pred(at(%d),%d,at(%d),%d,%d,%s)",
+ 		  p->functor->no, p->arity, p->pl_file->no, p->pl_line,
+ 		  p->prop, buff_hexa);
+       
+ 
++
+       cur_pred_no++;		/* for FORMAT_LABEL */
+ 
+       for (i = 0; i < 3; i++)
+@@ -567,7 +609,7 @@
+   Direct *p;
+ 
+   fputc('\n', file_out);
+-  Label_Printf("c_code  local System_Directives\n");
++  Label_Printf("c_code  %s System_Directives\n", dynamic? "global": "local");
+ 
+   i = 0;
+   for (p = dummy_direct_start.next; p; p = p->next)
+@@ -583,7 +625,7 @@
+   Inst_Printf("c_ret", "");
+ 
+   fputc('\n', file_out);
+-  Label_Printf("c_code  local User_Directives\n");
++  Label_Printf("c_code  %s User_Directives\n", dynamic? "global": "local");
+ 
+   i = 0;
+   for (p = dummy_direct_start.next; p; p = p->next)
+@@ -740,6 +782,7 @@
+ 
+   cur_pred->functor = atom;
+   cur_pred->arity = arity;
++  cur_pred->cxt_unit = cxt_cur_unit;
+   cur_pred->pl_file = cur_pl_file;
+   cur_pred->pl_line = pl_line;
+   cur_pred->prop = prop;
+@@ -755,7 +798,7 @@
+     Label_Printf("\n\n; *** Predicate: %s/%d (%s:%d)",
+ 		 functor, arity, cur_pl_file->str, pl_line);
+ 
+-  Make_Native_Hexa_Symbol(cur_pred, buff_hexa);
++  Native_Hexa_Symbol_For_Pred(cur_pred, buff_hexa);
+   Label_Printf("\n\npl_code global %s", buff_hexa);
+ }
+ 
+@@ -1375,9 +1418,13 @@
+ void
+ F_call(ArgVal arg[])
+ {
+-  Args1(P_N(hexa, n));
++  Args1(STR_N(functor, arity));
++
++  Native_Hexa_Symbol(cxt_unit_for_next_call, cxt_arity_for_next_call,
++		     functor, arity, buff_hexa);
++  cxt_unit_for_next_call[0] = 0;
+ 
+-  Inst_Printf("pl_call", "%s_%ld", hexa, n);
++  Inst_Printf("pl_call", "%s", buff_hexa);
+ }
+ 
+ 
+@@ -1390,9 +1437,13 @@
+ void
+ F_execute(ArgVal arg[])
+ {
+-  Args1(P_N(hexa, n));
++  Args1(STR_N(functor, arity));
+ 
+-  Inst_Printf("pl_jump", "%s_%ld", hexa, n);
++  Native_Hexa_Symbol(cxt_unit_for_next_call, cxt_arity_for_next_call,
++		     functor, arity, buff_hexa);
++  cxt_unit_for_next_call[0] = 0;
++
++  Inst_Printf("pl_jump", "%s", buff_hexa);
+ }
+ 
+ 
+@@ -1805,8 +1856,8 @@
+   int set_cp = 0;
+   char *str;
+   int adr_of_xy;
+-  long ret_xy;
+-  char ret_c;
++  long ret_xy = 0;
++  char ret_c = 0;
+   int i;
+ 
+   DEF_STR(c_option);
+@@ -2132,8 +2183,12 @@
+ 	  break;
+ 
+ 	case FOREIGN_MODE_IN_OUT:
++	  if (n != FOREIGN_TYPE_TERM)
+ 	    Inst_Printf("call_c", "Foreign_Un_IO_Arg(%d,&Un_%s,FL(%d),"
+ 			"X(%d))", c == 'L', foreign_tbl[n], i, i);
++	  else
++	    Inst_Printf("call_c", "Foreign_Un_IO_Arg(1,&Unify,FL(%d),"
++			"X(%d))", i, i);
+ 	  Inst_Printf("fail_ret", "");
+ 	  break;
+ 	}
+@@ -2187,6 +2242,12 @@
+ 	      continue;
+ 	    }
+ 
++	  if (Check_Arg(i, "--dynamic"))
++	    {
++	      dynamic = 1;
++	      continue;
++	    }
++
+ 	  if (Check_Arg(i, "--version"))
+ 	    {
+ 	      Display_Copying("WAM to Mini-Assembly Compiler");
+@@ -2257,3 +2318,127 @@
+ }
+ 
+ #undef L
++
++
++/* --- Contexts --- */
++
++/*-------------------------------------------------------------------------*
++ * CXT_UNIT_NAME                                                           *
++ *                                                                         *
++ *-------------------------------------------------------------------------*/
++void
++Cxt_Unit_Name(char *unit_name, int arity)
++{
++  if (strcmp(unit_name, "[]") == 0)
++    cxt_cur_unit = NULL;
++  else {
++    cxt_cur_unit = BT_String_Add(&bt_atom, unit_name);
++    cxt_cur_unit->arity = arity;
++  }
++}
++
++
++
++
++/*-------------------------------------------------------------------------*
++ * F_CXT_EXECUTE                                                           *
++ *                                                                         *
++ *-------------------------------------------------------------------------*/
++void
++F_cxt_execute(ArgVal arg[])
++{
++  Args2(F_N(atom, n), X_Y(xy));
++
++#ifdef USE_TAGGED_CALLS_FOR_WAM_FCTS
++  Inst_Printf("call_c", FAST "Cxt_Call_Tagged(fn(%d),%c(%d))", 
++	      f_n_no, c, xy);
++#else
++  Inst_Printf("call_c", FAST "Cxt_Call(at(%d),%ld,%c(%d))",
++	      atom->no, n, c, xy);
++#endif
++  Inst_Printf("jump_ret", "");
++}
++
++
++
++
++/*-------------------------------------------------------------------------*
++ * F_CXT_CALL                                                              *
++ *                                                                         *
++ *-------------------------------------------------------------------------*/
++void
++F_cxt_call(ArgVal arg[])
++{
++  Inst_Printf("prep_cp", "");
++  F_cxt_execute(arg);
++  Inst_Printf("here_cp", "");
++}
++
++
++
++
++/*-------------------------------------------------------------------------*
++ * F_CXT_ASSIGN_K                                                          *
++ *                                                                         *
++ *-------------------------------------------------------------------------*/
++void
++F_cxt_assign_K(ArgVal arg[])
++{
++  Args1(X_Y(xy));
++
++  Inst_Printf("call_c", FAST "Cxt_Assign_K(%c(%d))", c, xy);
++}
++
++
++
++
++/*-------------------------------------------------------------------------*
++ * F_CXT_UNIT_FOR_NEXT_CALL                                                *
++ *                                                                         *
++ *-------------------------------------------------------------------------*/
++void
++F_cxt_unit_for_next_call(ArgVal arg[])
++{
++  register char *p;
++  Args1(F_N(atom, n));
++
++  sprintf (cxt_unit_for_next_call, "%s", str_atom);
++  for (p=cxt_unit_for_next_call; *p && *p != '/'; ++p)
++    ;
++  *p = 0;
++  cxt_arity_for_next_call = n;
++}
++
++
++
++
++/*-------------------------------------------------------------------------*
++ * F_CXT_ARG_UNIFY                                                         *
++ *                                                                         *
++ *-------------------------------------------------------------------------*/
++void
++F_cxt_arg_unify(ArgVal arg[])
++{
++  Args3(INTEGER(i), X_Y(xy), X_Y1(c1, xy1));
++
++  Inst_Printf("call_c", FAST "Cxt_Arg_Unify(%d,%c(%d),%c(%d))",
++	      i - 1, c, xy, c1, xy1);
++  Inst_Printf("fail_ret", "");
++}
++
++
++
++
++/*-------------------------------------------------------------------------*
++ * F_CXT_ARG_LOAD                                                          *
++ *                                                                         *
++ *-------------------------------------------------------------------------*/
++void
++F_cxt_arg_load(ArgVal arg[])
++{
++  Args3(INTEGER(i), X_Y(xy), X_Y1(c1, xy1));
++
++  Inst_Printf("call_c", FAST "Cxt_Arg_Load(%d,%c(%d),&%c(%d))",
++	      i - 1, c, xy, c1, xy1);
++  Inst_Printf("fail_ret", "");
++}
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/Wam2Ma/wam_parser.c gprolog-cx/base/src/Wam2Ma/wam_parser.c
+--- gprolog-1.2.18/src/Wam2Ma/wam_parser.c	2004-06-04 22:05:02.000000000 +0600
++++ gprolog-cx/base/src/Wam2Ma/wam_parser.c	2003-04-08 17:20:39.000000000 +0600
+@@ -135,6 +135,13 @@
+   {"foreign_call_c", F_foreign_call_c, 5, {ATOM, ATOM, F_N, INTEGER, 
+ 					   L2(ATOM, ATOM)}},
+ 
++  {"cxt_call", F_cxt_call, 2, {F_N, X_Y}},
++  {"cxt_execute", F_cxt_execute, 2, {F_N, X_Y}},
++  {"cxt_assign_K", F_cxt_assign_K, 1, {X_Y}},
++  {"cxt_unit_for_next_call", F_cxt_unit_for_next_call, 1, {F_N}},
++  {"cxt_arg_load", F_cxt_arg_load, 3, {INTEGER, X_Y, X_Y}},
++  {"cxt_arg_unify", F_cxt_arg_unify, 3, {INTEGER, X_Y, X_Y}},
++
+   {NULL, NULL, 0, {0}}
+ };
+ 
+@@ -238,10 +245,22 @@
+       if (k != ATOM)
+ 	{
+ 	top_error:
+-	  Syntax_Error("file_name, predicate, directive "
++	  Syntax_Error("unit_name file_name, predicate, directive "
+ 		       "or ensure_linked expected");
+ 	}
+ 
++      if (strcmp(str_val, "unit_name") == 0)
++	{
++	  Read_Token('(');
++	  Read_Token(ATOM);
++	  Read_Token('/');
++	  Read_Token(INTEGER);
++	  Read_Token(')');
++	  Read_Token('.');
++	  Cxt_Unit_Name(strdup(str_val), int_val);
++	  continue;
++	}
++
+       if (strcmp(str_val, "file_name") == 0)
+ 	{
+ 	  Read_Token('(');
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/Wam2Ma/wam_protos.h gprolog-cx/base/src/Wam2Ma/wam_protos.h
+--- gprolog-1.2.18/src/Wam2Ma/wam_protos.h	2004-06-04 22:05:02.000000000 +0600
++++ gprolog-cx/base/src/Wam2Ma/wam_protos.h	2003-04-08 17:20:39.000000000 +0600
+@@ -155,3 +155,21 @@
+ void F_call_c(ArgVal arg[]);
+ 
+ void F_foreign_call_c(ArgVal arg[]);
++
++/* --- Contexts --- */
++
++void Cxt_Unit_Name(char *unit_name, int arity);
++
++void F_cxt_call(ArgVal arg[]);
++
++void F_cxt_execute(ArgVal arg[]);
++
++void F_cxt_assign_K(ArgVal arg[]);
++
++void F_cxt_unit_for_next_call(ArgVal arg[]);
++
++void F_cxt_arg_load(ArgVal arg[]);
++
++void F_cxt_arg_unify(ArgVal arg[]);
++
++
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/BipsFD/TO_DO gprolog-cx/base/src/BipsFD/TO_DO
+--- gprolog-1.2.18/src/BipsFD/TO_DO	1970-01-01 05:00:00.000000000 +0500
++++ gprolog-cx/base/src/BipsFD/TO_DO	2003-04-08 15:42:51.000000000 +0600
+@@ -0,0 +1,88 @@
++compiler les contraintes lineaires (cf difference de temps entre bridge et
++      bridge1).
++
++definir une contrainte pour square (test entre variable entre 2 bornes) plus
++      efficace qu'avec 2 /\ (and) (cf ad-hoc ou BETWEEN ?)
++
++faudrait optimiser des cas comme X < 4 \/ X > 10 qui peut se traduire dans un
++	domaine sparse par les valeur 0,1,2,3,11,12,...
++
++math: optimiser code gestion des monomes (pointeurs au lieu d'indice)
++
++math: X*Y#=1 produit: 'xy=z'(_13,_14,1) (non linear part) dans
++      Load_Delay_Cstr_Part constraint il faudrait tester si 'res' est une
++      variable ou pas (si entier appeler xy=c)
++
++
++FD: last_fail_variable (+ heuristiques sur la derniere var)
++
++FD: revenir a des meta_bool + efficace ?
++
++relation/2 relationc/2 ne teste pas bien tous les cas d'erreurs, peut echouer
++	   avant une erreur ex relation([[b,2,3],[4,5]],[X,Y]).
++	   no donne pas type error integer b
++
++vector too small: devrait etre affiche pour  X/12#=#Y, Y=15.
++	(result X=180 >127)
++
++vector too small: en faire un prolog flag avec fail/warning/error
++
++produire du code 3 adresses pour les ranges et distinguer les reg de 
++	chargement (pour dom(X)) (ie. des long) et ceux de travail 
++	(des Range)
++
++ajouter: among alldifferent avec global cstr
++	fd_minimize/maximize avec timeout+bounds+percent (cf CHIP)
++	
++prolog_flag fd_max_integer, fd_vec_max,... fd_min_integer,...
++	default_var_selection_method, default_value_selection_method,...
++
++fd_math_fd.fd: 
++	pour eucldiv en mode full domain([Y,Z],0,100),quot_mod(14,Y,R) #=# Z.
++	donne 0..14 au lieu de 0..4,7,14
++	car R<Y n'est pas tenu compte dans calcul ecrire fct C
++	Z in Fct(dom(X),dom(Y),dom(R)) ? avec 3 boucles imbriquees ?
++	irait plus vite de meme pour X, Y et R.
++
++	X*Y en mode full ne propage tout ce qu'il peut (partial AC semble ok)
++	12*Y#=#Z.
++	Y = _#3(0..10@)
++	Z = _#22(0:12:24:36:48:60:72:84:96:108:120@)
++
++	mais
++
++	X*Y#=#Z, X#=12.
++	X = 12
++	Y = _#22(0..268435455)   *** PAS MODIFIE ***
++	Z = _#41(0:12:24:36:48:60:72:84:96:108:120@)
++
++Bool:   pref_load_word pour #<=>  verif que fait X#=Y #<=> Z#=T
++
++        performance: bschur / bramsey plus lent: car on avait 
++	and0(C13,C23,C33) en contrainte primitive dans l'ancienne version.
++	(avant pour ramsey15 (borba) 69ms maintenant 166ms facteur = 2.5)
++
++	faire pour X\/Y\/Z comme avec + dans les equations (grouper par 3)
++        et    pour X/\Y/\Z ?
++
++Fd2C
++	permettre wait imbrique ? (utile dans fd_math_fd.fd pour X*Y=Z)
++
++link: verif ne charger que ce qu'il faut.
++
++#= #\= et autres:
++	tester en inversant les ordre du qsort (return -cmp)
++
++	tester en modifiant l'ordre de pose des cstr
++	donc reveil d'abord code = + c (bien) puis tout t2 et tout t1 
++	(vrai ?) peut etre alterner 1 de t1 et 1 de t2...
++
++tester effet du most_constrained
++
++fd_math_fd.fd: tester performances quand on distingue borne min et borne max
++	ex dans 	x_plus_y_plus_z_eq_t
++	start X in min(T) - max(Y) - max(Z) .. max(T) - min(Y) - min(Z)
++	si que min(T) est change on evalue borne max pour rien
++
++
++
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/BipsPl/TO_DO gprolog-cx/base/src/BipsPl/TO_DO
+--- gprolog-1.2.18/src/BipsPl/TO_DO	1970-01-01 05:00:00.000000000 +0500
++++ gprolog-cx/base/src/BipsPl/TO_DO	2003-04-08 15:42:51.000000000 +0600
+@@ -0,0 +1,244 @@
++ajouter option a bind_variables prefix(...) qui cree des noms de variables
++commencant par prefix (implique namevars).
++
++portray_clause: ajouter une version du bip avec une liste de variable names
++qui afficherait en tenant compte de VN (cf. code debug des context)
++
++bug: au read(X). un point seul suivi de \n attend encore qq chose...
++
++bug: au CTRL+C de repeat,write(ttt),fail. SIGSEGV...
++
++bug: sleep(100). + CTRL+C + a(bort) fait un SIGSEGV...
++
++ajouter un read_line/1 et /2 (fgets) - que rendre à l'EOF ?
++    \n car jamais possible ?
++
++ajouter de quoi récupérer le buffer d'écriture courant pour les constant term
++stream
++
++ajouter possibilite de lire terme d'ordre superieur, e.g. X(f,b) sera rendu
++comme '$HO'(X,f,b) + à compiler en meta-call un peu efficace ?
++
++pb catch a verifier (cf fichier CATCH):
++| ?- catch(throw(f(A)),E,E==f(A)).
++
++no
++réussit en SWI-Prolog
++Si doit réussir modifier top-level pour afficher noms vars dans un
++uncaught exception:
++à voir: changer le '$call' de exec_query par
++	'$catch'(X, Excep, '$query_exception'(QueryVars, Excep),
++		 top_level, 0, true),
++et
++'$query_exception'(QueryVars, Excep) :-
++	'$set_query_vars_names'(QueryVars, _),
++	throw(Excep). (ou  '$top_level_exception'(Excep), fail)
++
++
++
++write_term ajouter option pour casser les longues listes et termes structures
++ex: split_depth(10), afficher de maniere jolie et indentee ? 
++modifier wam_emit pour utiliser cela à la place de emit_one_arg.
++ou encore mieux (mais plus difficile) un width(80) pour ne pas depasse 80
++col + indent(true/false) (indentation des sous/terme) 
+++ tab_size(N) (si precise les espaces deviennent des tabs) ou tab(true/false)
++L'utiliser pour portray_clause.
++
++read reentrancy problem (linedit is reentrant also streams but not read) 
++   	since global vars pf parse_supp.c an parse_dico_var[], e.g.
++
++| ?- read_term(X,[variables(L)]).
++p(X,Y,  % \n is important here to restart a LE_FGets
++
++Prolog interruption (h for help) ? b
++{Break Level 1}
++{1}
++| ?- write(A=1).
++_51=1
++
++yes
++{1}
++| ?- 
++
++{End Break}
++
++Prolog interruption (h for help) ? c
++Z).
++
++L = [A]
++X = p(_,_,A)
++
++instead of
++| ?- read_term(X,[variables(L)]).
++p(X,Y,Z).
++
++L = [A,B,C]
++X = p(A,B,C)
++
++
++current_prolog_flag (cf sicstus):
++	ajouter language, version, argv, discontiguous_warning,
++	redefine_warning, toplevel_print_options, debugger_print_options,
++	
++ajouter assert/2 et erase/1 (+ autres...)
++	assert[az](Clause, -Ref).
++	clause(+Head, ?Body, -Ref).
++	clause(?Head, ?Body, +Ref).
++	instance(+Ref, ?Term).
++	erase(+Ref).
++	update(+ArgNo, +Ref, +NewValue)
++	ArgNo = 1..arity, NewValue doit etre un int ou un atom (cf setarg/4)
++	on peut accepter une variable. Il vaut mieux que le terme précédent
++	soit aussi un 1-tagged word.
++	cf '$setarg_in_last_found'/2.
++
++	ajouter retract_first/clause_first qui ne creent pas de pt de choix ?
++	
++exec/5 on a tout pour permettre de ne pas specifier tous les streams et 
++	aussi que out==err. penser a equivalent de /dev/null (cf sicstus)
++
++eviter certaines erreurs fatales - par exemple un overflow annule la query en
++cours sous top-level.
++
++verif dans built_in si pas Dont_Separate_Tag a tester (ou sur que c'est dans
++       le tas). cas simple si c'est le contenu d'une liste car ne peut pas
++       etre le cas.
++
++bagof: pb var FD pour 'variant' (cf Link_Variable) dans all_solut.pl
++	fd_domain([X,Y],1,10),bagof(X,(X+3#<Y),L). devrait donner une seule
++	reponse (il suffirait de tester egalite des domaines ?).
++
++member/2 eviter dernier point de choix (ex member(X,[a,b,c])) - code C ?
++
++listing a revoir pour pouvoir afficher les clauses systemes 
++(un '$listing_any'/0-1 ?)
++
++DCG: | pas reconnu comme ; car | n'est pas 'name' mais un ponctuation...
++     ou faire comme sictus (read_term le transforme en ;)
++     si ca change maj doc
++
++diff consult et compile: t(X):- X is a. pas err en consult et
++     unknown expression in arithmetic expression (atm(a)) en compile
++
++top_level: options pour re-affichage des solutions avec print, write,...
++
++library: faire plein de petits fichiers comme pour la lib c de maniere a
++encore reduire la taille des executables.
++
++predicate_property rendre [native/emulated/interpeted/hybrid]_code
++	(enlever MASK_PRED_NATIVE car = codep!=NULL ?)
++
++linedit: pb avec un rlogin + xhost et ()
++	echo de linedit pas emis sur un stream Prolog (ex user_output),
++	d'ou pb avec set_top_level_streams car l'echo ne sera pas redirige
++	(mais linedit n'est pas appele car le stream n'est pas une tty).
++	Probleme ?
++
++stream: ajouter une option linedit(true/false) au open + ensuite (pb switcher
++	de true/false)
++
++consult: mode insert/redefine_new/redefine_all?silent (pas affichage d'infos)
++        (pb nom fichier avec :- include...) 
++
++read/1 et autres ne gere pas representation_error(max/min_integer)
++       et re(max_arity) est gere comme syntax error plutot que representation
++       error (a cause de longjmp...)
++
++dans Call_Prolog: pb si throw qui passe au travers...
++
++list.pl verifier msg erreur (ameliorer append ?)
++
++nom de vars: taille limitee (cf parse_dico_var[...].name dans parse_supp.c)
++	gerer avec malloc ?
++
++scan_supp.c: big_buffer limite. gerer avec realloc taille infinie ?
++	ou tester si chaine trop longue (ex quote, atom,...),
++	tout ce qui ecrit dans token.name. Faire gaffe pour les atomes car
++        un utilise aussi le glob_buff (pour l'instant meme taille que le
++        buffer du scanner) pour atom_chars/2 par exemple. Meme traitement
++        pour les deux ? (realloc infini si besoin ?).
++
++
++call_c[test/jump]: pb si pas seul dans une clause (continuation CP a voir)
++	(cf assert.pl cmt pour '$clause'/2)
++
++profile: quoi faire ?
++
++banniere supplementaire du top-level
++
++voir si option pour predicats locaux au lieu de $ en debut...
++
++debugger:
++	quand ca boucle: ^C + t(race) pose pb car on appelle Call_Prolog
++	(trace ou debug). Mais on ne sait pas ou en etait le moteur prolog.
++	Il vaudrait mieux appeler une fct C (cf top_level_c.c).
++	Pb il faut faire l'equivalent du g_assign + setarg en C
++	(cf '$debug_switch_on').
++
++	verif que les builtin du debugger fassent tous un gc en fin.
++
++	voir ce qu'il manque par rapport aux commandes du debugger sicstus
++
++	recuperer exceptions (ex sigsegv) sous le Wam debugger.
++
++dynamic code avec FDV
++	ex assert avec une var FDV (sous top-level)
++	verif  clause avec var FDV...
++
++regexp: cf C_Progs/unix/regexp
++	faire interface pour Prolog
++	envisager lex+yacc pour Prolog ?
++
++lib prologs:
++	comment gerer des lib prolog (ex liblists.a),...
++	option -lib name dans top_comp.c ?
++	et on chercher name.lib_suffix puis lib<name>.lib_suffix
++	dans les paths ?
++
++	faire des libs pour compatibilite comme dec10.a, quintus.
++	(pour par ex recorded...)
++
++
++setarg/4 si Undo=false et nouveau arg=float donne msg erreur	
++	type_error(atomic,1.2)
++	en fait les floats ne sont pas acceptes.
++
++harmoniser utilisation de '$get_cut_level' et '$get_current_B'
++	          et   de '$cut'           et '$set_current_B' ?
++	car '$get_cut_level' doit toujours etre utilise en premier but 
++	de corps (cf call.pl / debug.pl)
++
++format: gestion des tabulations ?
++
++ascii: voir EUC dans sicstus faire pareil ? 
++
++stream:	dans les compteurs gerer les \t et les \b
++	ex  nl, write('ab\b'), line_position(user_output,X).
++	       donne 3 (en SWI donne 1) ?
++            nl, write('ab\t'), line_position(user_output,X).
++	       donne 3 (en SWI donne 8) ?
++
++	l'alias user n'existe pas (sf pour DEC10). pb ?
++
++var glob: pb avec tblx g_read(t(I),X) cree a chaque fois le terme t(I) en
++        memoire (gc ? ou simplifier la syntaxe g_read(t,I,X) ?).
++	on peut ruser avec:
++
++	g_assign(t,g_array(N)), X=t(0), p1(0,N,X).
++
++	p1(N,N,_):-
++		!.
++
++	p1(I,N,X):-
++		setarg(1,X,I),
++		g_assign(X,a),
++		I1 is I+1,
++		p1(I1,N,X).
++
++	qui ne bouffe pas de heap.
++
++arithmetique: finir les err exceptions
++	ints   avec fct + min(X,Y) et max(X,Y) + cputime + autres fcts ?
++	evaluation_error(...)
++
++help:	en ligne
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/EngineFD/TO_DO gprolog-cx/base/src/EngineFD/TO_DO
+--- gprolog-1.2.18/src/EngineFD/TO_DO	1970-01-01 05:00:00.000000000 +0500
++++ gprolog-cx/base/src/EngineFD/TO_DO	2003-04-08 15:42:52.000000000 +0600
+@@ -0,0 +1,55 @@
++optimiser un peu les Set_Min_Mask(propag)... on peut en faire plusieurs avec
++	un seul OU logique (|)
++
++ATT: on ne traile pas l'incrementation du nb de contraintes sur une 
++	variable.
++
++vraie unify fdv et fdv: garder liste de toutes les variables/cstrs ?
++	tagger les argument frame ?
++
++
++Warning: Vector too small - maybe lost solutions
++	n'afficher qu'une fois par etape de propagation ?
++
++pb vector too small: pas bien propage:
++	
++	| ?- domain(N,[1,4,8,32,63,128]).      
++	N = _#2(1:4:8:32:63@)
++
++	mais
++
++	| ?- domain(N,[1,4,8,32,63,128]), X#=N.
++	N = _#2(1:4:8:32:63)
++	X = _#33(1..63)
++
++	de meme pour 2**N#=#Y avec le N ci-dessus
++
++pb dans FD_Tell_Range_Range apres le Range_Inter ?
++	car on a deja remis CS a la valeur save_CS ?
++
++noms des fct C pour les user fct a revoir (ajouter l'arite pour eviter
++	des erreurs betes).
++
++eviter creat A frame si pas de var dans le r de X in r
++	ex domain ? penser a retraction future ...
++
++optimiser: voir code asm de fd_inst.c
++	pour voir si dans Update_... Min(fdv_adr) Max(fdv_adr)
++	ne serait pas mieux avec Range *r=Range(fdv_adr);
++	et r->min et r->max;
++
++voir quel pred/arity afficher pour tous les pl_err_... de fd_*.c
++
++definir un fichier fd_solver.c avec le solveur proprement dit ?
++
++essayer de modif compil pour
++
++	tous les fd_install
++	fd_before_add_cstr
++	 tous fd_call
++	fd_after_add_cstr
++
++	pour voir si on optimise des reveils ?
++
++	a priori on gangne pas grand chose mais...
++
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/EnginePl/TO_DO gprolog-cx/base/src/EnginePl/TO_DO
+--- gprolog-1.2.18/src/EnginePl/TO_DO	1970-01-01 05:00:00.000000000 +0500
++++ gprolog-cx/base/src/EnginePl/TO_DO	2003-04-08 15:42:52.000000000 +0600
+@@ -0,0 +1,68 @@
++remonter dans EnginePl les exceptions (partie C) et les erreurs
++	et peut etre le code dynamique et le byte code
++
++pouvoir ecrire en C un catch utiliser pour findall/... et write_to_atom/...
++	pour recuperer le constant term stream et le detruire si besoin.
++
++alloc piles: faire des petits mmap + munmap entre les pages.	
++	extension de pile: cf ce que fait swi prolog (pas utile d'apres Robert
++	il  suffit d'allouer un gd espace ex 500Mo, 
++	pb alloue aussi le swap d'apres Salvador).
++
++M_Cmd_Line_To_Argv
++	a traiter le cas des "string" et 'string' (notamment pour unix)
++
++malloc:
++	reecrire son propre malloc pour utiliser mmap ?
++	etre sur que adr de malloc compatib avec les tags (ex assert)
++	ou le checker au configure pour refuser l'install si pas compatible.
++
++sigsegv voir aussi les check_magic_words, marche pas toujours.
++	peut etre verifier les les poiteurs de pile en plus...
++	main souvent on fait le H+= apres avoir ecrit...
++	utiliser sigsegv quand meme avec malloc + check_magic... ?
++
++profile:
++	penser un jour a des infos de profilage pour voir ou on passe du
++	temps...	
++
++Portage:
++	test de pile software moins couteux.
++
++	test pile pour malloc - comment ? (generer une inst en entree de pred
++	avec une option du compilo --no-test-stack appelle par top_comp.c 
++	avec les mmaps ?)
++	cf. mprotect mais a priori garanti que sur des zones rendues par mmap ?
++	tester à l'install ?
++
++trouver solution pour signal(): qd on rentre dans un handler, certains
++	registres sont perdus (cf top_level_c.c:Ctrl_C_Handler())
++	si que reg_bank il peut etre restaure aves save_reg_bank mais
++	les autres regs ? N'utiliser que reg_bank en registre ?
++	ie. ameliorer la fct Reset_Prolog_In_Signal() dans engine.c.
++
++ascii: voir EUC dans sicstus faire pareil ? 
++
++Fatal_Error: remplacer la plupart par des pl_err_ressources ?
++	pour les ERR_ALLOC_FAULT faire un malloc special en passant
++	__FILE__ ?
++	pb avec le link une passe car ca implique engine_pl->bips_pl
++
++dynload: builtin (re)load(+DynObject) (compile en .so).
++
++-fomit-frame-pointer:
++        att si on supprime sur alpha on ne peut peut utiliser les $15
++
++atom.c: ajouter les defs de tous les atom_xxx necessaires et virer les
++	Initializer inutiles en bips_xxx ?
++
++voir obj_chain avec nom de sections speciaux ? ou options constructor de gcc
++
++modif configure:
++	taille maxi pour l'ensemble des piles (par rapport au masque)
++	taille maxi pour les malloc (en soustrayant les atom/pred/oper/...)
++
++interface graphique
++
++pages man
++
+diff -urw N-x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/Fd2C/TO_DO gprolog-cx/base/src/Fd2C/TO_DO
+--- gprolog-1.2.18/src/Fd2C/TO_DO	1970-01-01 05:00:00.000000000 +0500
++++ gprolog-cx/base/src/Fd2C/TO_DO	2003-04-08 15:42:52.000000000 +0600
+@@ -0,0 +1,22 @@
++bug dans compilo: il faut un \n en fin de fichier sinon un simple example
++plante: 
++
++cstr(fdv X)
++{
++}
++
++
++forall pas super bien fait (mais pas utilise pour l'instant)
++reflechir sur les tableaux ex term::= var[tem]
++et fdv X=L[i] si L est une l_fdv
++
++permettre wait imbrique ? (utile dans fd_math_fd.fd pour X*Y=Z)
++si oui modifier dans fd_to_c.h pour avoir une boucle dans
++call_internal_and_test_switch 
++
++permettre des val() dans les wait_switch (pour l'instant si un val est
++faux sort lde la fonction au lieu de passer au case suivant).
++(pas utile mais incoherent)
++
++resume des inst produites en cmt comme pour pl2wam6.pl
++
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/Linedit/TO_DO gprolog-cx/base/src/Linedit/TO_DO
+--- gprolog-1.2.18/src/Linedit/TO_DO	1970-01-01 05:00:00.000000000 +0500
++++ gprolog-cx/base/src/Linedit/TO_DO	2003-04-08 15:42:52.000000000 +0600
+@@ -0,0 +1,12 @@
++mettre les #define de linedit.c sous forme d'option dans var env LINEDIT
++
++supp bancs debut et fin avant ajout en history (avec une option env LINEDIT)
++
++differents history (ex un par stream ouvert - ne rappelle que ce qui a ete
++tape dans ce stream)
++
++prendre en compte differents terminaux (tester $TERM ?)
++
++hooks utilisateurs pour: taille ecran, put_char, get_char de maniere a interfacer avec n'importe quoi (ex Tcl/Tk). c'est fait non ?
++
++
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/Ma2Asm/TO_DO gprolog-cx/base/src/Ma2Asm/TO_DO
+--- gprolog-1.2.18/src/Ma2Asm/TO_DO	1970-01-01 05:00:00.000000000 +0500
++++ gprolog-cx/base/src/Ma2Asm/TO_DO	2003-04-08 15:42:53.000000000 +0600
+@@ -0,0 +1,21 @@
++finir prep_cp et here_cp pour sparc
++
++ajouter test de prep_cp et here_cp à check.c
++
++definir des symboles locaux dans la syntaxe MA
++	(ex $L+identificateur sera toujours remplace par le prefix local du
++	mapper en cours+identificateur)
++	
++
++ma2asm	voir de recup memoire strdup malloc a chaque nouvelle inst si
++	possible 
++
++	pb de labels locaux (ex .L en linux)
++
++sparc_any: essayer d'eviter tous les sethi en initialisant un registre (l3)
++	au milieu du code ? (en debut pour les switch_on_term, try,...)
++	on a +- 4096 de code (ou +8192 si on le met au debut)
++	reste les constantes... (Put_Constant(X...))
++
++
++
+diff -urwN -x CVS -x .cvsignore -x debian -x autom4te.cache -x '.#*' -x '?.*' -x 'u?.pl' -x '?_c.*' -x '*.wam*' -x '*.ma' -x '*.s' -x '*.o' -x '*.a' -x '*.rtf' -x '*.cnt' -x 'config.*' -I '^ \* Copyright.*\(C\).*\*.*$' -I '^% defined in /.*$' -I '^% ((compiler|date|time)[ 	]): .*$' -I '^file_name\('\''.*\.pl'\''\)\.$' -I '^.*\$\Id.*$.*$' gprolog-1.2.18/src/Pl2Wam/TO_DO_CXT gprolog-cx/base/src/Pl2Wam/TO_DO_CXT
+--- gprolog-1.2.18/src/Pl2Wam/TO_DO_CXT	1970-01-01 05:00:00.000000000 +0500
++++ gprolog-cx/base/src/Pl2Wam/TO_DO_CXT	2003-04-08 15:42:53.000000000 +0600
+@@ -0,0 +1,118 @@
++que faire avec un appel a>>p s'il faut a(...)>>p. Pour l'instant echec si
++l'on essaye d'acceder aux args qui n'existent pas. Choix
++- gérer atom/arity plutot que atom mais pb par rapport aux modules ou on a
++  juste un atome ou alors etendre les modules avec arguments mais quand
++  passer les arguments ? au use_module c'est pas génial, 
++  directement par module(...args...):pred ou un module_args(....),
++  comment les stocker ?
++  ou juste pour les units (et générer des noms hexa de la forme:
++  Xmodule_arité_Xpred_arité (pour module on aura 0)
++- msg erreur pendant la recherche si pas coherent (stocker l'arité)
++
++
++Que faire si on met qq chose de pas callable dans le contexte ? pour
++l'instant c'est ignore pendant la recherche. 
++Options: verifier avant de le mettre ou à la recherche + msg erreur.
++point de choix ?
++
++
++Voir que faire avec les control construct (tester catch, throw, call)
++
++
++dans wam_inst.c remplacer le msg erreur
++'from a contextual call' par l'affichage du context courant (atome ou liste)
++ex: atome call_with_context([......])
++
++
++byte-code
++
++
++-----------------------------------------------------------------------------
++
++verfier: pb avec -O3
++-- FIXED -- pb dans ma2asm (pushl et popl de %esi ajoutés)
++
++
++verifier recompilation en mode full de pl2wam (ne trouve pas sr_open)
++-- FIXED -- ne pas utiliser --min-bips (cf. commentaire en context.pl)
++
++
++definir un U:G (utiliser autre chose car : c'est pour les modules sauf si on
++arrive à faire pareil). Que faire si U est une var ? A resoudre pour definir
++aussi le bip correspondant en U:G :- U:G.
++-- FIXED -- on a choisi :>>
++
++
++Pb coherence assoc de >>. Bien compile (car on le change mais a l'exec ca 
++merde). Ex sous top-level: a>>b>>c>>pred est vu comme >>(>>(>>(a,b),c),pred)
++--- FIXED --- (pas inline dans pl2wam si contient une var.)
++Pas satisfaisant car on devrait compiler si c'est une variable !
++
++
++instruction pour Cxt_Arg_3 plutot que le call_c et faire le arg_no-1 dans
++l'appel
++--- FIXED --- (+ optim load/unify suivant 1ere occurrence ou pas)
++
++
++:>> a definir dans le compilo + modif de cxt_mk_extension_list pour gérer
++un :>> dedans (a>>b:>>c>>d  retourne [b,c,d] + info que c'est dans b).
++
++
++a voir: idee d'un acces + rapide
++
++f/n -> unit1 -----------------> unit3 ->
++f/n ------------> unit2 ------> unit3 ----------->
++
++
++
++a voir: si a>>b>>...>>pred, tester au run-time si pred apparait dans a,b...
++et creer un code d'indirection
++
++
++-----------------------------------------------------------------------------
++
++C est une liste d'unités
++
++un Goal c'est: soit un appel de prédicat
++soit U >> Goal (pose probleme a cause de l'assoc de >>)
++
++context(C) recupere context entree clause
++
++C :< Goal appele Goal dans un contexte donné
++
++U >> Goal etend le contexte avec une unite donné
++
++:- unit(meta(C))
++
++do_all([X|L]):-
++	C :< action(X),
++	do_all(L).
++
++
++:- unit(window(X)).
++
++p :-
++   meta([window(X)]) :>> do_all([a,b,c])
++
++
++:- location(unit1, p/3)
++
++%set_prolog_flag(context, on/off)
++
++
++C :< P
++        cxt_call(P, C)
++
++
++
++U >> P:-
++	context(C), C1 = [U|C], C1 :< P.
++
++
++U :>> P:-
++	get_K(C),
++        C1=[U|C], 
++        assign_K(C1)
++        call(U:P)  si U pas variable (sinon comme >>)
++
++

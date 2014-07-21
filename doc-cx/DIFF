@@ -1,0 +1,38 @@
+#! /bin/sh
+#
+# usage: DIFF DIROLD DIRNEW
+
+DIROLD=$1
+DIRNEW=$2
+
+DIFFFLAGS="-urwN"
+DIFF=/usr/bin/diff
+
+IGNWAMFILES=${IGNWAMFILES-"-x *.wam*"}
+
+$DIFF $DIFFFLAGS $DIROLD $DIRNEW			\
+	-x CVS						\
+	-x .cvsignore					\
+	-x .gitignore					\
+	-x .git						\
+	-x debian					\
+	-x autom4te.cache				\
+	-x .\#*						\
+	-x \?.*						\
+	-x u\?.pl					\
+	-x \?_c.*					\
+	$IGNWAMFILES					\
+	-x \*.ma					\
+	-x \*.s						\
+	-x \*.o						\
+	-x \*.a						\
+	-x \*.rtf					\
+	-x \*.cnt					\
+	-x \*.pdf					\
+	-x \*.ps					\
+	-x config.\*					\
+	-I '^ \* Copyright.*\(C\).*\*.*$'		\
+	-I '^% defined in /.*$'				\
+	-I '^% ((compiler|date|time)[ 	]): .*$'	\
+	-I '^file_name\('"'.*\.pl'"'\)\.$'		\
+	-I '^.*\$\Id.*$.*$'

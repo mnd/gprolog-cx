@@ -1,0 +1,2 @@
+Was not applied code relate to `--enable-watermark' and `--enable-dynamic'
+switches. See in `gprolog-cx-with-dynamic.patch' file.

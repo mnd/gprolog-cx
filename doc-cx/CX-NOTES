@@ -1,0 +1,38 @@
+notes for bc_supp.c:   -*- text -*-
+
+w => inc. op
+w1, w2 => possible extra words for inst (based on "nb_word")
+
+caller_func/caller_arity: same as func/arity except it gets rid of
+"aux" predicates.  informational only (eg. for debug/trace)
+
+BC_Arg_X_Or_Y (WamWord arg_word, int *op)
+	-> Can modify op, in case the term referred to by arg_word is
+	   *not* x(_) (as in y(_), e.g.)
+	-> OP x(_) = N
+	   OP y(_) = N+1
+
+Operations & formats:
+
+cxt_call/cxt_execute(PRED/ARITY, CX_REGISTER)
+	nb_word = 1
+	BC_OP(w) = CXT_CALL or CXT_EXECUTE (t1.code_op)
+	BC_Ari(w) = ARITY (t1.i8)
+	BC_Fun(w) = PRED (t1.i16)
+	w.word = CX_REGISTER
+	-> Wasteful because CX_REGISTER (Xn or Yn) is smaller than 32 bits?
+
+cxt_assign_K(CX_REGISTER)
+	nb_word = 1
+	BC_OP(w) = CXT_ASSIGN_K (t1.code_op)
+	BC_XY(w) = CX_REGISTER (t1.i16)
+
+cxt_arg_load/unify(ARG_NUMBER, SOURCE_XY, DEST_XY)
+	nb_word = 1
+	BC_OP(w) = CXT_ARG_LOAD/UNIFY (t1.code_op)
+	BC_XY(w) = SOURCE_XY (t1.i16)
+	w.word = DEST_XY (word)
+	-> Wasteful because DEST_XY (Xn or Yn) is smaller than 32 bits?
+
+cxt_unit_for_next_call(FUNCTOR/ARITY)
+	-> IGNORE for now...
